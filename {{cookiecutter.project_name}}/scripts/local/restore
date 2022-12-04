@@ -1,0 +1,5 @@
+#!/bin/sh
+
+container_id=$(docker ps -aqf "name=^{{cookiecutter.project_name}}_local_postgres$")
+
+cat data/local_backup.sql | docker exec -i "$container_id" psql -U {{cookiecutter.project_name}}

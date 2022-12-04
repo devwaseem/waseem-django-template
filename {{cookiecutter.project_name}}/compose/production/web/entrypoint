@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+#echo "Waiting for postgres..."
+
+#while ! nc -z ${DJANGO_DATABASE_HOST} ${DJANGO_DATABASE_PORT}; do
+#  sleep 1
+#done
+
+#echo "PostgreSQL started"
+
+python /app/manage.py tailwind install --no-input
+python /app/manage.py tailwind build --no-input
+
+rm -rf /app/server/apps/app_theme/static_src/node_modules
+
+python /app/manage.py collectstatic --noinput --clear
+
+python /app/manage.py migrate
+
+exec "$@"

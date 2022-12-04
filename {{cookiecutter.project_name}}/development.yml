@@ -1,0 +1,47 @@
+version: "3.8"
+
+volumes:
+  {{cookiecutter.project_name}}_local_postgres_data: { }
+
+
+
+services:
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    container_name: {{cookiecutter.project_name}}_local_mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: {{cookiecutter.project_name}}_local_redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:14.0-alpine
+    container_name: {{cookiecutter.project_name}}_local_postgres
+    volumes:
+      - {{cookiecutter.project_name}}_local_postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB={{cookiecutter.project_name}}
+      - POSTGRES_USER={{cookiecutter.project_name}}
+      - POSTGRES_PASSWORD={{cookiecutter.project_name}}
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+
+  mjml:
+    image: liminspace/mjml-tcpserver:0.11
+    restart: always
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "28101"
+      MJML_ARGS: "--mjml.minify=true --mjml.validationLevel=strict"
+    expose:
+      - "28101"
+    ports:
+      - "28101:28101"

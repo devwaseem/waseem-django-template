@@ -1,0 +1,41 @@
+{
+  email ... # Add a email
+}
+
+{$DOMAIN_NAME} {
+
+	header {
+		-Server
+
+		# enable HSTS
+		Strict-Transport-Security max-age=31536000;
+
+		# disable clients from sniffing the media type
+		X-Content-Type-Options nosniff
+
+		# clickjacking protection
+		X-Frame-Options DENY
+
+		Built-By "waaklabs.com"
+	}
+
+	log {
+			output file /var/log/caddy/access.log {
+				roll_size 10mb
+				roll_keep 5
+			}
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+
+	handle_path /static/* {
+		# STATIC_ROOT
+		root * /var/www/static
+		file_server
+
+	}
+
+	encode zstd gzip
+}

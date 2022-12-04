@@ -1,0 +1,111 @@
+version: "3.8"
+
+services:
+
+  caddy:
+    restart: unless-stopped
+    image: caddy:2.6.2
+    volumes:
+      - ./compose/production/caddy/Caddyfile:/etc/caddy/Caddyfile  # configuration
+      - caddy-config:/config  # configuration autosaves
+      - caddy-data:/data  # saving certificates
+      - web-static:/var/www/static:ro # serving django's statics
+      - /var/log:/var/log:rw
+    environment:
+      - DOMAIN_NAME=
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    networks:
+      - proxynet
+
+  web:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: compose/production/web/Dockerfile
+    image: production_web_server
+    container_name: web_production_server
+    command: /start
+    volumes:
+      - web-static:/var/www/static:rw
+      - /var/log:/var/log:rw
+    depends_on:
+      - postgres
+      - redis
+      - mjml
+    environment:
+      - DJANGO_ENV=production
+      - REDIS_HOST=redis
+      - MJML_HOST=mjml
+      - DJANGO_DATABASE_HOST=postgres
+      - DJANGO_DATABASE_PORT=5432
+      - POSTGRES_DB=
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - DJANGO_ALLOWED_HOSTS=
+      - CSRF_TRUSTED_ORIGINS=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_STORAGE_BUCKET_NAME=
+      - AWS_S3_REGION_NAME=
+    expose:
+      - "3000"
+    networks:
+      - webnet
+      - proxynet
+
+  redis:
+    restart: unless-stopped
+    image: redis:6.2-alpine
+    container_name: redis_production
+    expose:
+      - "6379"
+    networks:
+      - webnet
+
+  postgres:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: compose/production/postgres/Dockerfile
+    container_name: web_production_postgres
+    volumes:
+      - web-postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB={{cookiecutter.project_name}}
+      - POSTGRES_USER={{cookiecutter.project_name}}
+      - POSTGRES_PASSWORD={{cookiecutter.project_name}}
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
+      - BACKUP_DIR_PATH:/backups
+    expose:
+      - "5432"
+    networks:
+      - webnet
+
+  mjml:
+    image: liminspace/mjml-tcpserver:0.11
+    container_name: mjml_tcpserver_production
+    restart: unless-stopped
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "28101"
+      MJML_ARGS: "--mjml.minify=true --mjml.validationLevel=strict"
+    expose:
+      - "28101"
+    networks:
+      - webnet
+
+volumes:
+  web-static:
+  web-postgres-data:
+  web-logs:
+  caddy-config:
+  caddy-data:
+
+networks:
+  webnet:
+  proxynet:
