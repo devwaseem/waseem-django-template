@@ -226,7 +226,7 @@ PERMISSIONS_POLICY: dict[str, str | list[str]] = {}  # noqa: WPS234
 PHONENUMBER_DEFAULT_REGION = "IN"  # Defaults to India
 
 # Login URL
-LOGIN_URL = "main:candidate-login"
+LOGIN_URL = "main:login"
 
 # Messages
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"

@@ -69,15 +69,16 @@
     {% endcompress %}
   </head>
 
-  <body class="overflow-y-scroll h-screen leading-normal tracking-normal bg-gray-50 flex flex-col" hx-ext="loading-states" >
+  <body class="flex flex-col h-screen overflow-y-scroll leading-normal tracking-normal bg-gray-50" hx-ext="loading-states" >
     {% block navbar %}
     {% endblock %}
     {% include "main/atoms/loaders/htmx_indeterminate_loader.html" %}
     {% block content %}
       body not overridden
     {% endblock %}
+    
     <div>
-    <div id="modal_container"></div>
+      <div id="modal_container"></div>
     </div>
 
     {% block messages %}

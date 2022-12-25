@@ -3,10 +3,7 @@
   "project_verbose_name": "Test Project",
   "project_domain": "myapp.com",
   "organization": "waaklabs.com",
-
-  "_extensions": ["jinja2_git.GitExtension"],
-  "_copy_without_render": [
-    ".venv",
-    ""
+  "_extensions": [
+    "jinja2_git.GitExtension"
   ]
 }

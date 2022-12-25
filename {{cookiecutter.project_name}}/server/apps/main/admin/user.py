@@ -8,11 +8,11 @@ from server.apps.main.models.user import User
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     ordering = ["email"]
-    list_display = ("email", "first_name", "last_name", "role", "is_staff")
+    list_display = ("email", "first_name", "last_name", "is_staff")
     search_fields = ("first_name", "last_name", "email")
     fieldsets: tuple = (
-        (None, {"fields": ("email", "password", "role", "signup_step")}),
-        (_("Personal info"), {"fields": ("avatar", "first_name", "last_name")}),
+        (None, {"fields": ("email", "password", "signup_step")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (
             _("Permissions"),
             {
