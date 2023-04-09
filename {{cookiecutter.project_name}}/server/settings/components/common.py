@@ -48,8 +48,6 @@ THIRD_PARTY_APPS: list[str] = [
     # "health_check.storage",
     # django-widget-tweaks
     "widget_tweaks",
-    # Django Compressor
-    "compressor",
     # Django feather (Feather icons)
     "django_feather",
     # Django HTMX
@@ -58,8 +56,6 @@ THIRD_PARTY_APPS: list[str] = [
     "sekizai",
     # django-phonenumber-field
     "phonenumber_field",
-    # Django Components
-    "django_components",
     # https://github.com/theatlantic/django-nested-admin
     "nested_admin",
     # https://github.com/liminspace/django-mjml

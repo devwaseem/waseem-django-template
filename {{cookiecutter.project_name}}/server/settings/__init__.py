@@ -22,7 +22,6 @@ base_settings = [
     "components/caches.py",
     "components/emails.py",  # smtp
     "components/logging.py",
-    "components/compressor.py",  # django-compressor
     "components/csp.py",
     "components/tailwind.py",
     # You can even use glob:

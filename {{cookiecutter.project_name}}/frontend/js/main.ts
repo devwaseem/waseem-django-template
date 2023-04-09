@@ -14,8 +14,6 @@ import "htmx.org/dist/ext/alpine-morph.js";
 import "htmx.org/dist/ext/morphdom-swap";
 import "htmx.org/dist/ext/loading-states.js";
 
-import "./components/index.ts"
-
 if (import.meta.env.MODE != "production") {
     //@ts-ignore
     await import("htmx.org/dist/ext/debug.js");

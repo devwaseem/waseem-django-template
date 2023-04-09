@@ -1,4 +1,3 @@
-{% raw %}
 import uuid
 
 from django import template
@@ -11,7 +10,6 @@ def uuid4(value):
     """
     generate random filter.
 
-    Use `{{ "uuid4"|uuid4 }}`
+    Use `{% raw %}{{ "uuid4"|uuid4 }}{% endraw %}`
     """
     return value.replace("uuid4", str(uuid.uuid4()))
-{% endraw %}
