@@ -186,11 +186,17 @@ DATE_INPUT_FORMATS = ("%d-%m-%Y", "%Y-%m-%d")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+FRONTEND_STATIC_SOURCE_DIR = BASE_DIR / "frontend"
+
+DJANGO_VITE_ASSETS_PATH = FRONTEND_STATIC_SOURCE_DIR / "static"
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_ROOT = "static"
 
 STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -252,4 +258,4 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/
 CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_RESULT_BACKEND", "redis://localhost:6379/0"
 )
-CELERY_IMPORTS = ("src.infrastructure.apps.main.tasks",)
+CELERY_IMPORTS = ("server.apps.main.tasks",)

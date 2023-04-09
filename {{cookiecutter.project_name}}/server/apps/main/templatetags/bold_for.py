@@ -1,7 +1,7 @@
 from django import template
 from django.utils.html import escape
 
-from src.infrastructure.apps.main.helpers.string import mark_as_strong_for
+from server.apps.main.helpers.string import mark_as_strong_for
 
 register = template.Library()
 
