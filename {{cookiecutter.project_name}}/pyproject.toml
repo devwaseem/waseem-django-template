@@ -9,7 +9,7 @@ readme = "README.md"
 python = "3.11.1"
 aiohttp = {extras = ["speedups"], version = "^3.8.3"}
 argon2-cffi = "^21.3.0"
-django = "^4.2"
+django = "^4.1.8"
 django-admin-interface = "^0.22.1"
 django-anymail = {extras = ["amazon-ses"], version = "^8.6"}
 django-browser-reload = "^1.7.0"

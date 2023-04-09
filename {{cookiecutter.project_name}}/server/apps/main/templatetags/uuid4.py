@@ -1,3 +1,4 @@
+{% raw %}
 import uuid
 
 from django import template
@@ -13,3 +14,4 @@ def uuid4(value):
     Use `{{ "uuid4"|uuid4 }}`
     """
     return value.replace("uuid4", str(uuid.uuid4()))
+{% endraw %}

@@ -8,7 +8,7 @@ We are using `django-csp` to provide these headers.
 Docs: https://github.com/mozilla/django-csp
 """
 CSP_INCLUDE_NONCE_IN = ("script-src",)
-CSP_EXCLUDE_URL_PREFIXES = ("/admin", )
+CSP_EXCLUDE_URL_PREFIXES = ("/admin",)
 CSP_SCRIPT_SRC = (
     "'self'",
     "'unsafe-eval'",

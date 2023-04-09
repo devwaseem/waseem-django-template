@@ -1,3 +1,4 @@
+{% raw %}
 from django import template
 from django.utils.html import escape
 
@@ -14,3 +15,4 @@ def bold_for(value, arg):
     Use `{{ "text_part_example"|bold_for:"example" }}`
     """
     return mark_as_strong_for(escape(value), escape(arg))
+{% endraw %}

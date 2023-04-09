@@ -38,9 +38,6 @@
     <body class="overflow-y-scroll h-screen leading-normal tracking-normal bg-gray-50 flex flex-col"
           hx-ext="loading-states,debug">
 {% endraw %}
-        {% if request.user.is_staff %}
-            {% wagtailuserbar 'bottom-left' %}
-        {% endif %}
 {% raw %}
         {% block navbar %}{% endblock %}
         {% block content %}{% endblock %}

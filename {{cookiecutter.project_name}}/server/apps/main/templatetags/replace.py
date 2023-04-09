@@ -1,3 +1,4 @@
+{% raw %}
 from django import template
 
 register = template.Library()
@@ -15,3 +16,5 @@ def replace(value, arg):
 
     what, to = arg.split("|")
     return value.replace(what, to)
+
+{% endraw %}

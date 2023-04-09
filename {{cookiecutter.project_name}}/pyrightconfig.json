@@ -2,4 +2,3 @@
     "venvPath": "venv",
     "venv": "{{ cookiecutter.project_name }} venv"
   }
-  

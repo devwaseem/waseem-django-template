@@ -5,14 +5,24 @@ import socket
 import structlog
 
 from server.settings.components.common import INSTALLED_APPS, MIDDLEWARE
-from server.settings.components.csp import CSP_SCRIPT_SRC
+from server.settings.components.csp import (
+    CSP_CONNECT_SRC,
+    CSP_DEFAULT_SRC,
+    CSP_SCRIPT_SRC,
+    CSP_STYLE_SRC,
+)
 from server.settings.components.logging import LOGGING
+
 
 def get_host_ip_address() -> str:
     ip_address_list = socket.gethostbyname_ex(socket.gethostname())[2]
-    if len(ip_address_list) > 1:
-        return ip_address_list[1]
-    return ip_address_list[0]
+    try:
+        if len(ip_address_list) > 1:
+            return ip_address_list[1]
+        return ip_address_list[0]
+    except socket.gaierror:
+        return "0.0.0.0"
+
 
 DEBUG = True
 
@@ -50,7 +60,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("POSTGRES_DB", "{{cookiecutter.project_name}}"),
         "USER": os.environ.get("POSTGRES_USER", "{{cookiecutter.project_name}}"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "{{cookiecutter.project_name}}"),
+        "PASSWORD": os.environ.get(
+            "POSTGRES_PASSWORD", "{{cookiecutter.project_name}}"
+        ),
         "HOST": os.environ.get("DJANGO_DATABASE_HOST", "localhost"),
         "PORT": os.environ.get("DJANGO_DATABASE_PORT", 5432),
         "CONN_MAX_AGE": os.environ.get("CONN_MAX_AGE", 1),
@@ -102,7 +114,9 @@ CSP_CONNECT_SRC += (  # type: ignore[assignment]
 # https://github.com/jmcarp/nplusone
 
 # Should be the first in line:
-MIDDLEWARE = ("nplusone.ext.django.NPlusOneMiddleware",) + MIDDLEWARE  # noqa  # noqa: WPS440
+MIDDLEWARE = (
+    "nplusone.ext.django.NPlusOneMiddleware",
+) + MIDDLEWARE  # noqa  # noqa: WPS440
 
 # Logging N+1 requests:
 # NPLUSONE_RAISE = True  # comment out if you want to allow N+1 requests
@@ -113,7 +127,6 @@ NPLUSONE_WHITELIST = [{"model": "admin.LogEntry", "field": "user"}]
 
 # Browser Reload Middleware
 MIDDLEWARE += ("django_browser_reload.middleware.BrowserReloadMiddleware",)
-
 
 
 LOGGING["loggers"]["server.apps.main"] = {  # type: ignore[index]
