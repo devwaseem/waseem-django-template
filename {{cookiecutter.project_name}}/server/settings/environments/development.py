@@ -15,12 +15,12 @@ from server.settings.components.logging import LOGGING
 
 
 def get_host_ip_address() -> str:
-    ip_address_list = socket.gethostbyname_ex(socket.gethostname())[2]
     try:
+        ip_address_list = socket.gethostbyname_ex(socket.gethostname())[2]
         if len(ip_address_list) > 1:
             return ip_address_list[1]
         return ip_address_list[0]
-    except socket.gaierror:
+    except Exception:
         return "0.0.0.0"
 
 

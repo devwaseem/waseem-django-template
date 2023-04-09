@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 import { $byId } from "./utils";
 
 import "htmx.org";
-import "htmx.org/dist/ext/debug.js";
 import "htmx.org/dist/ext/alpine-morph.js";
 import "htmx.org/dist/ext/morphdom-swap";
 import "htmx.org/dist/ext/loading-states.js";
