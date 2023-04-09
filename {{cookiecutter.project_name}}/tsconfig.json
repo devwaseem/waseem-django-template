@@ -21,7 +21,7 @@
     "types": [
       "vite/client"
     ],
-    "baseUrl": "src",
+    "baseUrl": "server",
     "paths": {
       "@frontend/*": [
         "frontend/*"
