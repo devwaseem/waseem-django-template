@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 
 from django.contrib.messages import constants as messages
+from django.utils.translation import gettext_lazy as _
 
 from server.settings import BASE_DIR
 
