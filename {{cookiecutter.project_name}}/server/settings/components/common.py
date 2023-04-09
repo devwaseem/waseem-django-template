@@ -97,7 +97,7 @@ MIDDLEWARE: tuple[str, ...] = (
     "django_htmx.middleware.HtmxMiddleware",
 )
 
-ROOT_URLCONF = "config.urls"
+ROOT_URLCONF = "server.urls"
 
 # Templates
 # https://docs.djangoproject.com/en/3.2/ref/templates/api
