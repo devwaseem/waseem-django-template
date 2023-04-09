@@ -25,10 +25,8 @@ services:
     container_name: {{cookiecutter.project_name}}_local_postgres
     volumes:
       - {{cookiecutter.project_name}}_local_postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB={{cookiecutter.project_name}}
-      - POSTGRES_USER={{cookiecutter.project_name}}
-      - POSTGRES_PASSWORD={{cookiecutter.project_name}}
+    env_file:
+      - env/.development.env
     ports:
       - "5432:5432"
     expose:

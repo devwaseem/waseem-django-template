@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+exec /usr/local/bin/gunicorn server.wsgi --config /app/compose/production/{{ cookiecutter.project_name }}/gunicorn_config.py

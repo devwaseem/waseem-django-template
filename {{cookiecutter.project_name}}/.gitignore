@@ -58,7 +58,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 .venv/
-env/
 develop-eggs/
 dist/
 downloads/
@@ -251,3 +250,6 @@ artifacts/
 
 # Cookie cutter
 .cookiecutter_replay
+
+# NVIM
+.null-ls_*

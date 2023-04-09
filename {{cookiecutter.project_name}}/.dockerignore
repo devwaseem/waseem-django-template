@@ -8,7 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -25,6 +24,8 @@ var/
 .installed.cfg
 *.egg
 .venv/
+node_modules/
+env/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -45,6 +46,8 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+.hypothesis/
+.testmondata
 
 # Translations
 *.mo
@@ -70,4 +73,7 @@ docker/docker-compose.prod.yml
 
 
 # pytest
-.pytest_cache
+.pytest_cache/
+
+# mypy
+.mypy_cache/

@@ -1,104 +1,56 @@
-{% raw %}{% load static  tailwind_tags compress sekizai_tags %}
+{% raw %}
+{% load static django_vite %}
+{% endraw %}
+{% raw %}
 <!doctype html>
 <html class="overflow-hidden no-js" lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    {% block seo %}
-    {% endraw %}<title>{% block title %}{{cookiecutter.project_verbose_name}}{% endblock %}</title>{% raw %}
-    <meta name="description" content="">
-    {% endblock %}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" >
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'main/images/favicon/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'main/images/favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'main/images/favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'main/images/favicon/site.webmanifest' %}">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    {% block head %}
-    {% endblock %}
-
-    {% tailwind_preload_css %}
-    {% tailwind_css %}
-
-    <!-- Page Level CSS Deps: Start -->
-    {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
-    <!-- Page Level CSS Deps: End -->
-
-    {% compress css %}
-      <!--  IZITOAST 1.4.0: https://izitoast.marcelodolza.com/  -->
-      <link rel="stylesheet" href="{% static 'main/css/iziToast.min.css' %}">
-      <link rel="stylesheet" href="{% static 'main/css/index.css' %}">
-    {% endcompress %}
-
-    {% compress js %}
-    <script defer src="{% static 'main/js/app.js' %}" data-csrf-token="{{ csrf_token }}"></script>
-    {% endcompress %}
-
-    <script defer src="https://unpkg.com/htmx.org@1.8.4/dist/htmx{% if not debug %}.min{% endif %}.js"></script>
-    <script defer src="https://unpkg.com/htmx.org@1.8.4/dist/ext/alpine-morph.js"></script>
-    {% if debug %}<script defer src="https://unpkg.com/htmx.org@1.8.4/dist/ext/debug.js"></script>{% endif %}
-    <!-- Contains Bug: https://github.com/bigskysoftware/htmx/issues/1114 -->
-    <!-- <script defer src="https://unpkg.com/htmx.org@1.8.4/dist/ext/loading-states.js"></script>-->
-    <!-- Alpine Plugins -->
-    <script defer src="https://unpkg.com/@alpinejs/morph@3.10.4/dist/cdn{% if not debug %}.min{% endif %}.js"></script>
-    <script defer src="https://unpkg.com/@alpinejs/focus@3.10.4/dist/cdn{% if not debug %}.min{% endif %}.js"></script>
-    <script defer src="https://unpkg.com/@alpinejs/mask@3.10.4/dist/cdn{% if not debug %}.min{% endif %}.js"></script>
-    <script defer src="https://unpkg.com/@alpinejs/collapse@3.10.4/dist/cdn{% if not debug %}.min{% endif %}.js"></script>
-    <!-- Alpine Core -->
-    <script defer src="https://unpkg.com/alpinejs@3.10.4/dist/cdn{% if not debug %}.min{% endif %}.js"></script>
-
-    <!-- Page Level JS Deps: Start -->
-    {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
-    <!-- Page Level JS Deps: End -->
-
-    {% compress js %}
-      <!--  IZITOAST 1.4.0: https://izitoast.marcelodolza.com/  -->
-      <script defer src="{% static 'main/js/iziToast.min.js' %}" type="text/javascript"></script>
-      <!-- Patched File  -->
-      <script defer src="{% static 'main/js/htmx-loading-states.js' %}"></script>
-    {% endcompress %}
-
-    <!--  Common JS  -->
-    {% compress js %}
-
-    {% endcompress %}
-  </head>
-
-  <body class="flex flex-col h-screen overflow-y-scroll leading-normal tracking-normal bg-gray-50" hx-ext="loading-states" >
-    {% block navbar %}
-    {% endblock %}
-    {% include "main/atoms/loaders/htmx_indeterminate_loader.html" %}
-    {% block content %}
-      body not overridden
-    {% endblock %}
-    
-    <div>
-      <div id="modal_container"></div>
-    </div>
-
-    {% block messages %}
-      {% if messages %}
-      <div x-data x-init="
-        window.addEventListener('DOMContentLoaded', () => {
-          {% for message in messages %}
-            setTimeout(() => {
-              showToast('{{message}}', '{{message.tags}}')
-            }, {{ forloop.counter0 }} * 300)
-          {% endfor %}
-        })
-      "></div>
-      {% endif %}
-    {% endblock %}
-    <script defer nonce="{{request.csp_nonce}}">
-    document.addEventListener('htmx:configRequest', (event) => {
-      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}'
-    })
-    </script>
-	</body>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+        {% block seo %}
+        {% endraw %}
+            <title>{{ cookiecutter.project_name }}</title>
+{% raw %}
+            <meta name="description" content=""/>
+        {% endblock %}
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+        {% comment %}
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'main/images/favicon/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'main/images/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'main/images/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'main/images/favicon/site.webmanifest' %}">
+        {% endcomment %}
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&display=swap"/>
+        {% comment %}
+        {% vite_hmr_client %}
+        {% endcomment %}
+        {% vite_asset 'css/styles.js' %}
+        {% block extrahead %}{% endblock %}
+        <meta name="htmx-config"
+              content='{"inlineScriptNonce":"{{ request.csp_nonce }}"}'/>
+        {% vite_asset 'js/main.ts' %}
+    </head>
+    <body class="overflow-y-scroll h-screen leading-normal tracking-normal bg-gray-50 flex flex-col"
+          hx-ext="loading-states,debug">
+{% endraw %}
+        {% if request.user.is_staff %}
+            {% wagtailuserbar 'bottom-left' %}
+        {% endif %}
+{% raw %}
+        {% block navbar %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block footer %}
+            {% include "main/organisms/footer/footer.html" %}
+        {% endblock %}
+        <div x-data="ModalContainer">
+            <div id="modal_container"></div>
+        </div>
+        <div>{% include "main/organisms/toast/toast.html" %}</div>
+    </body>
 </html>
 {% endraw %}
