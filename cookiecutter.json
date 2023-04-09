@@ -2,8 +2,5 @@
   "project_name": "test-project",
   "project_verbose_name": "Test Project",
   "project_domain": "myapp.com",
-  "organization": "waaklabs.com",
-  "_extensions": [
-    "jinja2_git.GitExtension"
-  ]
+  "organization": "waaklabs.com"
 }
