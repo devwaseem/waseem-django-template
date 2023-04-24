@@ -20,8 +20,8 @@ def get_host_ip_address() -> str:
         if len(ip_address_list) > 1:
             return ip_address_list[1]
         return ip_address_list[0]
-    except Exception:
-        return "0.0.0.0"
+    except (socket.herror, socket.gaierror):
+        return "localhost"
 
 
 DEBUG = True
@@ -88,6 +88,9 @@ CACHES = {
 
 MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
 
+# Django Browser Reload
+MIDDLEWARE += ("django_browser_reload.middleware.BrowserReloadMiddleware",)
+
 # Django Vite
 DJANGO_VITE_DEV_MODE = True
 DJANGO_VITE_DEV_SERVER_HOST = get_host_ip_address()
@@ -125,10 +128,6 @@ NPLUSONE_LOG_LEVEL = logging.WARN  # type:ignore
 NPLUSONE_WHITELIST = [{"model": "admin.LogEntry", "field": "user"}]
 
 
-# Browser Reload Middleware
-MIDDLEWARE += ("django_browser_reload.middleware.BrowserReloadMiddleware",)
-
-
 LOGGING["loggers"]["server.apps.main"] = {  # type: ignore[index]
     "handlers": ["plain_console"],
     "propagate": False,
@@ -156,10 +155,3 @@ DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 # INSTALLED_APPS += ["silk"]
 # MIDDLEWARE += ("silk.middleware.SilkyMiddleware",)
 
-
-# Email
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "localhost"
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
-EMAIL_PORT = 1025

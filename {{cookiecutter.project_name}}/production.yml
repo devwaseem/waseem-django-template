@@ -11,8 +11,8 @@ services:
       - caddy-data:/data  # saving certificates
       - {{ cookiecutter.project_name }}-static:/var/www/static:ro # serving django's statics
       - /var/log:/var/log:rw
-    environment:
-      - DOMAIN_NAME=
+    env_file:
+      - env/.production.env
     ports:
       - "80:80"
       - "443:443"
@@ -21,7 +21,7 @@ services:
     networks:
       - proxynet
 
-  {{ cookiecutter.project_name }}:
+  {{ cookiecutter.project_name }}:&{{ cookiecutter.project_name }}
     restart: unless-stopped
     build:
       context: .
@@ -43,6 +43,23 @@ services:
     networks:
       - webnet
       - proxynet
+
+  celery_worker:
+    <<: *{{ cookiecutter.project_name }}
+    container_name: "celery_worker"
+    command: /start-celery-worker
+
+
+  celery_beat:
+    <<: *{{ cookiecutter.project_name }}
+    container_name: "celery_beat"
+    command: /start-celery-beat
+
+
+  celery_flower:
+    <<: *{{ cookiecutter.project_name }}
+    container_name: "celery_flower"
+    command: /start-celery-flower
 
   redis:
     restart: unless-stopped

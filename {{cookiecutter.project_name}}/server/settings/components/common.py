@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 
 from django.contrib.messages import constants as messages
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from server.settings import BASE_DIR
@@ -52,8 +53,6 @@ THIRD_PARTY_APPS: list[str] = [
     "django_feather",
     # Django HTMX
     "django_htmx",
-    # Django-sekizai
-    "sekizai",
     # django-phonenumber-field
     "phonenumber_field",
     # https://github.com/theatlantic/django-nested-admin
@@ -62,10 +61,18 @@ THIRD_PARTY_APPS: list[str] = [
     "mjml",
     # https://github.com/SmileyChris/easy-thumbnails
     "easy_thumbnails",
+    "django_vite",
+    "djcelery_email",
 ]
 
 PROJECT_APPS: list[str] = [
     "server.apps.main",
+]
+
+ALL_AUTH_APPS: list[str] = [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
 INSTALLED_APPS = [
@@ -73,10 +80,13 @@ INSTALLED_APPS = [
     *DEFAULT_DJANGO_APPS,
     *THIRD_PARTY_APPS,
     *PROJECT_APPS,
+    *ALL_AUTH_APPS,
 ]
 
 MIDDLEWARE: tuple[str, ...] = (
     # Logging:
+    # "server.middleware.disable_client_side_caching_middleware", # Uncomment this line to disable client side caching
+    # "django.middleware.cache.UpdateCacheMiddleware",  # This must be first on the list
     # "server.settings.components.logging.LoggingContextVarsMiddleware",
     "django_structlog.middlewares.RequestMiddleware",
     # Content Security Policy:
@@ -95,6 +105,7 @@ MIDDLEWARE: tuple[str, ...] = (
     "django_http_referrer_policy.middleware.ReferrerPolicyMiddleware",
     # Django HTMX
     "django_htmx.middleware.HtmxMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",  # This must be last
 )
 
 ROOT_URLCONF = "server.urls"
@@ -148,6 +159,18 @@ AUTH_USER_MODEL = "main.User"
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+
+LOGIN_URL = reverse_lazy("account_login")
+LOGIN_REDIRECT_URL = "/"
+
+# Session
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -234,8 +257,6 @@ PERMISSIONS_POLICY: dict[str, str | list[str]] = {}  # noqa: WPS234
 # https://django-phonenumber-field.readthedocs.io/en/latest/reference.html#phonenumber-default-region
 PHONENUMBER_DEFAULT_REGION = "US"  # Defaults to India
 
-# Login URL
-LOGIN_URL = "main:login"
 
 # Messages
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"

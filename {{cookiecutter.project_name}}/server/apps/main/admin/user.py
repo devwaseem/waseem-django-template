@@ -10,8 +10,8 @@ class UserAdmin(BaseUserAdmin):
     ordering = ["email"]
     list_display = ("email", "first_name", "last_name", "is_staff")
     search_fields = ("first_name", "last_name", "email")
-    fieldsets: tuple = (
-        (None, {"fields": ("email", "password", "signup_step")}),
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
         (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (
             _("Permissions"),

@@ -69,6 +69,21 @@ COPY --chown=web:web ./compose/production/{{ cookiecutter.project_name }}/start 
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+
+COPY --chown=web:web ./compose/production/app/celery/worker/start /start-celery-worker
+RUN sed -i 's/\r$//g' /start-celery-worker
+RUN chmod +x /start-celery-worker
+
+
+COPY --chown=web:web ./compose/production/app/celery/beat/start /start-celery-beat
+RUN sed -i 's/\r$//g' /start-celery-beat
+RUN chmod +x /start-celery-beat
+
+
+COPY --chown=web:web ./compose/production/app/celery/flower/start /start-celery-flower
+RUN sed -i 's/\r$//g' /start-celery-flower
+RUN chmod +x /start-celery-flower
+
 RUN chown -R web:web ${APP_HOME}
 
 USER web
