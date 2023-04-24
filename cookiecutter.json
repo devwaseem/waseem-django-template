@@ -5,9 +5,5 @@
   "organization": "waaklabs.com",
   "_copy_without_render": [
     "./**/*.txt",
-    "./{{cookiecutter.project_name}}/server/apps/main/templates/account/*.html",
-    "./{{cookiecutter.project_name}}/server/apps/main/templates/account/**/*.html",
-    "./{{cookiecutter.project_name}}/server/apps/main/templates/socialaccount/*.html",
-    "./{{cookiecutter.project_name}}/server/apps/main/templates/socialaccount/**/*.html"
   ]
 }
