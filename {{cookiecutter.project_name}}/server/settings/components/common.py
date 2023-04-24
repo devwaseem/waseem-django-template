@@ -132,8 +132,6 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
-                # django-sekizai
-                "sekizai.context_processors.sekizai",
                 # Django CSP
                 "csp.context_processors.nonce",
                 # Custom
