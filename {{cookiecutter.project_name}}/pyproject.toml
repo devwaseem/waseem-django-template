@@ -6,7 +6,7 @@ authors = ["Waseem akram <waseem07799@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.11.1"
+python = "3.11.2"
 aiohttp = {extras = ["speedups"], version = "^3.8.3"}
 argon2-cffi = "^21.3.0"
 django = "^4.1.8"
