@@ -4,6 +4,6 @@
   "project_domain": "myapp.com",
   "organization": "waaklabs.com",
   "_copy_without_render": [
-    "./**/*.txt",
+    "./**/*.txt"
   ]
 }
