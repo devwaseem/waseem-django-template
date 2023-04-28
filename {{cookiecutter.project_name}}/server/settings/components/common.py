@@ -14,7 +14,7 @@ from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from server.settings import BASE_DIR
+from server.settings import BASE_DIR, env
 
 DEBUG = False
 
@@ -39,7 +39,6 @@ DEFAULT_DJANGO_APPS: list[str] = [
 ]
 
 THIRD_PARTY_APPS: list[str] = [
-    "django_vite",
     # Health checks:
     # You may want to enable other checks as well,
     # see: https://github.com/KristianOellegaard/django-health-check
@@ -54,14 +53,16 @@ THIRD_PARTY_APPS: list[str] = [
     # Django HTMX
     "django_htmx",
     # django-phonenumber-field
-    "phonenumber_field",
+    # "phonenumber_field", Uncomment to enable
     # https://github.com/theatlantic/django-nested-admin
     "nested_admin",
     # https://github.com/liminspace/django-mjml
     "mjml",
     # https://github.com/SmileyChris/easy-thumbnails
     "easy_thumbnails",
+    # https://github.com/MrBin99/django-vite
     "django_vite",
+    # https://github.com/pmclanahan/django-celery-email
     "djcelery_email",
 ]
 
@@ -120,7 +121,7 @@ TEMPLATES = [
         "DIRS": [
             # Contains plain text templates, like `robots.txt`:
             BASE_DIR
-            / "config"
+            / "server"
             / "templates",
         ],
         "OPTIONS": {
@@ -269,12 +270,5 @@ MESSAGE_TAGS = {
 # MJML: https://github.com/liminspace/django-mjml#tcpserver-mode
 MJML_BACKEND_MODE = "tcpserver"
 MJML_TCPSERVERS = [
-    (os.environ.get("MJML_HOST", default="localhost"), 28101),
+    (env("MJML_HOST"), env("MJML_PORT", int, 28101)),
 ]
-
-# Celery
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get(
-    "CELERY_RESULT_BACKEND", "redis://localhost:6379/0"
-)
-CELERY_IMPORTS = ("server.apps.main.tasks",)

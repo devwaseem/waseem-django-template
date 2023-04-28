@@ -1,16 +1,16 @@
-import os
+from server.settings import env
 
 # Caching
 # https://docs.djangoproject.com/en/3.2/topics/cache/
 
 
-REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+DJANGO_CACHE_REDIS_URL = env("DJANGO_CACHE_REDIS_URL")
 
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:6379/0",
+        "LOCATION": f"{DJANGO_CACHE_REDIS_URL}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",

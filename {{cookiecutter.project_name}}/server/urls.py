@@ -26,6 +26,7 @@ from server.apps.main import urls as main_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("allauth.urls")), #django allauth urls
     path("", include(main_urls)),
     # Text and xml static files:
     path(

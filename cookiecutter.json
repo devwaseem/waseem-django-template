@@ -2,7 +2,6 @@
   "project_name": "test-project",
   "project_verbose_name": "Test Project",
   "project_domain": "myapp.com",
-  "organization": "waaklabs.com",
   "_copy_without_render": [
     "./**/*.txt"
   ]

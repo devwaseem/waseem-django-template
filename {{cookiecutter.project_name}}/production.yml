@@ -12,7 +12,7 @@ services:
       - {{ cookiecutter.project_name }}-static:/var/www/static:ro # serving django's statics
       - /var/log:/var/log:rw
     env_file:
-      - env/.production.env
+      - env/.env
     ports:
       - "80:80"
       - "443:443"
@@ -37,7 +37,7 @@ services:
       - redis
       - mjml
     env_file:
-      - env/.production.env
+      - env/.env
     expose:
       - "3000"
     networks:
@@ -79,7 +79,7 @@ services:
     volumes:
       - {{ cookiecutter.project_name }}-postgres-data:/var/lib/postgresql/data
     env_file:
-      - env/.production.env
+      - env/.env
     expose:
       - "5432"
     networks:

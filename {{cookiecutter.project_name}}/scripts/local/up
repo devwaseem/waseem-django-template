@@ -4,7 +4,6 @@ set -o pipefail
 docker-compose -f development.yml up -d
 if [ $? -eq 0 ];
   then
-    poetry run python manage.py migrate
-    poetry run python manage.py tailwind start &
-    poetry run python manage.py runserver 0.0.0.0:8000
+    env poetry run python manage.py migrate
+    env poetry run python manage.py runserver 0.0.0.0:8000
 fi

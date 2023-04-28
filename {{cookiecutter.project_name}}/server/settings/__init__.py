@@ -7,23 +7,31 @@ To change settings file:
 `DJANGO_ENV=production python manage.py runserver`
 """
 
-from os import environ
+import os
+import environ
 from pathlib import Path
 
 from split_settings.tools import include
 
 # from split_settings.tools import optional
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV = environ.get("DJANGO_ENV") or "development"
+environ.Env.read_env(os.path.join(BASE_DIR, "env", ".env"))
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+ENV = env("DJANGO_ENV") or "development"
+
 
 base_settings = [
-    "components/common.py",  # standard django settings
-    "components/database.py",  # postgres
+    "components/common.py",
+    "components/allauth.py",
+    "components/database.py",
     "components/caches.py",
-    "components/emails.py",  # smtp
+    "components/emails.py",
     "components/logging.py",
     "components/csp.py",
-    "components/tailwind.py",
     # You can even use glob:
     # 'components/*.py'
     # Select the right env:

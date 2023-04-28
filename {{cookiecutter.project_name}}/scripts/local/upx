@@ -36,7 +36,7 @@ fi
 pane=0
 
 sleep 1
-tmux send-keys -t $session:$window.$pane 'PYTHONBREAKPOINT="ipdb.set_trace" poetry run python manage.py runserver 0.0.0.0:8000' C-m
+tmux send-keys -t $session:$window.$pane 'poetry run python manage.py runserver 0.0.0.0:8000' C-m
 ((pane = pane + 1))
 
 sleep 1
@@ -54,7 +54,7 @@ tmux send-keys -t $session:$window.$pane 'poetry run python -m celery --app serv
 ((pane = pane + 1))
 
 # tmux -2 -CC attach -t $session
-tmux -2 attach -t $session
+TMUX='' tmux -2 attach -t $session
 
 # After exiting the tmux session
 
