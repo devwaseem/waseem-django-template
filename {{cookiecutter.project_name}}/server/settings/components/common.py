@@ -8,13 +8,14 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os
+
+from env import Env
 
 from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from server.settings import BASE_DIR, env
+from server.settings import BASE_DIR
 
 DEBUG = False
 
@@ -84,7 +85,7 @@ INSTALLED_APPS = [
     *ALL_AUTH_APPS,
 ]
 
-MIDDLEWARE: tuple[str, ...] = (
+MIDDLEWARE: list[str] = [
     # Logging:
     # "server.middleware.disable_client_side_caching_middleware", # Uncomment this line to disable client side caching
     # "django.middleware.cache.UpdateCacheMiddleware",  # This must be first on the list
@@ -107,7 +108,7 @@ MIDDLEWARE: tuple[str, ...] = (
     # Django HTMX
     "django_htmx.middleware.HtmxMiddleware",
     # "django.middleware.cache.FetchFromCacheMiddleware",  # This must be last
-)
+]
 
 ROOT_URLCONF = "server.urls"
 
@@ -270,5 +271,5 @@ MESSAGE_TAGS = {
 # MJML: https://github.com/liminspace/django-mjml#tcpserver-mode
 MJML_BACKEND_MODE = "tcpserver"
 MJML_TCPSERVERS = [
-    (env("MJML_HOST"), env("MJML_PORT", int, 28101)),
+    (Env("MJML_HOST"), Env("MJML_PORT", int, 28101)),
 ]

@@ -26,11 +26,18 @@ export default defineConfig({
                 manifest: true, // adds a manifest.json
                 emptyOutDir: true,
                 rollupOptions: {
+                         output: {
+                                entryFileNames: "[name].[hash].js",
+                                chunkFileNames: "[name].[hash].js",
+                                assetFileNames: "assets/[name].[hash][extname]",
+                        },
                         input: {
                                 /* The bundle's entry point(s).  If you provide an array of entry points or an object mapping names to entry points, they will be bundled to separate output chunks. */
                                 styles: resolve(__dirname, STATIC_SOURCE_DIR + "css/styles.js"),
                                 // JS
                                 main: resolve(__dirname, STATIC_SOURCE_DIR + "js/main.ts"),
+                                // Bunlde by Pages
+                                error_page: resolve(DIRNAME, STATIC_SOURCE_DIR + "js/error_page.ts"),
                         },
                 },
         },

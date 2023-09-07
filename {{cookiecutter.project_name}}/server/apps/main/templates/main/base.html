@@ -30,7 +30,10 @@
         {% vite_hmr_client %}
         {% endcomment %}
         {% vite_asset 'css/styles.js' %}
-        {% block extrahead %}{% endblock %}
+       {% block extrahead %}{% endblock %}
+         <script src="https://unpkg.com/htmx.org@1.9.5"
+                integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
+                crossorigin="anonymous"></script>
         <meta name="htmx-config"
               content='{"inlineScriptNonce":"{{ request.csp_nonce }}"}'/>
         {% vite_asset 'js/main.ts' %}

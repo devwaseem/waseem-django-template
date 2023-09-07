@@ -9,3 +9,7 @@ export function $query(select: string): HTMLElement | null {
 export function $queryAll(select: string) {
     return document.querySelectorAll(select);
 }
+
+export function openLinkInNewWindow(link: string) {
+  window.open(link, '_blank')
+}

@@ -9,62 +9,78 @@ services:
       - ./compose/production/caddy/Caddyfile:/etc/caddy/Caddyfile  # configuration
       - caddy-config:/config  # configuration autosaves
       - caddy-data:/data  # saving certificates
-      - {{ cookiecutter.project_name }}-static:/var/www/static:ro # serving django's statics
-      - /var/log:/var/log:rw
+      - /data/static:/var/www/static:ro # serving django's statics
+      - /data/log:/var/log:rw
     env_file:
-      - env/.env
+      - .env
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80/tcp"
+      - "80:80/udp"
+      - "443:443/tcp"
+      - "443:443/udp"
     depends_on:
-      - {{ cookiecutter.project_name }}
+      - web
     networks:
       - proxynet
 
-  {{ cookiecutter.project_name }}:&{{ cookiecutter.project_name }}
+  web: &web
     restart: unless-stopped
     build:
       context: .
-      dockerfile: compose/production/{{ cookiecutter.project_name }}/Dockerfile
-    image: production_{{ cookiecutter.project_name }}_server
-    container_name: {{ cookiecutter.project_name }}_production_server
+      dockerfile: compose/production/app/Dockerfile
+    image: production_web_server
+    container_name: web_production_server
     command: /start
     volumes:
-      - {{ cookiecutter.project_name }}-static:/var/www/static:rw
-      - /var/log:/var/log:rw
+      - /data/static:/var/www/static:rw
+      - /data/log:/var/log:rw
+      - /data:/data:rw
     depends_on:
       - postgres
       - redis
       - mjml
     env_file:
-      - env/.env
+      - .env
     expose:
       - "3000"
     networks:
       - webnet
       - proxynet
 
-  celery_worker:
-    <<: *{{ cookiecutter.project_name }}
-    container_name: "celery_worker"
-    command: /start-celery-worker
-
+  celery_workers:
+    <<: *web
+    container_name: "celery_workers"
+    command: /start-celery-workers
+    environment:
+      - CELERY_QUEUES=celery,emails
+      - CELERY_CONCURRENCY=1
 
   celery_beat:
-    <<: *{{ cookiecutter.project_name }}
+    <<: *web
     container_name: "celery_beat"
     command: /start-celery-beat
 
 
   celery_flower:
-    <<: *{{ cookiecutter.project_name }}
-    container_name: "celery_flower"
-    command: /start-celery-flower
+    image: mher/flower:latest
+    depends_on:
+      - "redis"
+      - "web"
+      - "celery_workers"
+    env_file:
+      - .env
+    expose:
+      - "5555"
+    networks:
+      - webnet
+      - proxynet
 
   redis:
     restart: unless-stopped
     image: redis:6.2-alpine
     container_name: redis_production
+    volumes:
+      - redis-data:/data
     expose:
       - "6379"
     networks:
@@ -75,11 +91,13 @@ services:
     build:
       context: .
       dockerfile: compose/production/postgres/Dockerfile
-    container_name: {{ cookiecutter.project_name }}_production_postgres
+    container_name: web_production_postgres
     volumes:
-      - {{ cookiecutter.project_name }}-postgres-data:/var/lib/postgresql/data
+      - /data/postgresql/data:/var/lib/postgresql/data
+      - /data:/data:rw
+      - /data/db-backups:/backups
     env_file:
-      - env/.env
+      - .env
     expose:
       - "5432"
     networks:
@@ -99,12 +117,11 @@ services:
       - webnet
 
 volumes:
-  {{ cookiecutter.project_name }}-static:
-  {{ cookiecutter.project_name }}-postgres-data:
-  {{ cookiecutter.project_name }}-logs:
   caddy-config:
   caddy-data:
+  redis-data:
 
 networks:
   webnet:
   proxynet:
+

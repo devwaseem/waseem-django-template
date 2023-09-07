@@ -1,10 +1,10 @@
-from server.settings import env
+from env import Env
 
 # Caching
 # https://docs.djangoproject.com/en/3.2/topics/cache/
 
 
-DJANGO_CACHE_REDIS_URL = env("DJANGO_CACHE_REDIS_URL")
+DJANGO_CACHE_REDIS_URL = Env("DJANGO_CACHE_REDIS_URL")
 
 
 CACHES = {

@@ -1,4 +1,4 @@
-from server.settings import env
+from env import Env
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -6,12 +6,12 @@ from server.settings import env
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB"),
-        "USER": env("POSTGRES_USER"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("DJANGO_DATABASE_HOST"),
-        "PORT": env("DJANGO_DATABASE_PORT", int,  5432),
-        "CONN_MAX_AGE": env("CONN_MAX_AGE", int, 60),
+        "NAME": Env("POSTGRES_DB"),
+        "USER": Env("POSTGRES_USER"),
+        "PASSWORD": Env("POSTGRES_PASSWORD"),
+        "HOST": Env("DJANGO_DATABASE_HOST"),
+        "PORT": Env("DJANGO_DATABASE_PORT", int, 5432),
+        "CONN_MAX_AGE": Env("CONN_MAX_AGE", int, 60),
         "OPTIONS": {
             "connect_timeout": 10,
             "options": "-c statement_timeout=15000ms",

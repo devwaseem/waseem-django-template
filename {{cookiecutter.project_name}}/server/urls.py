@@ -17,16 +17,17 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static  # noqa: WPS433
 from django.contrib import admin
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import include, path
 from django.views.generic import TemplateView
+from django_ratelimit.exceptions import Ratelimited
 
 from server.apps.main import urls as main_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("allauth.urls")), #django allauth urls
+    path("", include("allauth.urls")),  # django allauth urls
     path("", include(main_urls)),
     # Text and xml static files:
     path(
@@ -49,16 +50,24 @@ urlpatterns = [
 )
 
 
-def handler404(request: HttpRequest, exception: Exception) -> HttpResponse:
-    return render(request, "errors/404.html", {"exception": exception})
+def not_found(_):
+    return HttpResponseNotFound()
 
 
-def handler403(request: HttpRequest, exception: Exception) -> HttpResponse:
-    return render(request, "errors/403.html", {"exception": exception})
+def handler404(request: HttpRequest, *args, **kwargs) -> HttpResponse:  # noqa
+    return render(request, "errors/404.html", status=404)
 
 
-def handler500(request: HttpRequest) -> HttpResponse:
-    return render(request, "errors/500.html", {})
+def handler403(
+    request: HttpRequest, exception: Exception | None = None
+) -> HttpResponse:  # noqa
+    if isinstance(exception, Ratelimited):
+        return HttpResponse("Sorry you are blocked", status=429)
+    return render(request, "errors/403.html", status=403)
+
+
+def handler500(request: HttpRequest, *args, **kwargs) -> HttpResponse:  # noqa
+    return render(request, "errors/500.html", status=500)
 
 
 if settings.DEBUG:  # pragma: no cover

@@ -78,18 +78,7 @@ LOGGING = {
     # These loggers are required by our app:
     # - django is required when using `logger.getLogger('django')`
     # - security is required by `axes`
-    "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "propagate": True,
-            "level": "INFO",
-        },
-        "security": {
-            "handlers": ["console"],
-            "level": "ERROR",
-            "propagate": False,
-        },
-    },
+    "loggers": {},
 }
 
 

@@ -26,7 +26,6 @@ RUN groupadd -g "${GID}" -r web \
   && chown -R web:web '/var/www/static'
 
 
-
 RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
   build-essential \
@@ -34,21 +33,30 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Other tools \
   curl bash \
+  wget gnupg2 \
   gettext \
   wait-for-it \
-  brotli \
-  # Cleaning cache:
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  brotli
+
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+RUN wget -qO - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
+RUN apt update
+RUN apt-get remove -y wget gnupg2
+RUN apt-get -y install postgresql-client-15
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+  && apt-get install --no-install-recommends -y nodejs \
+  && npm install -g npm@9.1.2 \
+  && npm install -g yarn
+
+# Cleaning cache:
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+RUN pip install iredis
 
 RUN curl -sSL 'https://install.python-poetry.org' | POETRY_HOME='/usr/local' python - \
   && poetry --version
-
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install --no-install-recommends -y nodejs \
-    && npm install -g npm@9.1.2 \
-    && npm install -g yarn
-
 
 COPY --chown=web:web ./poetry.lock ./pyproject.toml ${APP_HOME}/
 
@@ -70,9 +78,9 @@ RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
 
-COPY --chown=web:web ./compose/production/app/celery/worker/start /start-celery-worker
-RUN sed -i 's/\r$//g' /start-celery-worker
-RUN chmod +x /start-celery-worker
+COPY --chown=web:web ./compose/production/app/celery/worker/start /start-celery-workers
+RUN sed -i 's/\r$//g' /start-celery-workers
+RUN chmod +x /start-celery-workers
 
 
 COPY --chown=web:web ./compose/production/app/celery/beat/start /start-celery-beat

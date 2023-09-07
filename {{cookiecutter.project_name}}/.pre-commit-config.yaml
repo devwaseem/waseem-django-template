@@ -12,29 +12,35 @@ repos:
       - id: debug-statements
         language_version: python3.11
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.272
     hooks:
-      - id: pyupgrade
-        args: [--py310-plus]
+      - id: ruff
+        args: [ --fix ]
+
 
   - repo: https://github.com/psf/black
     rev: 23.1.0
     hooks:
       - id: black
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.30.2
     hooks:
-      - id: isort
-        args: [--profile, black]
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        args: [--config=setup.cfg]
-
+      - id: djlint-reformat-django
+      - id: djlint-django
+  #
+  # - repo: https://github.com/PyCQA/isort
+  #   rev: 5.12.0
+  #   hooks:
+  #     - id: isort
+  #       args: [--profile, black]
+  # - repo: https://github.com/PyCQA/flake8
+  #   rev: 6.0.0
+  #   hooks:
+  #     - id: flake8
+  #       args: [--config=setup.cfg]
   # - repo: local
   #   hooks:
   #     - id: pylint

@@ -67,13 +67,28 @@ Dockerfile
 docker-compose.yml
 docker-compose.override.yml
 docker/docker-compose.prod.yml
+development.yml
+production.override.yml
 
 # JetBrains
 .idea/
 
+# Cookie cutter
+.cookiecutter_replay
+
+# NVIM
+.null-ls_*
 
 # pytest
 .pytest_cache/
 
 # mypy
 .mypy_cache/
+
+# Custom
+playground
+data/*
+
+.vim
+.trunk
+.ruff_cache

@@ -6,7 +6,7 @@ chmod +x ./scripts/local/restore
 chmod +x ./scripts/local/up
 chmod +x ./scripts/local/upx
 
-cp env/env_template.txt env/.env
+cp env_template.txt .env
 
 # Install python dependencies
 poetry install
@@ -15,7 +15,7 @@ poetry install
 yarn
 
 # Customize the env file before proceeding
-vi env/.env
+vi .env
 
 if [[ $? -eq 0 ]];
 then

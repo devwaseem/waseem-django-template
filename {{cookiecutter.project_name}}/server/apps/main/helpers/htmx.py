@@ -20,4 +20,3 @@ class HTMXLoginRequiredMixin(LoginRequiredMixin):
             redirect = redirect_to_login(self.request.htmx.current_url_abs_path)  # type: ignore
             return HttpResponseClientRedirect(redirect.url)
         return redirect
-

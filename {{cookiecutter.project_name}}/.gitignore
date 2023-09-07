@@ -253,3 +253,15 @@ artifacts/
 
 # NVIM
 .null-ls_*
+
+
+# Celery
+celerybeat-schedule
+
+# Custom
+playground
+data/*
+
+.vim
+.trunk
+.ruff_cache

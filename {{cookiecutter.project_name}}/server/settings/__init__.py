@@ -7,21 +7,15 @@ To change settings file:
 `DJANGO_ENV=production python manage.py runserver`
 """
 
-import os
-import environ
+from env import Env
 from pathlib import Path
 
 from split_settings.tools import include
 
 # from split_settings.tools import optional
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-environ.Env.read_env(os.path.join(BASE_DIR, "env", ".env"))
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
 
-ENV = env("DJANGO_ENV") or "development"
+ENV = Env("DJANGO_ENV") or "development"
 
 
 base_settings = [

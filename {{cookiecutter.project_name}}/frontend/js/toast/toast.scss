@@ -1,0 +1,36 @@
+.toast {
+    transform: translateY(200%);
+    opacity: 0;
+    transition: all 400ms ease-in;
+    @apply flex w-full flex-row items-center justify-between gap-4 overflow-hidden border px-6 py-3 lg:rounded-lg;
+}
+
+.toast-error-simple {
+    @apply border-red-500 bg-red-100 text-red-700;
+}
+
+.toast-info-simple {
+    @apply border-black bg-black text-white;
+}
+
+.toast-warning-simple {
+    @apply border-yellow-500 bg-yellow-100 text-yellow-700;
+}
+
+.toast-success-simple {
+    @apply border-green-500 bg-green-100 text-green-700;
+}
+
+.toast-show {
+    transform: translateY(0%);
+    opacity: 1;
+}
+
+.toast-progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background-color: currentColor;
+    animation-fill-mode: forwards;
+}
