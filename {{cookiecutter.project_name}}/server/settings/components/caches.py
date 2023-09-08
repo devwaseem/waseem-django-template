@@ -4,13 +4,23 @@ from env import Env
 # https://docs.djangoproject.com/en/3.2/topics/cache/
 
 
-DJANGO_CACHE_REDIS_URL = Env("DJANGO_CACHE_REDIS_URL")
+REDIS_HOST = Env("REDIS_HOST")
+REDIS_PORT = Env("REDIS_PORT")
 
+RATE_LIMIT_CACHE_BACKEND = "ratelimiting"
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"{DJANGO_CACHE_REDIS_URL}",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+        },
+    },
+    RATE_LIMIT_CACHE_BACKEND: {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
