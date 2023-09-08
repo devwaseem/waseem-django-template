@@ -7,6 +7,9 @@ import { defineConfig, } from "vite";
 
 const STATIC_SOURCE_DIR = "frontend/";
 
+// @ts-ignore
+const DIRNAME = __dirname;
+
 export default defineConfig({
         root: resolve(STATIC_SOURCE_DIR),
         base: "/static/", //same as `STATIC_URL` Django setting

@@ -72,9 +72,10 @@ PROJECT_APPS: list[str] = [
 ]
 
 ALL_AUTH_APPS: list[str] = [
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
+    # NOTE: Uncomment below lines to enable authentication
+    # "allauth",
+    # "allauth.account",
+    # "allauth.socialaccount",
 ]
 
 INSTALLED_APPS = [

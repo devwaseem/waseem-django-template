@@ -25,9 +25,31 @@ from django_ratelimit.exceptions import Ratelimited
 
 from server.apps.main import urls as main_urls
 
+
+def not_found(_):
+    return HttpResponseNotFound()
+
+
+def handler404(request: HttpRequest, *args, **kwargs) -> HttpResponse:  # noqa
+    return render(request, "errors/404.html", status=404)
+
+
+def handler403(
+    request: HttpRequest, exception: Exception | None = None
+) -> HttpResponse:  # noqa
+    if isinstance(exception, Ratelimited):
+        return HttpResponse("Sorry you are blocked", status=429)
+    return render(request, "errors/403.html", status=403)
+
+
+def handler500(request: HttpRequest, *args, **kwargs) -> HttpResponse:  # noqa
+    return render(request, "errors/500.html", status=500)
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("allauth.urls")),  # django allauth urls
+    # path("account/email/", handler404),
+    # path("", include("allauth.urls")),  # django allauth urls
     path("", include(main_urls)),
     # Text and xml static files:
     path(
@@ -48,26 +70,6 @@ urlpatterns = [
     settings.STATIC_URL,  # type: ignore
     document_root=settings.STATIC_ROOT,
 )
-
-
-def not_found(_):
-    return HttpResponseNotFound()
-
-
-def handler404(request: HttpRequest, *args, **kwargs) -> HttpResponse:  # noqa
-    return render(request, "errors/404.html", status=404)
-
-
-def handler403(
-    request: HttpRequest, exception: Exception | None = None
-) -> HttpResponse:  # noqa
-    if isinstance(exception, Ratelimited):
-        return HttpResponse("Sorry you are blocked", status=429)
-    return render(request, "errors/403.html", status=403)
-
-
-def handler500(request: HttpRequest, *args, **kwargs) -> HttpResponse:  # noqa
-    return render(request, "errors/500.html", status=500)
 
 
 if settings.DEBUG:  # pragma: no cover

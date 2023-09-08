@@ -13,7 +13,7 @@
         {
             "label": "Celery Workers",
             "type": "shell",
-            "command": "poetry run python -m celery --app src.infrastructure.server worker -E -l INFO -Q celery,analytics,emails,data_fetcher",
+            "command": "poetry run python -m celery --app server worker -E -l INFO -Q celery,emails",
             "problemMatcher": [],
             "group": {
                 "kind": "build"
