@@ -1,4 +1,3 @@
-
 {
   "compilerOptions": {
     "target": "ESNext",
@@ -22,11 +21,11 @@
       "vite/client"
     ],
     "baseUrl": ".",
-    "paths": {
-      "@frontend/*": [
-        "frontend/*"
-      ]
-    }
+        "paths": {
+            "@frontend/*": ["frontend/*"],
+            "@components/*": ["server/apps/main/templates/main/components/*"],
+            "@templates/*": ["server/apps/main/templates/main/templates/*"]
+        }
   },
   "include": [
     "./**/*.ts",

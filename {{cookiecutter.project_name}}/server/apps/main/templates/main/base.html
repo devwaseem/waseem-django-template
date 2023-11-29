@@ -1,20 +1,15 @@
-{% raw %}
 {% load static django_vite %}
-{% endraw %}
-{% raw %}
-<!doctype html>
+<!DOCTYPE html>
 <html class="overflow-hidden no-js" lang="en">
     <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
         {% block seo %}
-        {% endraw %}
-            <title>{{ cookiecutter.project_name }}</title>
-{% raw %}
-            <meta name="description" content=""/>
-        {% endblock %}
+            <title>humanevideo</title>
+            <meta name="description" content="" />
+        {% endblock seo %}
         <meta name="viewport"
-              content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+              content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         {% comment %}
         <link rel="apple-touch-icon" sizes="180x180" href="{% static 'main/images/favicon/apple-touch-icon.png' %}">
         <link rel="icon" type="image/png" sizes="32x32" href="{% static 'main/images/favicon/favicon-32x32.png' %}">
@@ -22,35 +17,35 @@
         <link rel="manifest" href="{% static 'main/images/favicon/site.webmanifest' %}">
         {% endcomment %}
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&display=swap"/>
+              href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,500;1,400&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&display=swap" />
         {% comment %}
         {% vite_hmr_client %}
         {% endcomment %}
         {% vite_asset 'css/styles.js' %}
-       {% block extrahead %}{% endblock %}
-         <script src="https://unpkg.com/htmx.org@1.9.5"
-                integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
-                crossorigin="anonymous"></script>
+        {% block extrahead %}
+        {% endblock extrahead %}
+        <script src="https://unpkg.com/htmx.org@1.9.5" crossorigin="anonymous"></script>
         <meta name="htmx-config"
-              content='{"inlineScriptNonce":"{{ request.csp_nonce }}"}'/>
+              content='{"inlineScriptNonce":"{{ request.csp_nonce }}"}' />
         {% vite_asset 'js/main.ts' %}
     </head>
-    <body class="overflow-y-scroll h-screen leading-normal tracking-normal bg-gray-50 flex flex-col"
+    <body class="overflow-y-scroll leading-normal tracking-normal bg-gray-50 flex flex-col"
           hx-ext="loading-states,debug">
-{% endraw %}
-{% raw %}
-        {% block navbar %}{% endblock %}
-        {% block content %}{% endblock %}
+        {% block navbar %}
+        {% endblock navbar %}
+        <main>
+            {% block main %}
+            {% endblock main %}
+        </main>
         {% block footer %}
-            {% include "main/organisms/footer/footer.html" %}
-        {% endblock %}
+            {% include "main/components/footer/footer.html" %}
+        {% endblock footer %}
         <div x-data="ModalContainer">
             <div id="modal_container"></div>
         </div>
-        <div>{% include "main/organisms/toast/toast.html" %}</div>
+        {% include "main/components/toast/toast.html" %}
     </body>
 </html>
-{% endraw %}
