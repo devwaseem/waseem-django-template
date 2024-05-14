@@ -1,11 +1,14 @@
 dev:
-    poetry run python manage.py runserver 0.0.0.0:8000
+    poetry run python manage.py runserver_plus 0.0.0.0:8000
 
 lint:
     poetry run pre-commit run --all-files
 
+type:
+    poetry run mypy src
+
 celery:
-    poetry run watchmedo auto-restart  --directory=server --recursive --pattern '*.py' -- -- celery --app server worker -E -l INFO -Q celer
+    poetry run watchmedo auto-restart  --directory=server --recursive --pattern '*.py' -- -- celery --app server worker -E -l INFO -Q celery --pool gevent --concurrency 20
 
 makemigrations:
     poetry run python manage.py makemigrations

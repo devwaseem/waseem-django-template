@@ -4,7 +4,11 @@ services:
 
   caddy:
     restart: unless-stopped
-    image: caddy:2.6.2
+    image: caddy:2.7
+    # image: caddy
+    # build:
+    #     context: .
+    #     dockerfile: compose/production/caddy/Dockerfile
     volumes:
       - ./compose/production/caddy/Caddyfile:/etc/caddy/Caddyfile  # configuration
       - caddy-config:/config  # configuration autosaves

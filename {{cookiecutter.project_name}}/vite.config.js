@@ -1,50 +1,54 @@
-// const { resolve } = require('path');
-// const fg = require('fast-glob');
-// import { defineConfig } from 'vite';
+import { resolve } from "path";
+import { defineConfig } from "vite";
+import { glob } from "glob";
+import inject from "@rollup/plugin-inject";
 
-import { resolve } from 'path';
-import { defineConfig } from 'vite';
+const dirs = ["assets", "src"];
 
-const STATIC_SOURCE_DIR = 'frontend/';
+let inputFiles = [];
 
-// @ts-ignore
-const DIRNAME = __dirname;
+for (let dir of dirs) {
+  const files = await glob(dir + "/**/*.{js,ts,css}", {
+    ignore: ["node_modules/**", "dist/**"],
+  });
+  inputFiles = [...inputFiles, ...files];
+}
 
-export default defineConfig({
-    root: resolve(STATIC_SOURCE_DIR),
-    base: '/static/', //same as `STATIC_URL` Django setting
-    resolve: {
-        alias: {
-            // Use '@' in urls as a shortcut for './static_source'.
-            '@': resolve(STATIC_SOURCE_DIR),
-            '@frontend': resolve(STATIC_SOURCE_DIR),
-            '@templates': resolve('server/apps/main/templates/main/templates/'),
-            '@components': resolve('server/apps/main/templates/main/components/'),
-        },
-    },
+let rollupInput = {};
+
+for (let file of inputFiles) {
+  // let page_index = file.indexOf("pages");
+  // let file_key = file.slice(page_index);
+  rollupInput[file] = file;
+}
+
+export default defineConfig(({ mode }) => {
+  return {
     server: {
-        hmr: false,
+      hmr: false,
     },
     build: {
-        outDir: './static', // puts the manifest.json in PROJECT_ROOT/static_source/ for Django to collect
-        assetsDir: '',
-        manifest: true, // adds a manifest.json
-        emptyOutDir: true,
-        rollupOptions: {
-            output: {
-                entryFileNames: '[name].[hash].js',
-                chunkFileNames: '[name].[hash].js',
-                assetFileNames: 'assets/[name].[hash][extname]',
-            },
-            input: {
-                /* The bundle's entry point(s).  If you provide an array of entry points or an object mapping names to entry points, they will be bundled to separate output chunks. */
-                styles: resolve(__dirname, STATIC_SOURCE_DIR + 'css/styles.js'),
-                // JS
-                main: resolve(__dirname, STATIC_SOURCE_DIR + 'js/main.ts'),
-                // Bunlde by Pages
-                error_page: resolve(DIRNAME, STATIC_SOURCE_DIR + 'js/error_page.ts'),
-            },
+      ssr: false,
+      outDir: "./dist", // puts the manifest.json in PROJECT_ROOT/build/static/ for Django to collect
+      assetsDir: "",
+      manifest: true, // adds a manifest.json
+      emptyOutDir: true,
+      sourcemap: mode == "development" ? "inline" : false,
+      minify: mode == "development" ? false : "esbuild",
+      rollupOptions: {
+        output: {
+          compact: mode != "development",
+          entryFileNames: "[name].[hash].js",
+          chunkFileNames: "[name].[hash].js",
+          assetFileNames: "assets/[name].[hash][extname]",
         },
+        input: rollupInput,
+      },
     },
-    plugins: [],
+    plugins: [
+      inject({
+        htmx: "htmx.org",
+      }),
+    ],
+  };
 });

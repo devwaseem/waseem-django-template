@@ -48,23 +48,21 @@ THIRD_PARTY_APPS: list[str] = [
     # "health_check.cache",
     # "health_check.storage",
     # django-widget-tweaks
-    "widget_tweaks",
+    # "widget_tweaks",
     # Django feather (Feather icons)
-    "django_feather",
+    # "django_feather",
     # Django HTMX
-    "django_htmx",
+    # "django_htmx",
     # django-phonenumber-field
     # "phonenumber_field", Uncomment to enable
     # https://github.com/theatlantic/django-nested-admin
-    "nested_admin",
+    # "nested_admin",
     # https://github.com/liminspace/django-mjml
-    "mjml",
+    # "mjml",
     # https://github.com/SmileyChris/easy-thumbnails
-    "easy_thumbnails",
-    # https://github.com/MrBin99/django-vite
-    "django_vite",
+    # "easy_thumbnails",
     # https://github.com/pmclanahan/django-celery-email
-    "djcelery_email",
+    # "djcelery_email",
 ]
 
 PROJECT_APPS: list[str] = [
@@ -210,17 +208,13 @@ DATE_INPUT_FORMATS = ("%d-%m-%Y", "%Y-%m-%d")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-FRONTEND_STATIC_SOURCE_DIR = BASE_DIR / "frontend"
-
-DJANGO_VITE_ASSETS_PATH = FRONTEND_STATIC_SOURCE_DIR / "static"
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_ROOT = "static"
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
+STATICFILES_DIRS = []
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",

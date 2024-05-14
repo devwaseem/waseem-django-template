@@ -30,9 +30,8 @@ flower.{$DOMAIN_NAME} {
 
 		X-Frame-Options SAMEORIGIN
 
-    	X-XSS-Protection "1; mode=block"
+    X-XSS-Protection "1; mode=block"
 
-		Built-By "waaklabs.com"
 	}
 
 	log {
