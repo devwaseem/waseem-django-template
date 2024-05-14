@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from django.db import models
 
-from src.core.models.base import TimeStampedModel
+from server.apps.main.models.base import TimeStampedModel
 
 
 class APIKey(TimeStampedModel):

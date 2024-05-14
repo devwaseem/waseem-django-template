@@ -9,8 +9,8 @@ fi
 container_id=$(docker ps -aqf "name=^{{cookiecutter.project_name}}_local_postgres$")
 docker exec -it "$container_id" pg_dump -U {{cookiecutter.project_name}} > data/local_backup.sql
 if [[ $? -eq 0 ]]
-then
-echo "Local Backup successful"
-else
-echo "Local Backup Failed"
+  then
+    echo "Local Backup successful"
+  else
+    echo "Local Backup Failed"
 fi

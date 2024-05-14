@@ -22,9 +22,7 @@
     ],
     "baseUrl": ".",
         "paths": {
-            "@frontend/*": ["frontend/*"],
-            "@components/*": ["server/apps/main/templates/main/components/*"],
-            "@templates/*": ["server/apps/main/templates/main/templates/*"]
+            "@assets/*": ["assets/*"],
         }
   },
   "include": [

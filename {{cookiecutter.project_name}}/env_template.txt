@@ -32,8 +32,8 @@ EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 EMAIL_PORT=1025|587
 EMAIL_USE_TLS=True
-DEFAULT_FROM_EMAIL={{cookiecutter.project_verbose_name}} <admin@{{cookiecutter.project_domain}}>
-SERVER_EMAIL={{cookiecutter.project_verbose_name}} <system@{{cookiecutter.project_domain}}>
+DEFAULT_FROM_EMAIL="{{cookiecutter.project_verbose_name}} <admin@{{cookiecutter.project_domain}}>"
+SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@{{cookiecutter.project_domain}}>"
 
 
 # Database
@@ -56,7 +56,9 @@ CELERY_AUTOSCALE_WORKERS_MAX=3
 
 # Gunicorn
 GUNICORN_WORKERS=1
-GUNICORN_APPLICATION=server.wsgi
-GUNICORN_WORKER_CLASS="sync"
+GUNICORN_APPLICATION=server.wsgi:application
+GUNICORN_WORKER_CLASS="sync" # sync | gevent
+GUNICORN_WORKER_CONNECTIONS=100
 GUNICORN_MAX_REQUESTS=2000
 GUNICORN_REQUESTS_JITTER=400
+

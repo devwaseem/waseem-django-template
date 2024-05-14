@@ -4,12 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "NODE_ENV=production vite build --watch --mode development",
+    "build": "NODE_ENV=production tsc && vite build"
   },
   "devDependencies": {
-    "@types/alpinejs": "^3.13",
+    "@types/alpinejs": "^3.13"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -42,7 +41,6 @@
     "prettier": "^2.8.4",
     "prettier-plugin-organize-imports": "^3.2.2",
     "prettier-plugin-tailwindcss": "^0.2.6",
-    "sass": "^1.58.3",
     "sass": "^1.74.1",
     "tailwindcss": "^3.4.3",
     "tippy.js": "^6.3.7",

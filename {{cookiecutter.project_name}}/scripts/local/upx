@@ -36,11 +36,11 @@ fi
 pane=0
 
 sleep 1
-tmux send-keys -t $session:$window.$pane 'poetry run python manage.py runserver 0.0.0.0:8000' C-m
+tmux send-keys -t $session:$window.$pane 'just dev' C-m
 ((pane = pane + 1))
 
 sleep 1
-tmux send-keys -t $session:$window.$pane 'yarn run dev --host 0.0.0.0' C-m
+tmux send-keys -t $session:$window.$pane 'just frontend' C-m
 ((pane = pane + 1))
 
 if $enable_matrix; then
@@ -50,7 +50,7 @@ if $enable_matrix; then
 fi
 
 sleep 1
-tmux send-keys -t $session:$window.$pane 'poetry run python -m celery --app server worker' C-m
+tmux send-keys -t $session:$window.$pane 'just celery' C-m
 ((pane = pane + 1))
 
 # tmux -2 -CC attach -t $session

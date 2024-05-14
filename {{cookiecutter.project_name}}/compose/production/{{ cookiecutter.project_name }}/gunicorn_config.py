@@ -12,9 +12,16 @@ bind = "0.0.0.0:3000"
 workers = os.environ.get("GUNICORN_WORKERS", multiprocessing.cpu_count() * 2 + 1)
 worker_class = os.environ.get("GUNICORN_WORKER_CLASS", "sync")
 
+threads = os.environ.get("GUNICORN_THREADS", 1)
+worker_connections = os.environ.get("GUNICORN_WORKER_CONNECTIONS", 1000)
+
 max_requests = os.environ.get("GUNICORN_MAX_REQUESTS", 2000)
 max_requests_jitter = os.environ.get("GUNICORN_REQUESTS_JITTER", 400)
 
-log_file = "-"
+timeout = os.environ.get("GUNICORN_TIMEOUT", 90)
+
+accesslog = "-"
+errorlog = "-"
 chdir = "/app"
-worker_tmp_dir = "/dev/shm"  # noqa: S108
+worker_tmp_dir = "/dev/shm"
+

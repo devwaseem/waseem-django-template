@@ -1,4 +1,4 @@
-import { $byId } from "@frontend/js/utils";
+import { $byId } from "@assets/utils";
 import AlpineInstance from "alpinejs";
 
 AlpineInstance.data("ModalContainer", () => ({

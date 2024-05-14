@@ -1,13 +1,13 @@
-/**
- * This is a minimal config.
- *
- * If you need the full config, get it from here:
- * https://unpkg.com/browse/tailwindcss@latest/stubs/defaultConfig.stub.js
- */
+/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+const { spawnSync } = require("child_process");
 const defaultTheme = require("tailwindcss/defaultTheme");
+
+
 module.exports = {
   content: [
     "!./node_modules/",
+    "!./dist/",
     "./**/*.html",
     "./**/*.js",
     "./**/*.ts",
@@ -77,13 +77,15 @@ module.exports = {
     },
   },
   plugins: [
-    /**
-     * '@tailwindcss/forms' is the forms plugin that provides a minimal styling
-     * for forms. If you don't like it or have own styling for forms,
-     * comment the line below to disable '@tailwindcss/forms'.
-     */
-    require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
     require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/container-queries"),
+    plugin(function ({ addVariant }) {
+      addVariant("htmx-settling", ["&.htmx-settling", ".htmx-settling &"]);
+      addVariant("htmx-request", ["&.htmx-request", ".htmx-request &"]);
+      addVariant("htmx-swapping", ["&.htmx-swapping", ".htmx-swapping &"]);
+      addVariant("htmx-added", ["&.htmx-added", ".htmx-added &"]);
+    }),
   ],
 };

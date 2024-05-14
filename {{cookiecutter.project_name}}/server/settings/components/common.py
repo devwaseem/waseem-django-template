@@ -63,6 +63,8 @@ THIRD_PARTY_APPS: list[str] = [
     # "easy_thumbnails",
     # https://github.com/pmclanahan/django-celery-email
     # "djcelery_email",
+    # "rest_framework",
+    # "drf_spectacular",
 ]
 
 PROJECT_APPS: list[str] = [
@@ -214,7 +216,9 @@ STATIC_ROOT = "static"
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    BASE_DIR /  'dist',
+]
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",

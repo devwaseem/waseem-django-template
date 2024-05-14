@@ -8,12 +8,12 @@ Instagram:  ...
 Facebook:   ...
 Location:   ...
 Built with: HTML, CSS, Tailwind CSS, Javascript, Python, Django, Alpine.js, HTMX, MJML, Docker
-Launched:   2022
+Launched:   2024
 
 
 /* BUILT BY */
 
-Company:    WAAK Labs
-Site:       waaklabs.com
-Twitter:    https://twitter.com/waaklabs
+Company:    Waseem
+Site:       waseem.works
+Twitter:    https://twitter.com/iamwaseem99
 Location:   Chennai, India.

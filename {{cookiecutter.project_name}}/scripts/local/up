@@ -1,9 +1,12 @@
 #!/bin/sh
-set -e
+#
+set -o errexit
+set -o nounset
 set -o pipefail
-docker-compose -f development.yml up -d
+
+just up
 if [ $? -eq 0 ];
   then
-    env poetry run python manage.py migrate
-    env poetry run python manage.py runserver 0.0.0.0:8000
+    just migrate
+    just dev
 fi

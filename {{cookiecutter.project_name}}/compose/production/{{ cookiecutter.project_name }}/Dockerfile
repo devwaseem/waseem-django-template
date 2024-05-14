@@ -1,4 +1,4 @@
-FROM python:3.11.2-slim-buster
+FROM python:3.12-slim-bullseye
 
 ARG APP_HOME=/app
 ARG BUILD_ENVIRONMENT=production

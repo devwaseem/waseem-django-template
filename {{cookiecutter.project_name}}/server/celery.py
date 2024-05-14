@@ -1,11 +1,17 @@
 import os
 
+import django
 from celery import Celery
 from celery.schedules import crontab
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.settings")
+
+django.setup()
+
 app = Celery("{{ cookiecutter.project_name }}")
-app.config_from_object("django.conf:settings", namespace="CELERY")
+app.config_from_object("server.celeryconfig")
+
+# Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {

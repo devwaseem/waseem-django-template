@@ -6,7 +6,7 @@ from typing import Any
 from django import template
 from django.templatetags.static import static
 
-from src.server.settings.common import BASE_DIR
+from server.settings import BASE_DIR
 
 register = template.Library()
 
