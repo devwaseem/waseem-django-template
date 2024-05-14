@@ -18,3 +18,13 @@ repos:
       - id: ruff
         args: [--fix, '--preview', '--show-source']
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: bash -c 'poetry run mypy server'
+        language: system
+        types: [python]
+        pass_filenames: false
+
