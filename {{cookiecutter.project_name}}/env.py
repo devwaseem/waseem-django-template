@@ -1,10 +1,10 @@
-import os
+from pathlib import Path
 
 import environ
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = Path(__file__).parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+environ.Env.read_env(BASE_DIR / ".env")
 
 Env = environ.Env(
     # set casting, default value

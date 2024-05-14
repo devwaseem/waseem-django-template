@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.filter
-def replace(value, arg):
+def replace(value: str, arg: str) -> str:
     """
     Replacing filter.
 

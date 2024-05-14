@@ -20,5 +20,5 @@ EMAIL_USE_TLS = Env("EMAIL_USE_TLS", bool, default=False)  # type: ignore
 
 CELERY_EMAIL_TASK_CONFIG = {
     "queue": "emails",
-    # 'rate_limit' : '50/m',  # * CELERY_EMAIL_CHUNK_SIZE (default: 10)
+    # 'rate_limit' : '50/m',  # * CELERY_EMAIL_CHUNK_SIZE (default: 10) # noqa
 }

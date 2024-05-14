@@ -1,8 +1,7 @@
 import re
 
-from server.settings.components.logging import LOGGING
-from server.settings.components.common import INSTALLED_APPS
 from env import Env
+from server.settings.components.common import INSTALLED_APPS
 from server.settings.components.csp import (
     CSP_CONNECT_SRC,
     CSP_FONT_SRC,
@@ -11,6 +10,7 @@ from server.settings.components.csp import (
     CSP_SCRIPT_SRC,
     CSP_STYLE_SRC,
 )
+from server.settings.components.logging import LOGGING
 
 DEBUG = False
 
@@ -29,8 +29,7 @@ CSRF_COOKIE_SAMESITE = "Strict"
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
-# SECURE_HSTS_SECONDS = 86400  # 1 day
-SECURE_HSTS_SECONDS = 300  # 5 Minutes
+SECURE_HSTS_SECONDS = 300  # 5 Minutes - 300, 1 Day - 86400
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 CSRF_TRUSTED_ORIGINS = Env("CSRF_TRUSTED_ORIGINS", default="").split()
@@ -60,12 +59,14 @@ EMAIL_BACKEND = "anymail.backends.amazon_ses.EmailBackend"
 
 THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
 
+"""
 # Uncomment to use AWS s3 for staticfiles
 # STATIC_LOCATION = "static"
 # STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
 # STATICFILES_STORAGE = (
 #     "server.settings.storage_backends.StaticStorage"
 # )
+"""
 
 
 PUBLIC_MEDIA_LOCATION = "media"
@@ -79,7 +80,7 @@ STATIC_HOST = Env("DJANGO_STATIC_HOST", str, "")
 STATIC_URL = STATIC_HOST + "/static/"
 
 
-def immutable_file_test(_, url):
+def immutable_file_test(_: object, url: str) -> re.Match[str] | None:
     # Match filename with 12 hex digits before the extension
     # e.g. app.db8f2edc0c8a.js
     return re.match(r"^.+\.\w+\..+$", url)
@@ -89,9 +90,6 @@ WHITENOISE_IMMUTABLE_FILE_TEST = immutable_file_test
 
 ANYMAIL = {"AMAZON_SES_CLIENT_PARAMS": {"region_name": AWS_S3_REGION_NAME}}
 
-# Django Vite
-DJANGO_VITE_DEV_MODE = False
-# DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / "manifest.json"
 
 # Configure CSP to work with AWS s3
 

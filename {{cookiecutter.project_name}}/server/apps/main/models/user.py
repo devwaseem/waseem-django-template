@@ -1,4 +1,5 @@
 import uuid
+from typing import ClassVar
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -15,7 +16,7 @@ class UserManager(BaseUserManager[AbstractUser]):
         self,
         email: str,
         password: str,
-        **extra_fields,
+        **extra_fields: str | int | bool,
     ) -> "User":
         """Create a Normal User."""
         extra_fields.setdefault("is_staff", False)
@@ -24,9 +25,9 @@ class UserManager(BaseUserManager[AbstractUser]):
 
     def create_superuser(
         self,
-        email=None,
-        password=None,
-        **extra_fields,
+        email: str,
+        password: str,
+        **extra_fields: str | int | bool,
     ) -> "User":
         """Create a SuperUser with all the privileges."""
         extra_fields.setdefault("is_staff", True)
@@ -39,12 +40,14 @@ class UserManager(BaseUserManager[AbstractUser]):
 
         return self._create_user(email, password, **extra_fields)
 
-    def _create_user(self, email, password, **extra_fields) -> "User":
+    def _create_user(
+        self,
+        email: str,
+        password: str,
+        **extra_fields: str | int | bool,
+    ) -> "User":
         """Create and save a user with the given username, email, and password."""  # noqa: E501
         email = self.normalize_email(email)
-        # Lookup the real model class from the global app registry so this
-        # manager method can be used in migrations. This is fine because
-        # managers are by definition working on the real model.
         user = User(email=email, **extra_fields)
         user.password = make_password(password)
         user.save(using=self._db)
@@ -60,5 +63,5 @@ class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS: list[str] = []
+    REQUIRED_FIELDS: ClassVar[list[str]] = []
     objects = UserManager()  # type:ignore

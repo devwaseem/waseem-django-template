@@ -7,15 +7,15 @@ To change settings file:
 `DJANGO_ENV=production python manage.py runserver`
 """
 
-from env import Env
 from pathlib import Path
 
-from split_settings.tools import include
 import django_stubs_ext
+from split_settings.tools import include
+
+from env import Env
 
 django_stubs_ext.monkeypatch()
 
-# from split_settings.tools import optional
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ENV = Env("DJANGO_ENV") or "development"
@@ -33,8 +33,6 @@ base_settings = [
     # 'components/*.py'
     # Select the right env:
     f"environments/{ENV}.py",
-    # Optionally override some settings:
-    # optional("environments/local.py"),
 ]
 
 # Include settings:

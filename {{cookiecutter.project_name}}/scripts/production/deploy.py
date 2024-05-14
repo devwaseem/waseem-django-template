@@ -54,19 +54,19 @@ args = parser.parse_args()
 HOST = args.host[0]
 USER = args.user[0]
 PRIVATE_KEY_PATH = args.ssh_key_path[0]
-GITHUB_REPO_SUFFIX = "{{ cookiecutter.project_name }}/{{ cookiecutter.project_name }}"
+GITHUB_REPO_SUFFIX = "uhn-services/uhn-services"
 GITHUB_REPO_TOKEN = args.github_token[0]
-PROJECT_NAME = "{{ cookiecutter.project_name }}"
+PROJECT_NAME = "uhn-services"
 
 c = Connection(
     host=HOST,
     user=USER,
     connect_kwargs={"key_filename": str(PRIVATE_KEY_PATH)},
 )
-print("Starting Deploy script...")
+print("Starting Deploy script...")  # noqa
 if c.run(f"test -d {PROJECT_NAME}", warn=True).failed:
     c.run(
-        f"git clone https://oauth:{GITHUB_REPO_TOKEN}@github.com/{GITHUB_REPO_SUFFIX} {PROJECT_NAME}"
+        f"git clone https://oauth:{GITHUB_REPO_TOKEN}@github.com/{GITHUB_REPO_SUFFIX} {PROJECT_NAME}"  # noqa
     )
 
 with c.cd(PROJECT_NAME):

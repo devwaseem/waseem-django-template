@@ -2,7 +2,7 @@ from math import ceil
 
 
 class Page:
-    def __init__(self, page: int | None = None):
+    def __init__(self, page: int | None = None) -> None:
         self.page = page
 
     @property
@@ -24,7 +24,7 @@ class SimplePaginator:
         items_per_page: int,
         current_page: int = 1,
         delta: int = 2,
-    ):
+    ) -> None:
         self.delta = delta
         self.num_items = num_items
         self.items_per_page = items_per_page

@@ -7,7 +7,7 @@ register = template.Library()
 
 
 @register.filter(is_safe=True)
-def bold_for(value, arg):
+def bold_for(value: str, arg: str) -> str:
     """
     Make a part of text bold.
 

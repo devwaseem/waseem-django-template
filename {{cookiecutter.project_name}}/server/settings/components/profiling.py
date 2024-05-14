@@ -4,7 +4,7 @@ from server.settings.components.common import (
     MIDDLEWARE,
 )
 
-DJANGO_ENABLE_PROFILING = Env("DJANGO_ENABLE_PROFILING", bool, False)
+DJANGO_ENABLE_PROFILING = Env("DJANGO_ENABLE_PROFILING", bool, False)  # noqa
 
 if DJANGO_ENABLE_PROFILING:
     # Django Silk

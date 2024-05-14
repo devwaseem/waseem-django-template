@@ -10,7 +10,8 @@ from django.utils.translation import gettext_lazy as _
 @deconstructible
 class MaxFileSizeValidatorInMb:
     message = _(
-        "The file size is %(current_file_size)s MB, exceeding the maximum file size of %(max_file_size)s MB "
+        "The file size is %(current_file_size)s MB, "
+        "exceeding the maximum file size of %(max_file_size)s MB "
     )
     code = "file_size_exceeded"
 
@@ -19,14 +20,14 @@ class MaxFileSizeValidatorInMb:
         max_size_in_mb: int,
         message: str | None = None,
         code: str | None = None,
-    ):
+    ) -> None:
         self.max_size_in_mb = max_size_in_mb
         if message is not None:
             self.message = _(message)
         if code is not None:
             self.code = code
 
-    def __call__(self, value: Any) -> None:
+    def __call__(self, value: Any) -> None:  # type: ignore # noqa
         current_file_size = (value.size / 1024) / 1024
         max_file_size = self.max_size_in_mb * 1024 * 1024
         if value.size > max_file_size:

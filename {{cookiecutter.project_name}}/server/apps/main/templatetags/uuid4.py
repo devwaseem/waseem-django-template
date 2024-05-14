@@ -6,7 +6,7 @@ register = template.Library()
 
 
 @register.filter
-def uuid4(value):
+def uuid4(value: str) -> str:
     """
     generate random filter.
 

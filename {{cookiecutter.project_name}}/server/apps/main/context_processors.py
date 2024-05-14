@@ -1,21 +1,17 @@
-from dataclasses import asdict, dataclass
+from typing import TypedDict
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest
 
 
-@dataclass(slots=True, frozen=True)
-class DomainContext:
+class DomainContext(TypedDict):
     domain_name: str
     site_name: str
     protocol: str
     base_url: str
 
-    def as_dict(self) -> dict[str, str]:
-        return asdict(self)
 
-
-def get_site_data(request: HttpRequest):
+def get_site_data(request: HttpRequest) -> DomainContext:
     site = get_current_site(request)
     site_name = site.name
     domain_name = site.domain
@@ -23,8 +19,8 @@ def get_site_data(request: HttpRequest):
     base_url = f"{protocol}://{domain_name}"
 
     return DomainContext(
-        domain_name=domain_name,
-        site_name=site_name,
+        domain_name=domain_name,  # type: ignore
+        site_name=site_name,  # type: ignore
         protocol=protocol,
         base_url=base_url,
-    ).as_dict()
+    )

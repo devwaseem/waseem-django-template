@@ -6,5 +6,5 @@ register = template.Library()
 
 @register.filter
 @stringfilter
-def trim(value):
+def trim(value: str) -> str:
     return value.strip()

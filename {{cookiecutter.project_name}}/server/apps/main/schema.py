@@ -2,7 +2,8 @@ from drf_spectacular.extensions import OpenApiAuthenticationExtension
 
 
 class APIKeyAuthenticationScheme(OpenApiAuthenticationExtension):  # type: ignore
-    target_class = "server.apps.main.auth.APIKeyAuthentication"  # full import path OR class ref
+    # full import path OR class ref
+    target_class = "server.apps.main.auth.APIKeyAuthentication"
     name = "API Key"  # name used in the schema
 
     def get_security_definition(  # type: ignore
