@@ -9,7 +9,7 @@ lint:
   poetry run pre-commit run --all-files
 
 type:
-  poetry run mypy src
+  poetry run mypy server
 
 celery:
   poetry run watchmedo auto-restart --directory=server --recursive --pattern '*.py' -- -- celery --app server worker -E -l INFO -Q celery --pool gevent --concurrency 20

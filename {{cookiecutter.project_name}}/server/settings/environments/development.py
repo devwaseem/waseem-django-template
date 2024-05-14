@@ -49,7 +49,7 @@ MIDDLEWARE = ["nplusone.ext.django.NPlusOneMiddleware", *MIDDLEWARE]
 # Logging N+1 requests:
 # NPLUSONE_RAISE = True  # comment out if you want to allow N+1 requests # noqa
 NPLUSONE_LOGGER = structlog.getLogger("django")
-NPLUSONE_LOG_LEVEL = logging.WARNING  # type:ignore
+NPLUSONE_LOG_LEVEL = logging.WARNING
 NPLUSONE_WHITELIST = [{"model": "admin.LogEntry", "field": "user"}]
 
 

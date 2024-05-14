@@ -107,7 +107,7 @@ custom_html = "mjml,mj-head,mj-\\w+"
 # https://mypy.readthedocs.io/en/stable/config_file.html
 
 python_version = "3.12"
-mypy_path = "./server"
+mypy_path = "."
 
 
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]

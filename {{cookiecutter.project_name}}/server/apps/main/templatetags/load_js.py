@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from django import template
+from django.template.base import Parser, Token
 from django.templatetags.static import static
 
 from server.settings import BASE_DIR
@@ -11,15 +12,13 @@ from server.settings import BASE_DIR
 register = template.Library()
 
 
-def _get_manifest_data() -> dict[str, Any]:
+def _get_manifest_data() -> dict[str, Any]:  # type: ignore
     manifest_file = BASE_DIR / "dist/.vite/manifest.json"
     with manifest_file.open("r") as manifest_fd:
-        return json.loads(manifest_fd.read())
+        return json.loads(manifest_fd.read())  # type: ignore
 
 
-
-class AssetFileNotFoundError(Exception):
-    ...
+class AssetFileNotFoundError(Exception): ...
 
 
 def _get_script_and_css_tags(
@@ -63,7 +62,7 @@ class AssetTagNode(template.Node):
         self.file_name_or_path = file_name_or_path
         self.mode = mode
 
-    def render(self, context) -> str:  # noqa
+    def render(self, context: template.Context) -> str:  # noqa # type: ignore
         match self.mode:
             case AssetResolverMode.LOCAL:
                 page_directory = str(Path(self.origin.name).parent).replace(
@@ -94,7 +93,7 @@ class AssetTagNode(template.Node):
 
 
 @register.tag(name="load_asset")
-def load_asset(parser, token) -> AssetTagNode:  # noqa
+def load_asset(_parser: Parser, token: Token) -> AssetTagNode:
     tokens = token.split_contents()
     if len(tokens) < 3:
         raise ValueError(
@@ -102,7 +101,7 @@ def load_asset(parser, token) -> AssetTagNode:  # noqa
             "exactly 2 or more arguments"
         )
 
-    mode = tokens[1]
+    mode = AssetResolverMode(tokens[1])
     file_path = tokens[2]
 
     return AssetTagNode(

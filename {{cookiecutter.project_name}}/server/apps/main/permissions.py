@@ -35,6 +35,6 @@ class IsAPIKeyAuthenticated(BasePermission):
 class SuperUserLoginRequiredMixin(AccessMixin):
     def dispatch(self, request: HttpRequest, *args: str, **kwargs: str) -> HttpResponse:
         if request.user.is_authenticated and request.user.is_superuser:
-            return super().dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)  # type: ignore
 
         return self.handle_no_permission()

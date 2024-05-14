@@ -6,7 +6,7 @@ from django.http import HttpRequest
 
 class DomainContext(TypedDict):
     domain_name: str
-    site_name: str
+    site_name: str | None
     protocol: str
     base_url: str
 
