@@ -309,14 +309,20 @@ addopts = [
   '--strict-markers',
   '--strict-config',
   '--tb=short',
-  '--cov=core/',
+  '--durations=0',
+  '--durations-min=0.5',
+  '--cov=server/',
   '--cov-report=html',
   # '--doctest-modules',
   # '--cov-report=term',
 ]
 
-
-# Extra options:
+markers = [
+  "unit: mark as Unit Tests",
+  "integration: mark as Integration",
+  "e2e: mark as End to End",
+  "slow: mark test as slow.",
+]
 
 [tool.coverage.run]
 branch = true

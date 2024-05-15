@@ -5,6 +5,9 @@ dev:
 vite:
   npm run dev
 
+test *ARGS:
+    DJANGO_ENV=test PYTHONBREAKPOINT=ipdb.set_trace poetry run pytest -s {{ ARGS }}
+
 lint:
   poetry run pre-commit run --all-files
 

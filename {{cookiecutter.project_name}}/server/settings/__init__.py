@@ -8,8 +8,10 @@ To change settings file:
 """
 
 from pathlib import Path
+from typing import Literal
 
 import django_stubs_ext
+from django.core.exceptions import ImproperlyConfigured
 from split_settings.tools import include
 
 from env import Env
@@ -18,7 +20,14 @@ django_stubs_ext.monkeypatch()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-ENV = Env("DJANGO_ENV") or "development"
+ENV: Literal["development", "production", "test"] = (
+    Env("DJANGO_ENV") or "development"
+)
+
+if ENV not in ["development", "production", "test"]:
+    raise ImproperlyConfigured(
+        "DJANGO_ENV can only be one of [development|production|test]"
+    )
 
 
 base_settings = [
@@ -34,6 +43,7 @@ base_settings = [
     # Select the right env:
     f"environments/{ENV}.py",
 ]
+
 
 # Include settings:
 include(*base_settings)
