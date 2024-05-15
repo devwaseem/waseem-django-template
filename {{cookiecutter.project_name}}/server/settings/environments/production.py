@@ -55,8 +55,6 @@ AWS_S3_HOST = f"{AWS_S3_REGION_NAME}.amazonaws.com"
 
 ANYMAIL = {"AMAZON_SES_CLIENT_PARAMS": {"region_name": AWS_S3_REGION_NAME}}
 
-EMAIL_BACKEND = "anymail.backends.amazon_ses.EmailBackend"
-
 THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
 
 """
