@@ -62,6 +62,8 @@ COPY --chown=web:web ./poetry.lock ./pyproject.toml ${APP_HOME}/
 RUN cd ${APP_HOME} && poetry config virtualenvs.create false \
   && poetry install --without dev --no-interaction --no-ansi
 
+COPY --chown=web:web ./package-lock.json ./package.json ${APP_HOME}/
+
 RUN npm install
 
 COPY --chown=web:web . ${APP_HOME}/
