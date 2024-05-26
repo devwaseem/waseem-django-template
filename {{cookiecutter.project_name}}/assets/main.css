@@ -17,13 +17,18 @@ input[type=checkbox] {
     @apply text-black rounded border border-gray-300 bg-white cursor-pointer focus:ring-black;
 }
 
-input, input[type=number], textarea {
-    @apply p-3 pl-2.5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full;
+input[type='text'], input:where(:not([type])), input[type='email'],
+input[type='url'], input[type='password'], input[type='number'], input[type='date'],
+input[type='datetime-local'], input[type='month'], input[type='search'], input[type='tel'],
+input[type='time'], input[type='week'], textarea, select {
+    @apply p-3 pl-2.5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full;
+    @apply focus:ring-0 focus:outline-0 focus:border-black;
 }
 
 button {
-    @apply p-3 px-4 bg-black text-white rounded-md flex flex-row gap-3 items-center;
+    @apply p-2 px-3 bg-black text-white rounded-md flex flex-row gap-3 items-center;
 }
+
 
 .markdown-content {
     @apply prose prose-blue prose-table:rounded-lg prose-th:px-6 prose-th:py-3 prose-td:px-6 prose-td:py-4 prose-thead:text-xs prose-thead:text-gray-700 prose-thead:uppercase prose-thead:bg-gray-50 odd:prose-tr:bg-white even:prose-tr:bg-gray-50 prose-tr:border-b;
