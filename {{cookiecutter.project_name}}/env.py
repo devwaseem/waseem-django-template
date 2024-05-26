@@ -8,6 +8,9 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 Env = environ.Env(
     # set casting, default value
+    DEBUG=(bool, False),
+    TEST=(bool, False),
+    ACCOUNT_ALLOW_REGISTRATION=(bool, True),
     REDIS_PORT=(int, 6379),
     MJML_PORT=(int, 28101),
     DJANGO_DATABASE_PORT=(int, 5432),
@@ -18,4 +21,5 @@ Env = environ.Env(
     LOG_FILE_SECURITY=(str, "/var/log/django/security.log"),
     LOG_FILE_APP=(str, "/var/log/django/app.log"),
     LOG_FILE_CELERY=(str, "/var/log/django/celery.log"),
+    NO_CACHE=(bool, False),
 )

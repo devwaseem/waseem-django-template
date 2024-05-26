@@ -21,9 +21,9 @@
       "vite/client"
     ],
     "baseUrl": ".",
-        "paths": {
-            "@assets/*": ["assets/*"],
-        }
+    "paths": {
+      "@assets/*": ["./assets/*"]
+    }
   },
   "include": [
     "./**/*.ts",

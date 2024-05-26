@@ -13,8 +13,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV POETRY_VERSION=1.2.2
 ENV POETRY_NO_INTERACTION=1
 ENV POETRY_VIRTUALENVS_CREATE=false
-ENV POETRY_CACHE_DIR='/var/cache/pypoetry'
 ENV POETRY_HOME='/usr/local'
+ENV POETRY_CACHE_DIR='/tmp/poetry_cache'
 
 WORKDIR ${APP_HOME}
 
@@ -52,15 +52,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-RUN pip install iredis
-
 RUN curl -sSL 'https://install.python-poetry.org' | POETRY_HOME='/usr/local' python - \
   && poetry --version
 
 COPY --chown=web:web ./poetry.lock ./pyproject.toml ${APP_HOME}/
 
 RUN cd ${APP_HOME} && poetry config virtualenvs.create false \
-  && poetry install --without dev --no-interaction --no-ansi
+  && poetry install --without dev --no-interaction --no-ansi \
+  && rm -rf ${POETRY_CACHE_DIR}
 
 COPY --chown=web:web ./package-lock.json ./package.json ${APP_HOME}/
 

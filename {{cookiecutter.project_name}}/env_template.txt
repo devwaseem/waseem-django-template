@@ -1,11 +1,26 @@
 # Django - General
-PYTHONBREAKPOINT="pudb.set_trace"
-DJANGO_ENV=development
-SECRET_KEY=
-DJANGO_ALLOWED_HOSTS=
-CSRF_TRUSTED_ORIGINS=
+DEBUG=false
+SECRET_KEY=secret
+
+PYTHONBREAKPOINT="ipdb.set_trace"
+ENABLE_HEALTH_CHECK=false
+ENABLE_SILK_PROFILING=false
+ENABLE_CPROFILE=false
+
+
 DJANGO_STATIC_HOST=
-DJANGO_ENABLE_PROFILING=false
+DJANGO_MEDIA_HOST=
+STATIC_USE_WHITENOISE=false
+STATIC_USE_S3=false
+MEDIA_USE_S3=false
+
+
+# Logging
+LOG_FILE_DJANGO=
+LOG_FILE_SECURITY=
+LOG_FILE_APP=
+LOG_FILE_CELERY=
+
 
 # Django AWS
 AWS_ACCESS_KEY_ID=
@@ -13,17 +28,21 @@ AWS_SECRET_ACCESS_KEY=
 AWS_STORAGE_BUCKET_NAME=
 AWS_S3_REGION_NAME=
 
+
 # Redis
 REDIS_HOST=redis
 REDIS_PORT=6379
+
 
 # MJML
 MJML_HOST=mjml
 MJML_PORT=28101
 
+
 # Caddy
 DOMAIN_NAME=
 SSL_EMAIL=
+
 
 # Email
 EMAIL_BACKEND=[django.core.mail.backends.smtp.EmailBackend|anymail.backends.amazon_ses.EmailBackend]
@@ -31,13 +50,13 @@ EMAIL_HOST=
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 EMAIL_PORT=1025|587
-EMAIL_USE_TLS=True
-DEFAULT_FROM_EMAIL="{{cookiecutter.project_verbose_name}} <admin@{{cookiecutter.project_domain}}>"
-SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@{{cookiecutter.project_domain}}>"
+EMAIL_USE_TLS=false
+DEFAULT_FROM_EMAIL="{{cookiecutter.project_verbose_name}} <admin@example.com>"
+SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@example.com>"
 
 
 # Database
-DJANGO_DATABASE_HOST=postgres
+DJANGO_DATABASE_HOST=pg_bouncer
 DJANGO_DATABASE_PORT=5432
 POSTGRES_DB={{cookiecutter.project_name}}
 POSTGRES_USER={{cookiecutter.project_name}}
@@ -45,6 +64,15 @@ POSTGRES_PASSWORD={{cookiecutter.project_name}}
 CONN_MAX_AGE=60
 BACKUP_DIR_PATH="/db-backups"
 BACKUP_FILE_PREFIX={{cookiecutter.project_name}}
+
+
+# PGBOUNCER
+DB_HOST=postgres
+DB_NAME=${POSTGRES_DB}
+DB_USER=${POSTGRES_USER}
+DB_PASSWORD=${POSTGRES_PASSWORD}
+AUTH_TYPE=plain
+
 
 # Celery
 CELERY_BROKER_URL="redis://redis:6379/1"
@@ -54,11 +82,19 @@ CELERY_FLOWER_PASSWORD=
 CELERY_AUTOSCALE_WORKERS_MIN=1
 CELERY_AUTOSCALE_WORKERS_MAX=3
 
+
 # Gunicorn
 GUNICORN_WORKERS=1
-GUNICORN_APPLICATION=server.wsgi:application
+GUNICORN_APPLICATION={{cookiecutter.project_name}}.wsgi:application
 GUNICORN_WORKER_CLASS="sync" # sync | gevent
 GUNICORN_WORKER_CONNECTIONS=100
 GUNICORN_MAX_REQUESTS=2000
 GUNICORN_REQUESTS_JITTER=400
 
+
+# Sentry
+SENTRY_DSN=
+SENTRY_TRACES_SAMPLE_RATE=
+
+# Feature Flags
+ACCOUNT_ALLOW_REGISTRATION=true

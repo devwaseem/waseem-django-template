@@ -5,7 +5,7 @@ set -o nounset
 
 
 exec celery \
-    --app server \
+    --app {{cookiecutter.project_name}} \
     -b "${CELERY_BROKER_URL}" \
     --persistent=True --db="flower_db" \
     --max_tasks=1000 \

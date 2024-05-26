@@ -6,25 +6,25 @@ vite:
   npm run dev
 
 test *ARGS:
-    DJANGO_ENV=test PYTHONBREAKPOINT=ipdb.set_trace poetry run pytest -s {{ ARGS }}
+    DJANGO_ENV=test PYTHONBREAKPOINT=ipdb.set_trace poetry run pytest -s  {{ ARGS }}
 
 lint:
   poetry run pre-commit run --all-files
-
-type:
-  poetry run mypy server
+{% endraw %}
+type *ARGS:
+  poetry run mypy {{cookiecutter.project_name}} {% raw%} {{ ARGS }} {% endraw %}
 
 celery:
-  poetry run watchmedo auto-restart --directory=server --recursive --pattern '*.py' -- -- celery --app server worker -E -l INFO -Q celery --pool gevent --concurrency 20
+  poetry run watchmedo auto-restart --directory={{cookiecutter.project_name}} --recursive --pattern '*.py' -- -- celery --app {{cookiecutter.project_name}} worker -E -l INFO -Q celery --pool gevent --concurrency 20
+{% raw%}
+makemigrations *ARGS:
+  poetry run python manage.py makemigrations {{ ARGS }}
 
-makemigrations:
-  poetry run python manage.py makemigrations
+migrate *ARGS:
+  poetry run python manage.py migrate {{ ARGS }}
 
-migrate:
-  poetry run python manage.py migrate
-
-dbshell:
-  poetry run python manage.py dbshell
+dbshell *ARGS:
+  poetry run python manage.py dbshell {{ ARGS }}
 
 notebook:
   DJANGO_ALLOW_ASYNC_UNSAFE=true poetry run python manage.py shell_plus --notebook --no-browser
@@ -32,14 +32,14 @@ notebook:
 shell:
   poetry run python manage.py shell_plus
 
-up:
-  docker-compose -f development.yml up -d
+up *ARGS:
+  docker-compose -f development.yml up -d {{ ARGS }}
 
-stop:
-  docker-compose -f development.yml stop
+stop *ARGS:
+  docker-compose -f development.yml stop {{ ARGS }}
 
-down:
-  docker-compose -f development.yml down
+down *ARGS:
+  docker-compose -f development.yml down {{ ARGS }}
 
 docker-shell CONTAINER_NAME:
   docker-compose -f development.yml exec {{ CONTAINER_NAME }} bash

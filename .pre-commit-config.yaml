@@ -16,15 +16,14 @@ repos:
     rev: v0.1.11
     hooks:
       - id: ruff
-        args: [--fix, '--preview', '--show-source']
+        args: [--fix, "--preview", "--show-source"]
       - id: ruff-format
 
   - repo: local
     hooks:
       - id: mypy
         name: mypy
-        entry: bash -c 'poetry run mypy server'
+        entry: bash -c 'poetry run mypy {{cookiecutter.project_name}}'
         language: system
         types: [python]
         pass_filenames: false
-
