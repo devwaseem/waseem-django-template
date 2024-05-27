@@ -16,6 +16,7 @@ from {{cookiecutter.project_name}}.settings.vars import (
     ENABLE_CPROFILE,
     ENABLE_HEALTH_CHECK,
     ENABLE_SILK_PROFILING,
+    ENABLE_PYINSTRUMENT
 )
 
 django_stubs_ext.monkeypatch()
@@ -56,6 +57,9 @@ if ENABLE_SILK_PROFILING:
 
 if ENABLE_CPROFILE:
     include("components/cprofile.py")
+
+if ENABLE_PYINSTRUMENT:
+    include("components/pyinstrument.py")
 
 # only for dev
 if DEBUG:
