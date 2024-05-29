@@ -1,5 +1,5 @@
 # Django - General
-DEBUG=false
+DEBUG=true
 SECRET_KEY=secret
 
 PYTHONBREAKPOINT="ipdb.set_trace"
@@ -16,7 +16,6 @@ MEDIA_USE_S3=false
 
 
 # Logging
-LOG_DB=false
 LOG_FILE_DJANGO=
 LOG_FILE_SECURITY=
 LOG_FILE_APP=
@@ -31,22 +30,22 @@ AWS_S3_REGION_NAME=
 
 
 # Redis
-REDIS_HOST=redis
+REDIS_HOST=localhost|redis
 REDIS_PORT=6379
 
 
 # MJML
-MJML_HOST=mjml
+MJML_HOST=localhost|mjml
 MJML_PORT=28101
 
 
 # Caddy
-DOMAIN_NAME=
+DOMAIN_NAME=localhost:8000
 SSL_EMAIL=
 
 
 # Email
-EMAIL_BACKEND=[django.core.mail.backends.smtp.EmailBackend|anymail.backends.amazon_ses.EmailBackend]
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend|anymail.backends.amazon_ses.EmailBackend
 EMAIL_HOST=
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
@@ -57,7 +56,7 @@ SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@example.com>"
 
 
 # Database
-DJANGO_DATABASE_HOST=pg_bouncer
+DJANGO_DATABASE_HOST=localhost|pg_bouncer|postgres
 DJANGO_DATABASE_PORT=5432
 POSTGRES_DB={{cookiecutter.project_name}}
 POSTGRES_USER={{cookiecutter.project_name}}
