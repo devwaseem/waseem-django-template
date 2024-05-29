@@ -31,9 +31,11 @@ just lint
 echo "Checking type errors..."
 just type
 
+git add .
+git commit -m "Intial Commit"
+
 # Customize the env file before proceeding
 nvim .env
-
 
 echo "Setup Complete..."
 
