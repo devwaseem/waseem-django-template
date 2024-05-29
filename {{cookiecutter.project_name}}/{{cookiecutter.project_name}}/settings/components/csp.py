@@ -62,5 +62,3 @@ CSP_CONNECT_SRC: tuple[str, ...] = (
     CSP_STATIC_URL,
     CSP_MEDIA_URL,
 )
-
-)

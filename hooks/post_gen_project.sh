@@ -26,13 +26,15 @@ poetry run pre-commit install
 # Customize the env file before proceeding
 nvim .env
 
-if [[ $? -eq 0 ]];
-then
-  just up
-  just makemigrations
-  just migrate
-  if [[ $? -eq 0 ]];
-  then
-    echo "Setup Complete..."
-  fi
-fi
+echo "Setup Complete..."
+
+# if [[ $? -eq 0 ]];
+# then
+#   just up
+#   just makemigrations
+#   just migrate
+#   if [[ $? -eq 0 ]];
+#   then
+#     echo "Setup Complete..."
+#   fi
+# fi
