@@ -1,11 +1,10 @@
-from {{cookiecutter.project_name}}.settings.components.common import MIDDLEWARE
+from django.http import HttpRequest
+from optik_invoice.settings.components.common import MIDDLEWARE
+
+MIDDLEWARE += ["pyinstrument.middleware.ProfilerMiddleware"]
 
 
-MIDDLEWARE += [
-    "pyinstrument.middleware.ProfilerMiddleware"
-]
-
-def custom_show_pyinstrument(request):
+def custom_show_pyinstrument(request: HttpRequest) -> bool:
     return request.user.is_superuser
 
 
