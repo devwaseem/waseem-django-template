@@ -22,4 +22,5 @@ Env = environ.Env(
     LOG_FILE_APP=(str, "/var/log/django/app.log"),
     LOG_FILE_CELERY=(str, "/var/log/django/celery.log"),
     NO_CACHE=(bool, False),
+    LOG_DB=(bool, False),
 )

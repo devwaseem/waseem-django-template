@@ -18,6 +18,8 @@ poetry install --no-root
 # Install node dependencies
 npm install
 
+mkdir dist
+
 git init -b main
 git add .
 

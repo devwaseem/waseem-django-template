@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import structlog
 from env import Env
-from {{cookiecutter.project_name}}.settings.vars import DEBUG, TEST
+from {{cookiecutter.project_name}}.settings.vars import DEBUG
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -21,8 +21,13 @@ LOGGING = {
     # We use these formatters in our `'handlers'` configuration.
     # Probably, you won't need to modify these lines.
     # Unless, you know what you are doing.
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
     "formatters": {
-        "json_formatter": {
+        "json": {
             "()": structlog.stdlib.ProcessorFormatter,
             "processor": structlog.processors.JSONRenderer(),
         },
@@ -83,34 +88,34 @@ LOGGING = {
         "django_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_DJANGO"),
+            "filename": Env("LOG_FILE_DJANGO", "./logs/django.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
-            "formatter": "console",
+            "formatter": "json",
         },
         "django_security_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_SECURITY"),
+            "filename": Env("LOG_FILE_SECURITY", "./logs/security.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
-            "formatter": "console",
+            "formatter": "json",
         },
         "app_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_APP"),
+            "filename": Env("LOG_FILE_APP", "./logs/app.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
-            "formatter": "console",
+            "formatter": "json",
         },
         "celery_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_CELERY"),
+            "filename": Env("LOG_FILE_CELERY", "./logs/celery.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
-            "formatter": "console",
+            "formatter": "json",
         },
     },
     # These loggers are required by our app:
@@ -162,11 +167,6 @@ if DEBUG:
             "propagate": False,
             "level": "DEBUG",
         },
-        "django.db": {
-            "handlers": ["plain_console"],
-            "propagate": False,
-            "level": "DEBUG",
-        },
         "django.core.cache": {
             "handlers": ["plain_console"],
             "propagate": False,
@@ -193,9 +193,12 @@ if DEBUG:
             "propagate": True,
         },
     }
-
-if TEST:
-    LOGGING["loggers"]["django.db"] = {}  # type: ignore
+    if Env.bool("LOG_DB"):
+        LOGGING["loggers"]["django.db"] =  {
+            "handlers": ["plain_console"],
+            "propagate": False,
+            "level": "DEBUG",
+        }
 
 
 class LoggingContextVarsMiddleware:
