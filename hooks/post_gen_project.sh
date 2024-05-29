@@ -25,8 +25,11 @@ git add .
 
 poetry run pre-commit install
 
+just lint
+
 # Customize the env file before proceeding
 nvim .env
+
 
 echo "Setup Complete..."
 
