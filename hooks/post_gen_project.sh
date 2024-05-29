@@ -18,8 +18,7 @@ poetry install --no-root
 # Install node dependencies
 npm install
 
-git init
-git branch -m main
+git init -b main
 git add .
 
 poetry run pre-commit install
