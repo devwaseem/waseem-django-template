@@ -194,7 +194,7 @@ if DEBUG:
         },
     }
     if Env.bool("LOG_DB"):
-        LOGGING["loggers"]["django.db"] =  {
+        LOGGING["loggers"]["django.db"] = {  # type: ignore
             "handlers": ["plain_console"],
             "propagate": False,
             "level": "DEBUG",

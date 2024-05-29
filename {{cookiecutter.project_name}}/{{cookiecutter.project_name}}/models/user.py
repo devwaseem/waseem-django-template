@@ -62,6 +62,11 @@ class User(AbstractUser):
     username = None  # type:ignore
     email = models.EmailField(_("email address"), unique=True)
 
+    # First and last name do not cover name patterns around the globe
+    name = models.CharField(_("Name"), blank=True, max_length=255)
+    first_name = None  # type: ignore[assignment]
+    last_name = None  # type: ignore[assignment]
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = []
     objects = UserManager()  # type:ignore

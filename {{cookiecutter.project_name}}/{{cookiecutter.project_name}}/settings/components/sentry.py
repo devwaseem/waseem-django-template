@@ -1,7 +1,7 @@
 import sentry_sdk
 from env import Env
 
-sentry_dsn = Env("SENTRY_DSN", str, default=None)  # type: ignore
+sentry_dsn = Env.str("SENTRY_DSN", None)
 
 if sentry_dsn:
     sentry_sdk.init(
@@ -9,5 +9,5 @@ if sentry_dsn:
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for performance monitoring.
         # We recommend adjusting this value in production,
-        traces_sample_rate=Env("SENTRY_TRACES_SAMPLE_RATE", float, 0),  # type: ignore
+        traces_sample_rate=Env.float("SENTRY_TRACES_SAMPLE_RATE", 0.0),
     )

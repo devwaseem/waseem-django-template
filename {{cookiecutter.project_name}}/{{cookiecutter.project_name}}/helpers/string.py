@@ -16,11 +16,11 @@ def mark_as_strong_for(value: str, replacing_str: str) -> str:
         # subst found
         to_index = from_index + len(replacing_str)
         return (
-            value[:from_index]  # noqa: W503
-            + "<strong>"  # noqa: W503
-            + value[from_index:to_index]  # noqa: W503
-            + "</strong>"  # noqa: W503
-            + value[to_index:]  # noqa: W503
+            value[:from_index]
+            + "<strong>"
+            + value[from_index:to_index]
+            + "</strong>"
+            + value[to_index:]
         )
 
     return value

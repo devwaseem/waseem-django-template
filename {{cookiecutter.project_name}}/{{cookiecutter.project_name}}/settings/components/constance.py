@@ -1,3 +1,5 @@
 # https://django-constance.readthedocs.io/en/latest/
 
-CONSTANCE_CONFIG = {}
+from typing import Any
+
+CONSTANCE_CONFIG: dict[str, Any] = {}  # type: ignore

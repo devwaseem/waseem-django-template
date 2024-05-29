@@ -1,14 +1,15 @@
 import typing
 from typing import Any
 
+from django.conf import settings
+from django.http import HttpRequest
+
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from django.conf import settings
+from allauth.socialaccount.models import SocialLogin
 
 from {{cookiecutter.project_name}}.context_processors import get_site_data
 from {{cookiecutter.project_name}}.models.user import User
-from django.http import HttpRequest
-from allauth.socialaccount.models import SocialLogin
 
 
 class AllAuthAccountAdapter(DefaultAccountAdapter):  # type: ignore
@@ -33,7 +34,7 @@ class AllAuthAccountAdapter(DefaultAccountAdapter):  # type: ignore
         return f"{prefix}: {subject}"
 
 
-class SocialAccountAdapter(DefaultSocialAccountAdapter):
+class SocialAccountAdapter(DefaultSocialAccountAdapter):  # type: ignore
     def is_open_for_signup(
         self,
         _request: HttpRequest,
@@ -41,7 +42,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
     ) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
-    def populate_user(
+    def populate_user(  # type: ignore
         self,
         request: HttpRequest,
         sociallogin: SocialLogin,
@@ -52,7 +53,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
         See: https://docs.allauth.org/en/latest/socialaccount/advanced.html#creating-and-populating-user-instances
         """
-        user = super().populate_user(request, sociallogin, data)
+        user: User = super().populate_user(request, sociallogin, data)
         if not user.name:
             if name := data.get("name"):
                 user.name = name

@@ -25,7 +25,11 @@ git add .
 
 poetry run pre-commit install
 
+echo "Linting & Formatting..."
 just lint
+
+echo "Checking type errors..."
+just type
 
 # Customize the env file before proceeding
 nvim .env

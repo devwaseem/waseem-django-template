@@ -27,8 +27,10 @@ def get_site_data(request: HttpRequest) -> DomainContext:
     )
 
 
-def allauth_settings(_request: HttpRequest) -> dict[str, Any]:
+def allauth_settings(_request: HttpRequest) -> dict[str, Any]:  # type: ignore
     """Expose some settings from django-allauth in templates."""
     return {
-        "ACCOUNT_ALLOW_REGISTRATION": settings.ACCOUNT_ALLOW_REGISTRATION,
+        "ACCOUNT_ALLOW_REGISTRATION": getattr(
+            settings, "ACCOUNT_ALLOW_REGISTRATION", True
+        )
     }

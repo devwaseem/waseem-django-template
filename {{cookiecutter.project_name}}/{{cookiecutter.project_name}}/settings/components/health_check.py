@@ -1,10 +1,9 @@
 # https://github.com/revsys/django-health-check
 
-
-from settings.vars import REDIS_HOST, REDIS_PORT
+from {{cookiecutter.project_name}}.settings.components.common import INSTALLED_APPS
+from {{cookiecutter.project_name}}.settings.vars import REDIS_HOST, REDIS_PORT
 
 from .caches import CACHES
-from {{cookiecutter.project_name}}.settings.components.common import INSTALLED_APPS
 
 INSTALLED_APPS += [
     "health_check",  # required
