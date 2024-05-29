@@ -88,7 +88,7 @@ LOGGING = {
         "django_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_DJANGO", "./logs/django.log"),
+            "filename": Env.str("LOG_FILE_DJANGO", "./logs/django.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
             "formatter": "json",
@@ -96,7 +96,7 @@ LOGGING = {
         "django_security_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_SECURITY", "./logs/security.log"),
+            "filename": Env.str("LOG_FILE_SECURITY", "./logs/security.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
             "formatter": "json",
@@ -104,7 +104,7 @@ LOGGING = {
         "app_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_APP", "./logs/app.log"),
+            "filename": Env.str("LOG_FILE_APP", "./logs/app.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
             "formatter": "json",
@@ -112,7 +112,7 @@ LOGGING = {
         "celery_file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env("LOG_FILE_CELERY", "./logs/celery.log"),
+            "filename": Env.str("LOG_FILE_CELERY", "./logs/celery.log"),
             "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
             "formatter": "json",
