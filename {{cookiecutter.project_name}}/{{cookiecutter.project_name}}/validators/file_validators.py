@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 @deconstructible
-class MaxFileSizeValidatorInMb:
+class FileSizeValidatorInMb:
     message = _(
         "The file size is %(current_file_size)s MB, "
         "exceeding the maximum file size of %(max_file_size)s MB "
