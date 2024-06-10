@@ -8,12 +8,12 @@
     "build": "NODE_ENV=production tsc && vite build"
   },
   "devDependencies": {
-    "@types/alpinejs": "^3.13"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
   },
   "dependencies": {
+    "typescript": "^5.4.5",
+    "@types/alpinejs": "^3.13",
     "@alpinejs/collapse": "^3.13.8",
     "@alpinejs/focus": "^3.13.8",
     "@alpinejs/mask": "^3.13.8",
