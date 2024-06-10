@@ -28,8 +28,10 @@ STORAGES = {
 if Env.bool("MEDIA_USE_S3", False):
     STORAGES["default"] = {
         "BACKEND": "{{cookiecutter.project_name}}.settings.components.aws.PublicMediaStorage", # noqa
-        "location": "media",
-        "base_url": f"https://{AWS_S3_CUSTOM_DOMAIN}/media/",
+        "OPTIONS": {
+            "location": "media",
+            "base_url": f"https://{AWS_S3_CUSTOM_DOMAIN}/media/",
+        }
     }
 
 if Env.bool("STATIC_USE_S3", False):

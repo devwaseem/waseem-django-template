@@ -5,4 +5,4 @@ set -o pipefail
 set -o nounset
 
 
-exec celery --app server beat -l INFO
+exec celery --app {{cookiecutter.project_name}} beat -l INFO
