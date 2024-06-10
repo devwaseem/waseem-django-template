@@ -79,43 +79,11 @@ LOGGING = {
         },
         "json_console": {
             "class": "logging.StreamHandler",
-            "formatter": "json_formatter",
+            "formatter": "json",
         },
         "mail_admins": {
             "level": "ERROR",
             "class": "django.utils.log.AdminEmailHandler",
-        },
-        "django_file": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env.str("LOG_FILE_DJANGO", "./logs/django.log"),
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 5,
-            "formatter": "json",
-        },
-        "django_security_file": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env.str("LOG_FILE_SECURITY", "./logs/security.log"),
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 5,
-            "formatter": "json",
-        },
-        "app_file": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env.str("LOG_FILE_APP", "./logs/app.log"),
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 5,
-            "formatter": "json",
-        },
-        "celery_file": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": Env.str("LOG_FILE_CELERY", "./logs/celery.log"),
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 5,
-            "formatter": "json",
         },
     },
     # These loggers are required by our app:
@@ -123,22 +91,22 @@ LOGGING = {
     # - security is required by `axes`
     "loggers": {
         "django.server": {
-            "handlers": ["django_file", "mail_admins"],
+            "handlers": ["json_console", "mail_admins"],
             "propagate": True,
             "level": "INFO",
         },
         "django.security": {
-            "handlers": ["django_security_file", "mail_admins"],
+            "handlers": ["json_console", "mail_admins"],
             "level": "WARNING",
             "propagate": True,
         },
         "celery": {
-            "handlers": ["celery_file", "mail_admins"],
+            "handlers": ["json_console", "mail_admins"],
             "level": "INFO",
             "propagate": True,
         },
         "{{cookiecutter.project_name}}": {
-            "handlers": ["app_file", "mail_admins"],
+            "handlers": ["json_console", "mail_admins"],
             "level": "INFO",
             "propagate": True,
         },
