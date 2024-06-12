@@ -4,8 +4,10 @@ from {{cookiecutter.project_name}}.settings.vars import DEBUG
 # Security
 # https://docs.djangoproject.com/en/3.2/topics/security/
 
+USE_SSL = Env.bool("USE_SSL", None)
 
-ALLOWED_HOSTS = ["." + Env.str("DOMAIN_NAME")]
+ALLOWED_HOSTS = Env.list("ALLOWED_HOSTS", [])
+
 
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
@@ -20,15 +22,17 @@ X_FRAME_OPTIONS = "DENY"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 # session
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = USE_SSL
 SESSION_COOKIE_HTTPONLY = True
-CSRF_TRUSTED_ORIGINS = ["https://*." + Env("DOMAIN_NAME")]
+CSRF_TRUSTED_ORIGINS = Env.list("CSRF_TRUSTED_ORIGINS", [])
 
 # csrf
 CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = USE_SSL
 CSRF_COOKIE_SAMESITE = "Strict"
 
+
+SECURE_SSL_REDIRECT = USE_SSL
 
 # https://github.com/DmytroLitvinov/django-http-referrer-policy
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
@@ -39,9 +43,11 @@ PERMISSIONS_POLICY: dict[str, str | list[str]] = {}
 
 # Only in production
 if not DEBUG:
-    USE_X_FORWARDED_HOST = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = True
+    USE_X_FORWARDED_HOST = Env.bool("USE_X_FORWARDED_HOST", False)
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https" if USE_SSL else "http",
+    )
 
     # HSTS
     SECURE_HSTS_SECONDS = 63072000  # 2 years

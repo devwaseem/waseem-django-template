@@ -5,13 +5,14 @@ from {{cookiecutter.project_name}}.settings.components.aws import AWS_S3_CUSTOM_
 DJANGO_STATIC_HOST = Env.str("DJANGO_STATIC_HOST", "")
 DJANGO_MEDIA_HOST = Env.str("DJANGO_MEDIA_HOST", "")
 
+MEDIA_LOCATION = "media"
 STATIC_LOCATION = "static" if DEBUG else "/var/www/static"
 
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
         "OPTIONS": {
-            "location": "media",
+            "location": MEDIA_LOCATION,
             "base_url": f"{DJANGO_MEDIA_HOST}/media/",
         },
     },
@@ -29,7 +30,7 @@ if Env.bool("MEDIA_USE_S3", False):
     STORAGES["default"] = {
         "BACKEND": "{{cookiecutter.project_name}}.settings.components.aws.PublicMediaStorage", # noqa
         "OPTIONS": {
-            "location": "media",
+            "location": MEDIA_LOCATION,
             "base_url": f"https://{AWS_S3_CUSTOM_DOMAIN}/media/",
         }
     }
@@ -42,7 +43,8 @@ if Env.bool("STATIC_USE_S3", False):
             "base_url": f"https://{AWS_S3_CUSTOM_DOMAIN}/static/",
         },
     }
-elif Env.bool("STATIC_USE_WHITENOISE", False):
+
+if Env.bool("STATIC_USE_WHITENOISE", False):
     STORAGES["staticfiles"] = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         "OPTIONS": {
