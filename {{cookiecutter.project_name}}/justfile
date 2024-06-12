@@ -16,6 +16,12 @@ type *ARGS:
 
 celery:
   LOG_DB=true poetry run watchmedo auto-restart --directory={{cookiecutter.project_name}} --recursive --pattern '*.py' -- -- celery --app {{cookiecutter.project_name}} worker -E -l INFO -Q celery --pool gevent --concurrency 20
+
+celery-beat:
+  LOG_DB=true poetry run celery --app {{cookiecutter.project_name}} beat -l INFO
+
+flower:
+  LOG_DB=true poetry run celery --app {{cookiecutter.project_name}} flower
 {% raw%}
 makemigrations *ARGS:
   poetry run python manage.py makemigrations {{ ARGS }}
