@@ -15,9 +15,9 @@ from {{cookiecutter.project_name}}.settings.vars import (
     DEBUG,
     ENABLE_CPROFILE,
     ENABLE_HEALTH_CHECK,
-    ENABLE_SILK_PROFILING,
     ENABLE_PYINSTRUMENT,
-    ENABLE_SENTRY
+    ENABLE_SENTRY,
+    ENABLE_SILK_PROFILING,
 )
 
 django_stubs_ext.monkeypatch()
@@ -47,7 +47,6 @@ include(
     "components/mjml.py",
     "components/rate_limit.py",
     "components/rest_framework.py",
-    "components/sentry.py",
 )
 
 if ENABLE_HEALTH_CHECK:
