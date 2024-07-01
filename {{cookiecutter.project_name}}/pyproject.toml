@@ -155,7 +155,7 @@ ignore_missing_model_attributes = true
 
 [tool.django-stubs]
 module = "django-stubs"
-django_settings_module = "{{cookiecutter.project_name}}.settings"
+django_settings_module = "src.settings"
 
 [[tool.mypy.overrides]]
 module = "*.migrations.*"
@@ -285,7 +285,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.ruff.lint.isort]
-known-first-party = ["{{cookiecutter.project_name}}"]
+known-first-party = ["src"]
 #
 [tool.ruff.lint.per-file-ignores]
 "**/admin/*" = [
@@ -303,7 +303,7 @@ known-first-party = ["{{cookiecutter.project_name}}"]
 ]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "{{cookiecutter.project_name}}.settings"
+DJANGO_SETTINGS_MODULE = "src.settings"
 filterwarnings = [
   "ignore::DeprecationWarning",
   # "ignore::django.utils.deprecation.RemovedInDjango50Warning",
@@ -318,7 +318,7 @@ addopts = [
   '--tb=short',
   '--durations=0',
   '--durations-min=0.5',
-  '--cov={{cookiecutter.project_name}}/',
+  '--cov=src/',
   '--cov-report=html',
   # '--doctest-modules',
   # '--cov-report=term',

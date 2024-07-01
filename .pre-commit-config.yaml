@@ -23,7 +23,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: bash -c 'poetry run mypy {{cookiecutter.project_name}}'
+        entry: bash -c 'poetry run mypy src'
         language: system
         types: [python]
         pass_filenames: false

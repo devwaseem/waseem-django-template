@@ -12,16 +12,16 @@ lint:
   poetry run pre-commit run --all-files
 {% endraw %}
 type *ARGS:
-  poetry run mypy {{cookiecutter.project_name}} {% raw%} {{ ARGS }} {% endraw %}
+  poetry run mypy src {% raw%} {{ ARGS }} {% endraw %}
 
 celery:
-  LOG_DB=true poetry run watchmedo auto-restart --directory={{cookiecutter.project_name}} --recursive --pattern '*.py' -- -- celery --app {{cookiecutter.project_name}} worker -E -l INFO -Q celery --pool gevent --concurrency 20
+  LOG_DB=true poetry run watchmedo auto-restart --directory=src --recursive --pattern '*.py' -- -- celery --app src worker -E -l INFO -Q celery --pool gevent --concurrency 20
 
 celery-beat:
-  LOG_DB=true poetry run celery --app {{cookiecutter.project_name}} beat -l INFO
+  LOG_DB=true poetry run celery --app src beat -l INFO
 
 flower:
-  LOG_DB=true poetry run celery --app {{cookiecutter.project_name}} flower
+  LOG_DB=true poetry run celery --app src flower
 {% raw%}
 makemigrations *ARGS:
   poetry run python manage.py makemigrations {{ ARGS }}

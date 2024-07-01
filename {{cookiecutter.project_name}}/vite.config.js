@@ -1,10 +1,9 @@
 import inject from '@rollup/plugin-inject';
 import { glob } from 'glob';
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
-
-const dirs = ['assets', '{{cookiecutter.project_name}}'];
+const dirs = ['assets', 'src'];
 
 let inputFiles = [];
 
