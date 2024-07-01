@@ -2,85 +2,107 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Vite Dev Server",
+            "label": "dev",
             "type": "shell",
-            "command": "yarn run dev --host 0.0.0.0",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "command": "LOG_DB=true poetry run python manage.py runserver_plus 0.0.0.0:8000",
+            "problemMatcher": []
         },
         {
-            "label": "Celery Workers",
+            "label": "vite",
             "type": "shell",
-            "command": "poetry run python -m celery --app server worker -E -l INFO -Q celery,emails",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "command": "npm run dev",
+            "problemMatcher": []
         },
         {
-            "label": "Pre-commit hook",
+            "label": "test",
+            "type": "shell",
+            "command": "DISABLE_LOGGING=true TEST=true PYTHONBREAKPOINT=ipdb.set_trace poetry run pytest -s",
+            "problemMatcher": []
+        },
+        {
+            "label": "lint",
             "type": "shell",
             "command": "poetry run pre-commit run --all-files",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "problemMatcher": []
         },
         {
-            "label": "Django Server",
+            "label": "type",
             "type": "shell",
-            "command": "poetry run python manage.py runserver 0.0.0.0:8000",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "command": "poetry run mypy optik_invoice",
+            "problemMatcher": []
         },
         {
-            "label": "Django Makemigrations",
+            "label": "celery",
+            "type": "shell",
+            "command": "LOG_DB=true poetry run watchmedo auto-restart --directory=optik_invoice --recursive --pattern '*.py' -- -- celery --app optik_invoice worker -E -l INFO -Q celery --pool gevent --concurrency 20",
+            "problemMatcher": []
+        },
+        {
+            "label": "celery-beat",
+            "type": "shell",
+            "command": "LOG_DB=true poetry run celery --app optik_invoice beat -l INFO",
+            "problemMatcher": []
+        },
+        {
+            "label": "flower",
+            "type": "shell",
+            "command": "LOG_DB=true poetry run celery --app optik_invoice flower",
+            "problemMatcher": []
+        },
+        {
+            "label": "makemigrations",
             "type": "shell",
             "command": "poetry run python manage.py makemigrations",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "problemMatcher": []
         },
         {
-            "label": "Django Migrate",
+            "label": "migrate",
             "type": "shell",
             "command": "poetry run python manage.py migrate",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "problemMatcher": []
         },
         {
-            "label": "🖥️ Django Shell Plus",
+            "label": "dbshell",
+            "type": "shell",
+            "command": "poetry run python manage.py dbshell",
+            "problemMatcher": []
+        },
+        {
+            "label": "notebook",
+            "type": "shell",
+            "command": "LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true poetry run python manage.py shell_plus --notebook --no-browser",
+            "problemMatcher": []
+        },
+        {
+            "label": "shell",
             "type": "shell",
             "command": "poetry run python manage.py shell_plus",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "problemMatcher": []
         },
         {
-            "label": "🗄️ Django DB Shell (PSQL)",
+            "label": "up",
             "type": "shell",
-            "command": "poetry run python manage.py shell_plus",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "command": "docker-compose -f development.yml up -d",
+            "problemMatcher": []
         },
         {
-            "label": "📒 Django Notebook",
+            "label": "stop",
             "type": "shell",
-            "command": "poetry run python manage.py shell_plus --notebook --no-browser",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build"
-            }
+            "command": "docker-compose -f development.yml stop",
+            "problemMatcher": []
+        },
+        {
+            "label": "down",
+            "type": "shell",
+            "command": "docker-compose -f development.yml down",
+            "problemMatcher": []
+        },
+        {
+            "label": "docker-shell",
+            "type": "shell",
+            "command": "docker-compose -f development.yml exec",
+            "args": ["${input:CONTAINER_NAME}", "bash"],
+            "problemMatcher": []
         }
     ]
 }
