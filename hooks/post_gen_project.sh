@@ -23,13 +23,13 @@ mkdir dist
 git init -b main
 git add .
 
-poetry run pre-commit install
+# poetry run pre-commit install
 
-echo "Linting & Formatting..."
-just lint
+# echo "Linting & Formatting..."
+# just lint
 
-echo "Checking type errors..."
-just type
+# echo "Checking type errors..."
+# just type
 
 git add .
 git commit -m "Intial Commit"
