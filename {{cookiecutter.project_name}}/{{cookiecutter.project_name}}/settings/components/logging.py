@@ -8,12 +8,16 @@
 from typing import TYPE_CHECKING
 
 import structlog
+from django.contrib.sites.shortcuts import get_current_site
+from django.dispatch import receiver
+from django_structlog import signals
+from django.http import HttpRequest, HttpResponse
+
 from env import Env
 from {{cookiecutter.project_name}}.settings.vars import DEBUG
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from django.http import HttpRequest, HttpResponse
 
 LOGGING = {
     "version": 1,
@@ -30,6 +34,17 @@ LOGGING = {
         "json": {
             "()": structlog.stdlib.ProcessorFormatter,
             "processor": structlog.processors.JSONRenderer(),
+            "foreign_pre_chain": [
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+                structlog.processors.StackInfoRenderer(),
+                structlog.processors.format_exc_info,
+                structlog.processors.UnicodeDecoder(),
+                structlog.processors.ExceptionPrettyPrinter(),
+            ],
         },
         "console": {
             "()": structlog.stdlib.ProcessorFormatter,
@@ -90,6 +105,11 @@ LOGGING = {
     # - django is required when using `logger.getLogger('django')`
     # - security is required by `axes`
     "loggers": {
+        "django_structlog": {
+            "handlers": ["json_console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
         "django.server": {
             "handlers": ["json_console", "mail_admins"],
             "propagate": True,
@@ -125,6 +145,16 @@ if DEBUG:
         },
     }
     LOGGING["loggers"] = {
+        "django_structlog": {
+            "handlers": ["plain_console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "werkzeug": {
+            "handlers": ["plain_console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
         "django.request": {
             "handlers": ["plain_console"],
             "propagate": True,
@@ -210,3 +240,9 @@ if not structlog.is_configured():
         wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
+
+@receiver(signals.bind_extra_request_metadata)
+def bind_domain(request: HttpRequest, logger: Any, **_kwargs: Any) -> None:  # type: ignore # noqa
+    current_site = get_current_site(request)
+    structlog.contextvars.bind_contextvars(domain=current_site.domain)
+
