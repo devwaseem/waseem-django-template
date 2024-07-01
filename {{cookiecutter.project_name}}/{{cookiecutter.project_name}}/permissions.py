@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Any
 
 from django.contrib.auth.mixins import AccessMixin
-from django.http.request import HttpRequest
-from django.http.response import HttpResponse
+from django.http import HttpResponse
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 
-from .models.api_key import APIKey
+from .models.account.api_key import APIKey
+from .request import HTTPAuthRequest
 
 if TYPE_CHECKING:
     from rest_framework.views import APIView
@@ -35,7 +35,7 @@ class IsAPIKeyAuthenticated(BasePermission):
 class SuperUserLoginRequiredMixin(AccessMixin):
     def dispatch(
         self,
-        request: HttpRequest,
+        request: HTTPAuthRequest,
         *args: str,
         **kwargs: str,
     ) -> HttpResponse:

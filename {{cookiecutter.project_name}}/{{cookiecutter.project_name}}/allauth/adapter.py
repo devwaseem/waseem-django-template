@@ -13,6 +13,8 @@ from {{cookiecutter.project_name}}.models.user import User
 
 
 class AllAuthAccountAdapter(DefaultAccountAdapter):  # type: ignore
+    request: HttpRequest
+
     def is_open_for_signup(self, _request: HttpRequest) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
