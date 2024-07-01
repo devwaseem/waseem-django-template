@@ -1,44 +1,51 @@
-{% raw %}{% load static %}
-{% load load_js %}
-<!DOCTYPE html>
-<html class="overflow-hidden no-js" lang="en">
-    <head>
-        <meta charset="utf-8" />{% endraw %}
-        <meta name="keywords" content="{{ cookiecutter.project_name }},{{cookiecutter.project_verbose_name}}" />{% raw %}
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        {% block seo %}{% endraw %}
-            <title>{{ cookiecutter.project_verbose_name }}</title>{% raw %}
-            <meta name="description" content="" />
-        {% endblock seo %}
-        <meta name="viewport"
-            content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
-            rel="stylesheet">
-        {% load_asset global modal.ts %}
-        {% block alpine_components %}
-        {% endblock alpine_components %}
-        {% load_asset global htmx.ts %}
-        {% load_asset global alpine.ts %}
-        {% block extrahead %}
-        {% endblock extrahead %}
-        {% load_asset global main.ts %}
-    </head>
-    <body class="overflow-y-scroll leading-normal tracking-normal bg-gray-50 flex flex-col"
-        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-ext="loading-states,debug">
-        {% block navbar %}
-        {% endblock navbar %}
-        {% block main %}
-        {% endblock main %}
-        <div x-data="ModalContainer">
-            <div id="modal_container"></div>
-        </div>
-        {% block footer %}
-        {% endblock footer %}
-        {% block extrabody %}
-        {% endblock extrabody %}
-    </body>
-</html>{% endraw %}
+{% raw %}
+    {% load static %}
+    {% load load_js %}
+    <!DOCTYPE html>
+    <html class="overflow-hidden no-js" lang="en">
+        <head>
+            <meta charset="utf-8" />
+        {% endraw %}
+        <meta name="keywords"
+              content="{{ cookiecutter.project_name }},{{ cookiecutter.project_verbose_name }}" />
+        {% raw %}
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            {% block seo %}
+            {% endraw %}
+            <title>{{ cookiecutter.project_verbose_name }}</title>
+            {% raw %}
+                <meta name="description" content="" />
+            {% endblock seo %}
+            <meta name="viewport"
+                  content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+            <!-- Fonts -->
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+                  rel="stylesheet">
+            {% load_asset global modal.ts %}
+            {% block alpine_components %}
+            {% endblock alpine_components %}
+            {% load_asset global htmx.ts %}
+            {% load_asset global alpine.ts %}
+            {% block extrahead %}
+            {% endblock extrahead %}
+            {% load_asset global main.ts %}
+        </head>
+        <body class="overflow-y-scroll leading-normal tracking-normal bg-gray-50 flex flex-col"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-ext="loading-states,debug">
+            {% block navbar %}
+            {% endblock navbar %}
+            {% block main %}
+            {% endblock main %}
+            <div x-data="ModalContainer">
+                <div id="modal_container"></div>
+            </div>
+            {% block footer %}
+            {% endblock footer %}
+            {% block extrabody %}
+            {% endblock extrabody %}
+        </body>
+    </html>
+{% endraw %}

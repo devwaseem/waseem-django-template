@@ -16,7 +16,8 @@ from {{cookiecutter.project_name}}.settings.vars import (
     ENABLE_CPROFILE,
     ENABLE_HEALTH_CHECK,
     ENABLE_SILK_PROFILING,
-    ENABLE_PYINSTRUMENT
+    ENABLE_PYINSTRUMENT,
+    ENABLE_SENTRY
 )
 
 django_stubs_ext.monkeypatch()
@@ -60,6 +61,9 @@ if ENABLE_CPROFILE:
 
 if ENABLE_PYINSTRUMENT:
     include("components/pyinstrument.py")
+
+if ENABLE_SENTRY:
+    include("components/sentry.py")
 
 # only for dev
 if DEBUG:
