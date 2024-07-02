@@ -28,25 +28,25 @@
         {
             "label": "type",
             "type": "shell",
-            "command": "poetry run mypy optik_invoice",
+            "command": "poetry run mypy app",
             "problemMatcher": []
         },
         {
             "label": "celery",
             "type": "shell",
-            "command": "LOG_DB=true poetry run watchmedo auto-restart --directory=optik_invoice --recursive --pattern '*.py' -- -- celery --app optik_invoice worker -E -l INFO -Q celery --pool gevent --concurrency 20",
+            "command": "LOG_DB=true poetry run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20",
             "problemMatcher": []
         },
         {
             "label": "celery-beat",
             "type": "shell",
-            "command": "LOG_DB=true poetry run celery --app optik_invoice beat -l INFO",
+            "command": "LOG_DB=true poetry run celery --app app beat -l INFO",
             "problemMatcher": []
         },
         {
             "label": "flower",
             "type": "shell",
-            "command": "LOG_DB=true poetry run celery --app optik_invoice flower",
+            "command": "LOG_DB=true poetry run celery --app app flower",
             "problemMatcher": []
         },
         {
