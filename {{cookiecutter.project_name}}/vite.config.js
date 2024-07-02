@@ -3,7 +3,7 @@ import { glob } from 'glob';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
-const dirs = ['assets', 'src'];
+const dirs = ['assets', 'app'];
 
 let inputFiles = [];
 

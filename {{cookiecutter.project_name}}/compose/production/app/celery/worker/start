@@ -4,4 +4,4 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-exec celery --app src worker -E -l INFO -Q ${CELERY_QUEUES} --concurrency ${CELERY_CONCURRENCY}
+exec celery --app app worker -E -l INFO -Q ${CELERY_QUEUES} --concurrency ${CELERY_CONCURRENCY}
