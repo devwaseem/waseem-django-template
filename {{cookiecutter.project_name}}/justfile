@@ -11,7 +11,7 @@ lint:
   poetry run pre-commit run --all-files
 
 type *ARGS:
-  poetry run mypy app  {{ ARGS }}
+  poetry run mypy app {{ ARGS }}
 
 celery:
   LOG_DB=true poetry run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20

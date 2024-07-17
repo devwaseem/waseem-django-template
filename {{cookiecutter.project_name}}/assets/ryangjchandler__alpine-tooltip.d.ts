@@ -1,1 +1,1 @@
-declare module "@ryangjchandler/alpine-tooltip"
+declare module '@ryangjchandler/alpine-tooltip';

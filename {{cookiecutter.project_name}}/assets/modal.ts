@@ -1,8 +1,8 @@
-import { $byId } from "@assets/utils";
-import AlpineInstance from "alpinejs";
+import { $byId } from '@assets/utils';
+import AlpineInstance from 'alpinejs';
 
-AlpineInstance.data("ModalContainer", () => ({
-  closeModal(id: string) {
-    $byId(id)?.remove();
-  },
+AlpineInstance.data('ModalContainer', () => ({
+    closeModal(id: string) {
+        $byId(id)?.remove();
+    },
 }));

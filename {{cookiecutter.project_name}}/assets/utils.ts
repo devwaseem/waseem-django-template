@@ -11,5 +11,5 @@ export function $queryAll(select: string) {
 }
 
 export function openLinkInNewWindow(link: string) {
-  window.open(link, '_blank')
+    window.open(link, '_blank');
 }
