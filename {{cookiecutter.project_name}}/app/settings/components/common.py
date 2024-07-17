@@ -42,6 +42,7 @@ THIRD_PARTY_APPS: list[str] = [
     "storages",
     "django_extensions",
     "constance",
+    "django_cotton",  # https://django-cotton.com/docs/quickstart
     # django-widget-tweaks
     # "widget_tweaks",
     # Django feather (Feather icons)
@@ -130,9 +131,16 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             # Contains plain text templates, like `robots.txt`:
-            BASE_DIR / "templates",
+            BASE_DIR / "app" / "templates",
         ],
         "OPTIONS": {
+            "loaders": [
+                "django_cotton.cotton_loader.Loader",
+                "django.template.loaders.app_directories.Loader",
+            ],
+            "builtins": [
+                "django_cotton.templatetags.cotton",
+            ],
             "context_processors": [
                 # Default template context processors:
                 "django.contrib.auth.context_processors.auth",
