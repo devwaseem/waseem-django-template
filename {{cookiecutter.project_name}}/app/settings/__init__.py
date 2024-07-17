@@ -9,6 +9,7 @@ To change settings file:
 
 
 import django_stubs_ext
+from celery.app.task import Task
 from split_settings.tools import include
 
 from app.settings.vars import (
@@ -21,6 +22,7 @@ from app.settings.vars import (
 )
 
 django_stubs_ext.monkeypatch()
+Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore[attr-defined] # noqa
 
 # Django settings
 # Include it first before third party
