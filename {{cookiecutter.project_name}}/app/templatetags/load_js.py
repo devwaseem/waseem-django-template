@@ -8,6 +8,12 @@ from django import template
 from django.conf import settings
 from django.template.base import Parser, Token
 from django.templatetags.static import static
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_fixed,
+)
 
 from app.settings.vars import BASE_DIR
 
@@ -15,6 +21,11 @@ register = template.Library()
 
 
 @cache
+@retry(
+    retry=retry_if_exception_type(FileNotFoundError),
+    wait=wait_fixed(2),
+    stop=stop_after_attempt(3),
+)
 def _get_manifest_data() -> dict[str, Any]:  # type: ignore
     manifest_file = BASE_DIR / "dist/.vite/manifest.json"
     with manifest_file.open("r") as manifest_fd:

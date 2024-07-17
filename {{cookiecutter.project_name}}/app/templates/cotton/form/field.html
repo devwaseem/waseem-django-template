@@ -1,4 +1,3 @@
-{% raw %}
 {% load widget_tweaks %}
 <c-vars attr="" />
 <div class="{% if field.field.disabled %} opacity-70 [&>input]:bg-gray-100 [&>input]:cursor-not-allowed
@@ -28,4 +27,3 @@ flex
 {% endif %}
 {% for error in field.errors %}<span class="text-red-500 text-sm">{{ error }}</span>{% endfor %}
 </div>
-{%endraw %}

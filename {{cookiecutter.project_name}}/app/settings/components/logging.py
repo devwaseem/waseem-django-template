@@ -110,6 +110,11 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": True,
         },
+        "gunicorn": {
+            "handlers": ["json_console"],
+            "level": "INFO",
+            "propagate": True,
+        },
         "django.server": {
             "handlers": ["json_console", "mail_admins"],
             "propagate": True,
@@ -173,7 +178,7 @@ if DEBUG:
         "django.template": {
             "handlers": ["plain_console"],
             "propagate": False,
-            "level": "DEBUG",
+            "level": "INFO",
         },
         "django.security": {
             "handlers": ["plain_console"],

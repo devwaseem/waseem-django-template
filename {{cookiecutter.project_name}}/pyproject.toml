@@ -58,6 +58,7 @@ uvicorn = { extras = ["standard"], version = "^0.19.0" }
 whitenoise = { extras = ["brotli"], version = "^6.6.0" }
 pyinstrument = "^4.6.2"
 django-cotton = "^0.9.20"
+django-unfold = "^0.30.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -90,6 +91,7 @@ pytest-cov = "^4.0.0"
 pytest-describe = "^2.1.0"
 pytest-django = "^4.5.2"
 pytest-mock = "^3.10.0"
+pytest-subtests = "^0.13.1"
 pytest-sugar = "^0.9.6"
 pytest-xdist = "^3.1.0"
 ruff = "^0.1.11"
@@ -105,7 +107,8 @@ venvPath = "."
 venv = ".venv"
 
 [tool.djlint]
-custom_html = "mjml,mj-head,mj-\\w+"
+custom_html = "mjml,mj-head,mj-\\w+,c-\\w+,c-\\w{\\.\\w+}*"
+
 
 [tool.mypy]
 
@@ -124,7 +127,7 @@ disable_error_code = ['import-untyped']
 
 allow_redefinition = false
 check_untyped_defs = true
-disallow_any_explicit = true
+disallow_any_explicit = false
 disallow_any_generics = true
 disallow_any_unimported = false
 disallow_incomplete_defs = true
@@ -254,6 +257,8 @@ ignore = [
   "TRY003", # raise-vanilla-args
   "ANN101", # missing-type-self
   'A003',   # builtin-attribute-shadowing
+  "ANN401", # any-type
+
 
 ]
 
@@ -305,10 +310,7 @@ known-first-party = ["app"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "app.settings"
-filterwarnings = [
-  "ignore::DeprecationWarning",
-  # "ignore::django.utils.deprecation.RemovedInDjango50Warning",
-]
+filterwarnings = ["ignore::DeprecationWarning"]
 
 
 addopts = [
@@ -317,8 +319,8 @@ addopts = [
   '--strict-markers',
   '--strict-config',
   '--tb=short',
-  '--durations=0',
-  '--durations-min=0.5',
+  # '--durations=0',
+  # '--durations-min=0.5',
   '--cov=app/',
   '--cov-report=html',
   # '--doctest-modules',
@@ -332,9 +334,25 @@ markers = [
   "slow: mark test as slow.",
 ]
 
+[tool.pytest_env]
+TEST = true
+LOG_DB = false
+DEBUG = false
+
+
 [tool.coverage.run]
 branch = true
 disable_warnings = ["no-data-collected"]
+omit = [
+  './app/settings/*',
+  './app/tests/*',
+  './app/migrations/*',
+  './app/celery.py',
+  './app/celeryconfig.py',
+  './app/schema.py',
+  './app/wsgi.py',
+  './app/asgi.py',
+]
 
 
 [tool.coverage.report]
@@ -342,6 +360,8 @@ exclude_also = [
   # Don't complain about missing debug-only code:
   "def __repr__",
   "if self\\.debug",
+  "if TYPE_CHECKING",
+  "if DEBUG",
 
   # Don't complain if tests don't hit defensive assertion code:
   "raise AssertionError",

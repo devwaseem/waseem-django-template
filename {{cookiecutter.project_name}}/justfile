@@ -1,4 +1,3 @@
-{% raw %}
 dev:
   LOG_DB=true poetry run python manage.py runserver_plus 0.0.0.0:8000
 
@@ -10,9 +9,9 @@ test *ARGS:
 
 lint:
   poetry run pre-commit run --all-files
-{% endraw %}
+
 type *ARGS:
-  poetry run mypy app {% raw%} {{ ARGS }} {% endraw %}
+  poetry run mypy app  {{ ARGS }}
 
 celery:
   LOG_DB=true poetry run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20
@@ -22,7 +21,7 @@ celery-beat:
 
 flower:
   LOG_DB=true poetry run celery --app app flower
-{% raw%}
+
 makemigrations *ARGS:
   poetry run python manage.py makemigrations {{ ARGS }}
 
@@ -49,5 +48,3 @@ down *ARGS:
 
 docker-shell CONTAINER_NAME:
   docker-compose -f development.yml exec {{ CONTAINER_NAME }} bash
-
-{% endraw %}

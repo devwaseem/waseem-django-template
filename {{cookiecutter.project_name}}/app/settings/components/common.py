@@ -24,6 +24,10 @@ SECRET_KEY = Env("SECRET_KEY")
 ADMIN_APPS = [
     "admin_interface",
     "colorfield",
+    # "unfold",  # before django.contrib.admin
+    # "unfold.contrib.filters",  # optional, if special filters are needed
+    # "unfold.contrib.forms",  # optional, if special form elements are needed
+    # "unfold.contrib.inlines",  # optional, if special inlines are needed
     "django.contrib.admin",
 ]
 
@@ -42,7 +46,12 @@ THIRD_PARTY_APPS: list[str] = [
     "storages",
     "django_extensions",
     "constance",
+    "django_structlog",
     "django_cotton",  # https://django-cotton.com/docs/quickstart
+    "django_object_actions",  # https://github.com/crccheck/django-object-actions
+    "solo",  # https://github.com/lazybird/django-solo
+    # "rest_framework",
+    # "drf_spectacular",
     # django-widget-tweaks
     # "widget_tweaks",
     # Django feather (Feather icons)
@@ -59,8 +68,6 @@ THIRD_PARTY_APPS: list[str] = [
     # "easy_thumbnails",
     # https://github.com/pmclanahan/django-celery-email
     # "djcelery_email",
-    # "rest_framework",
-    # "drf_spectacular",
 ]
 
 PROJECT_APPS: list[str] = [
