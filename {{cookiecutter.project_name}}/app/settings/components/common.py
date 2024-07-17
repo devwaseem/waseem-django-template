@@ -134,12 +134,12 @@ ROOT_URLCONF = "app.urls"
 
 TEMPLATES = [
     {
-        "APP_DIRS": True,
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             # Contains plain text templates, like `robots.txt`:
             BASE_DIR / "app" / "templates",
         ],
+        "APP_DIRS": False,
         "OPTIONS": {
             "loaders": [
                 "django_cotton.cotton_loader.Loader",
