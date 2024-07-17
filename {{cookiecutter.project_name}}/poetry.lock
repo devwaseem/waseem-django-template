@@ -1490,6 +1490,17 @@ dev = ["Pillow", "black", "dj-database-url", "django-selenosis", "flake8", "pyte
 test = ["Pillow", "dj-database-url", "django-selenosis", "pytest", "pytest-cov", "pytest-django", "pytest-xdist", "selenium"]
 
 [[package]]
+name = "django-object-actions"
+version = "4.2.0"
+description = "A Django app for adding object tools for models in the admin"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "django_object_actions-4.2.0-py3-none-any.whl", hash = "sha256:ae0df9984c68a4f42f219a391b71fa0630fe44a2983b39b8064378ebddcff30c"},
+    {file = "django_object_actions-4.2.0.tar.gz", hash = "sha256:e24befedf01b6fcdccbb03c33c0e2c855fd1a88f352a66dc7e2170ba31e80128"},
+]
+
+[[package]]
 name = "django-permissions-policy"
 version = "4.20.0"
 description = "Set the draft security HTTP header Permissions-Policy (previously Feature-Policy) on your Django app."
@@ -1602,6 +1613,20 @@ autopep8 = "*"
 Django = ">=3.2"
 gprof2dot = ">=2017.09.19"
 sqlparse = "*"
+
+[[package]]
+name = "django-solo"
+version = "2.3.0"
+description = "Django Solo helps working with singletons"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_solo-2.3.0-py3-none-any.whl", hash = "sha256:8069319fc9a3dc1080dc47b134d42526bf71749127eca1bf94bd7eb831c02fb2"},
+    {file = "django_solo-2.3.0.tar.gz", hash = "sha256:e82ee8b0aeccb97c401dc722bf01f665c93484c880e929f2a0ea53f5cbf2bf61"},
+]
+
+[package.dependencies]
+django = ">=3.2"
 
 [[package]]
 name = "django-split-settings"
@@ -5075,6 +5100,21 @@ tests = ["coverage[toml]", "freezegun (>=0.2.8)", "pretend", "pytest (>=6.0)", "
 typing = ["mypy", "rich", "twisted"]
 
 [[package]]
+name = "tenacity"
+version = "8.5.0"
+description = "Retry code until it succeeds"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "tenacity-8.5.0-py3-none-any.whl", hash = "sha256:b594c2a5945830c267ce6b79a166228323ed52718f30302c1359836112346687"},
+    {file = "tenacity-8.5.0.tar.gz", hash = "sha256:8bc6c0c8a09b31e6cad13c47afbed1a567518250a9a171418582ed8d9c20ca78"},
+]
+
+[package.extras]
+doc = ["reno", "sphinx"]
+test = ["pytest", "tornado (>=4.5)", "typeguard"]
+
+[[package]]
 name = "termcolor"
 version = "2.4.0"
 description = "ANSI color formatting for output in terminal"
@@ -5984,4 +6024,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12"
-content-hash = "7952d60085c391f05ee03d6262e0dfeb2fe654873a6967d8c6276e4a60bf7ed4"
+content-hash = "40128a569f67c791f00dda3b675c973e2e612c6fa906384b913a9da2d96febad"
