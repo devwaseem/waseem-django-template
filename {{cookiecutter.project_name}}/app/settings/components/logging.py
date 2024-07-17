@@ -198,6 +198,9 @@ if DEBUG:
             "level": "DEBUG",
         }
 
+if Env.bool("DISABLE_LOGGING"):
+    LOGGING["loggers"] = {}
+
 
 class LoggingContextVarsMiddleware:
     """Used to reset ContextVars in structlog on each request."""

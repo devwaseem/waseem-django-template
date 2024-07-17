@@ -20,6 +20,7 @@ Env = environ.Env(
     EMAIL_USE_TLS=(bool, False),
     NO_CACHE=(bool, False),
     LOG_DB=(bool, False),
+    DISABLE_LOGGING=(bool, False),
     ENABLE_HEALTH_CHECK=(bool, False),
     ENABLE_SILK_PROFILING=(bool, False),
     ENABLE_CPROFILE=(bool, False),
