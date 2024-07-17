@@ -2,8 +2,12 @@
   "project_name": "test_project",
   "project_verbose_name": "Test Project",
   "_copy_without_render": [
-    "./**/*.txt",
-    "./{{cookiecutter.project_name}}/app/justfile",
-    "./{{cookiecutter.project_name}}/app/templates/*"
+    "*justfile",
+    "*.txt",
+    "*.html",
+    "*.js",
+    "*.ts",
+    "*.map",
+    "*.css"
   ]
 }
