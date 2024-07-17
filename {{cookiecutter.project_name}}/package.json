@@ -30,6 +30,7 @@
         "esbuild-plugin-manifest": "^1.0.3",
         "esbuild-postcss": "^0.0.4",
         "fast-glob": "^3.2.12",
+        "flowbite": "^2.4.1",
         "fslightbox": "^3.4.1",
         "glob": "^10.3.12",
         "htmx.org": "^1.9.11",
