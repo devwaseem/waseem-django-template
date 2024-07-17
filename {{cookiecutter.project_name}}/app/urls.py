@@ -23,6 +23,11 @@ from django.shortcuts import render
 from django.urls import include, path
 from django.views.generic import TemplateView
 from django_ratelimit.exceptions import Ratelimited
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 from app.settings.vars import DEBUG, ENABLE_HEALTH_CHECK, ENABLE_SILK_PROFILING
 from app.views.home import HomeView
@@ -82,6 +87,26 @@ urlpatterns = [
         document_root=settings.STATIC_ROOT,
     ),
 ]
+
+if "drf_spectacular" in settings.INSTALLED_APPS:  # type: ignore
+    urlpatterns += [
+        # schema
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        # Optional UI:
+        path(
+            "api/schema/swagger-ui/",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui",
+        ),
+        path(
+            "api/schema/redoc/",
+            SpectacularRedocView.as_view(url_name="schema"),
+            name="redoc",
+        ),
+    ]
+
+if "rest_framework" in settings.INSTALLED_APPS:  # type: ignore
+    urlpatterns += []
 
 
 if DEBUG:  # pragma: no cover
