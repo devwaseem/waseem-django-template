@@ -3,8 +3,8 @@ from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 from rest_framework.request import Request
 
-from .models.account.api_key import APIKey
 from .models.account.user import User
+from .models.api_key import APIKey
 
 
 class APIKeyAuthentication(authentication.BaseAuthentication):

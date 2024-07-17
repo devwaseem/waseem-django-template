@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 
-from .models.account.api_key import APIKey
+from .models.api_key import APIKey
 from .request import HTTPAuthRequest
 
 if TYPE_CHECKING:
