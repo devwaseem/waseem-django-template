@@ -1,49 +1,63 @@
 import inject from '@rollup/plugin-inject';
 import { glob } from 'glob';
-import { resolve } from 'path';
-import { defineConfig } from 'vite';
+import { cpus } from 'os';
+import path from 'path';
+import { defineConfig, loadEnv } from 'vite';
+import tailwindcss from 'tailwindcss';
 
-const dirs = ['assets', 'app'];
+const dirs = ['assets', 'app/templates'];
 
 let inputFiles = [];
 
 for (let dir of dirs) {
     const files = await glob(dir + '/**/*.{js,ts,css}', {
-        ignore: ['node_modules/**', 'dist/**'],
+        ignore: ['node_modules/**', 'dist/**', '**/*.d.ts'],
     });
     inputFiles = [...inputFiles, ...files];
 }
 
+console.log(`Found ${inputFiles.length} files to build...`);
+
 let rollupInput = {};
 
 for (let file of inputFiles) {
-    // let page_index = file.indexOf("pages");
-    // let file_key = file.slice(page_index);
     rollupInput[file] = file;
 }
 
 export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd());
+    const isDevelopment = mode == "development";
+    const outputDir = env.VITE_APP_OUTPUT_DIR
+    if (!outputDir) {
+        throw Error('Set the output dir using {VITE_APP_OUTPUT_DIR} env variable')
+    }
     return {
         root: '.',
         resolve: {
             alias: {
-                '@assets': resolve('./assets'),
+                '@assets': path.resolve('./assets'),
             },
         },
         server: {
             hmr: false,
         },
+        css: {
+            postcss: {
+             plugins: [tailwindcss()],
+            },
+        },
         build: {
             ssr: false,
-            outDir: './dist', // puts the manifest.json in PROJECT_ROOT/build/static/ for Django to collect
+            outDir: outputDir,
             assetsDir: '',
-            manifest: true, // adds a manifest.json
+            manifest: true,
             emptyOutDir: true,
-            sourcemap: mode == 'development' ? 'inline' : false,
-            minify: mode == 'development' ? false : 'esbuild',
+            sourcemap: isDevelopment ? 'inline' : false,
+            minify: isDevelopment ? false : 'esbuild',
             rollupOptions: {
+                maxParallelFileOps: Math.max(1, cpus().length - 1),
                 output: {
-                    compact: mode != 'development',
+                    compact: isDevelopment,
                     entryFileNames: '[name].[hash].js',
                     chunkFileNames: '[name].[hash].js',
                     assetFileNames: 'assets/[name].[hash][extname]',

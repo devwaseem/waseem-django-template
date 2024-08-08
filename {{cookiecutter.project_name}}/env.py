@@ -30,6 +30,7 @@ Env = environ.Env(
     USE_SSL=(bool | None, None),
     USE_X_FORWARDED_HOST=(bool, False),
     # static
+    VITE_APP_OUTPUT_DIR=(str, "dist"),
     STATIC_USE_WHITENOISE=(bool, False),
     DJANGO_STATIC_HOST=(str, ""),
     DJANGO_MEDIA_HOST=(str, ""),

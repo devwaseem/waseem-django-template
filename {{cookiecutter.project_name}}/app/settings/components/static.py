@@ -11,7 +11,7 @@ STATIC_ROOT = STORAGES["staticfiles"]["OPTIONS"]["location"]  # type: ignore
 
 
 STATICFILES_DIRS = [
-    BASE_DIR / "dist",
+    BASE_DIR / Env.str("VITE_APP_OUTPUT_DIR"),
 ]
 
 STATICFILES_FINDERS = [

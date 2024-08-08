@@ -2,7 +2,7 @@
 This is a django-split-settings main file.
 For more information read this:
 https://github.com/sobolevn/django-split-settings
-Default environment is `developement`.
+Default environment is `development`.
 To change settings file:
 `DJANGO_ENV=production python manage.py runserver`
 """

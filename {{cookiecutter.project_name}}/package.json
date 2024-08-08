@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "NODE_ENV=production vite build --watch --mode development",
-        "build": "NODE_ENV=production tsc && vite build"
+        "build": "tsc & NODE_ENV=production vite build"
     },
     "devDependencies": {},
     "peerDependencies": {},
@@ -37,9 +37,6 @@
         "path": "^0.12.7",
         "postcss": "^8.4",
         "postcss-nested": "^6.0.1",
-        "prettier": "^2.8.4",
-        "prettier-plugin-organize-imports": "^3.2.2",
-        "prettier-plugin-tailwindcss": "^0.2.6",
         "sass": "^1.74.1",
         "tailwindcss": "^3.4.3",
         "tippy.js": "^6.3.7",

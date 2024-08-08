@@ -5,13 +5,13 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
     content: [
-        '!./node_modules/',
-        '!./dist/',
-        './node_modules/flowbite/**/*.js',
-        './**/*.html',
-        './**/*.js',
-        './**/*.ts',
-        './**/*.py',
+    "!./node_modules/",
+    "!./dist/",
+    "./node_modules/flowbite/**/*.js",
+    "./app/**/*.html",
+    "./app/**/*.js",
+    "./app/**/*.ts",
+    "./app/**/*.py",
     ],
     theme: {
         extend: {

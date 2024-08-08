@@ -7,9 +7,9 @@ services:
         # image: caddy
         # build:
         #     context: .
-        #     dockerfile: compose/production/caddy/Dockerfile
+        #     dockerfile: docker/caddy/Dockerfile
         volumes:
-            - ./compose/production/caddy/Caddyfile:/etc/caddy/Caddyfile # configuration
+            - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile # configuration
             - caddy-config:/config # configuration autosaves
             - caddy-data:/data # saving certificates
             - /data/static:/var/www/static:ro # serving django's statics
@@ -30,10 +30,12 @@ services:
         restart: unless-stopped
         build:
             context: .
-            dockerfile: compose/production/app/Dockerfile
+            dockerfile: docker/app/Dockerfile
+            args:
+                POSTGRES_VERSION: 15
         image: production_web_server
-        container_name: web_production_server
-        command: /start
+        container_name: app_production_server
+        command: gunicorn
         volumes:
             - /data/static:/var/www/static:rw
             - /data/log:/var/log:rw
@@ -53,7 +55,7 @@ services:
     celery_workers:
         <<: *web
         container_name: 'celery_workers'
-        command: /start-celery-workers
+        command: celery
         environment:
             - CELERY_QUEUES=celery,emails
             - CELERY_CONCURRENCY=1
@@ -61,7 +63,7 @@ services:
     celery_beat:
         <<: *web
         container_name: 'celery_beat'
-        command: /start-celery-beat
+        command: celery-beat
 
     celery_flower:
         image: mher/flower:latest
@@ -92,7 +94,9 @@ services:
         restart: unless-stopped
         build:
             context: .
-            dockerfile: compose/production/postgres/Dockerfile
+            dockerfile: docker/postgres/Dockerfile
+            args:
+                POSTGRES_VERSION: 15
         container_name: web_production_postgres
         volumes:
             - /data/postgresql/data:/var/lib/postgresql/data
@@ -137,7 +141,7 @@ services:
     awscli:
         build:
             context: .
-            dockerfile: compose/production/aws/Dockerfile
+            dockerfile: docker/aws/Dockerfile
         container_name: aws_cli
         volumes:
             - /data/db-backups:/backups

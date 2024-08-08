@@ -25,7 +25,11 @@ services:
       - "6379:6379"
 
   postgres:
-    image: postgres:14.0-alpine
+    build:
+      context: .
+      dockerfile: docker/postgres/Dockerfile
+      args:
+          POSTGRES_VERSION: 15
     container_name: {{cookiecutter.project_name}}_local_postgres
     volumes:
       - {{cookiecutter.project_name}}_local_postgres_data:/var/lib/postgresql/data
