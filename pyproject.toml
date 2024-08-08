@@ -47,7 +47,7 @@ disable_error_code = ['import-untyped']
 
 allow_redefinition = false
 check_untyped_defs = true
-disallow_any_explicit = true
+disallow_any_explicit = false
 disallow_any_generics = true
 disallow_any_unimported = false
 disallow_incomplete_defs = true
@@ -74,14 +74,28 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
+[tool.mypy_django_plugin]
+ignore_missing_model_attributes = true
+
+[tool.django-stubs]
+module = "django-stubs"
+django_settings_module = "app.settings"
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+# Django migrations should not produce any errors:
+ignore_errors = true
+
 
 [tool.ruff]
+
 exclude = [
     "*.egg",
-    "**/migrations/*.py",
+    "*/migrations/*.py",
     ".bzr",
     ".cache",
     ".direnv",
+    ".eggs",
     ".git",
     ".git-rewrite",
     ".hg",
@@ -108,7 +122,7 @@ exclude = [
     "manage.py",
     "node_modules",
     "site-packages",
-    "**/venv",
+    "venv",
 ]
 
 extend-select = [
@@ -126,30 +140,33 @@ extend-select = [
     "ERA",   # eradicate (ERA)
     "F",     # Pyflakes
     "FBT",   # flake8-boolean-trap (FBT)
-    # "FIX",   # flake8-fixme (FIX)
-    "FURB", # refurb (FURB)
-    "G",    # flake8-logging-format
-    "I",    # isort
-    "ICN",  # flake8-import-conventions
-    "LOG",  # flake8-logging (LOG)
-    "N",    # pep8-naming
-    "PERF", # Perflint (PERF)
-    "PIE",  # flake8-pie
-    "PTH",  # flake8-use-pathlib (PTH)
-    "PYI",  # flake8-pyi
-    "Q",    # flake8-quotes
-    "RET",  # flake8-return (RET)
-    "RSE",  # flake8-raise (RSE)
-    "RUF",  # Ruff-specific rules (RUF)
-    "SIM",  # flake8-simplify
-    "SLF",  # flake8-self (SLF)
-    "T10",  # flake8-debugger (T10)
-    "T20",  # flake8-print
+    "FIX",   # flake8-fixme (FIX)
+    "FURB",  # refurb (FURB)
+    "G",     # flake8-logging-format
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "LOG",   # flake8-logging (LOG)
+    "N",     # pep8-naming
+    "PERF",  # Perflint (PERF)
+    "PIE",   # flake8-pie
+    "PTH",   # flake8-use-pathlib (PTH)
+    "PYI",   # flake8-pyi
+    "Q",     # flake8-quotes
+    "RET",   # flake8-return (RET)
+    "RSE",   # flake8-raise (RSE)
+    "RUF",   # Ruff-specific rules (RUF)
+    "SIM",   # flake8-simplify
+    "SLF",   # flake8-self (SLF)
+    "T10",   # flake8-debugger (T10)
+    "T20",   # flake8-print
     # "TD",    # flake8-todos (TD)
     "TID", # flake8-tidy-imports (TID)
     "TRY", # tryceratops (TRY)
+    "TCH", # flake8-type-checking (TCH)
     "W",   # pycodestyle Warning
     # "D",     # pydocstyle (D)
+    "FLY",  # flynt (FLY)
+    "SLOT", #flake8-slots
 ]
 ignore = [
     "D100", # undocumented-public-module
@@ -160,6 +177,8 @@ ignore = [
     "TRY003", # raise-vanilla-args
     "ANN101", # missing-type-self
     'A003',   # builtin-attribute-shadowing
+    "ANN401", # any-type
+
 
 ]
 
@@ -207,6 +226,81 @@ known-first-party = ["app"]
 
 "**/management/commands/*" = [
     'A003', # builtin-attribute-shadowing
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "app.settings"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+
+addopts = [
+    # '--create-db',
+    '--reuse-db',
+    '--no-migrations',
+    '--color=yes',
+    '--strict-markers',
+    '--strict-config',
+    # '--durations=0',
+    # '--durations-min=0.5',
+    '--cov=app/',
+    '--cov-report=html',
+    # '--doctest-modules',
+    # '--cov-report=term',
+]
+
+markers = [
+    "unit: mark as Unit Tests",
+    "integration: mark as Integration",
+    "e2e: mark as End to End",
+    "slow: mark test as slow.",
+]
+
+[tool.pytest_env]
+TEST = true
+LOG_DB = false
+DISABLE_LOGGING = true
+DEBUG = false
+
+
+[tool.coverage.run]
+branch = true
+disable_warnings = ["no-data-collected"]
+omit = [
+    './app/settings/*',
+    './app/tests/*',
+    './app/migrations/*',
+    './app/celery.py',
+    './app/celeryconfig.py',
+    './app/schema.py',
+    './app/wsgi.py',
+    './app/asgi.py',
+]
+
+
+[tool.coverage.report]
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+    "if TYPE_CHECKING",
+    "if DEBUG",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+
+    # Skip any pass lines such as may be used for @abstractmethod
+    "pass",
+
+    # Have to re-enable the standard pragma
+    "pragma: no cover",
 ]
 
 
