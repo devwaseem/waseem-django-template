@@ -1,13 +1,5 @@
 {
   "project_name": "test_project",
   "project_verbose_name": "Test Project",
-  "_copy_without_render": [
-    "*justfile",
-    "*.txt",
-    "*.html",
-    "*.js",
-    "*.ts",
-    "*.map",
-    "*.css"
-  ]
+  "_copy_without_render": ["*justfile", "app"]
 }

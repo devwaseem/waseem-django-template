@@ -6,7 +6,6 @@ from app.settings.components.common import MIDDLEWARE
 from app.settings.components.storages import STORAGES
 from app.settings.vars import BASE_DIR
 
-STATIC_URL = STORAGES["staticfiles"]["OPTIONS"]["base_url"]  # type: ignore
 STATIC_ROOT = STORAGES["staticfiles"]["OPTIONS"]["location"]  # type: ignore
 
 

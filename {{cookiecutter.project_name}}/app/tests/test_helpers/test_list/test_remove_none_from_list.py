@@ -1,4 +1,4 @@
-from optik_invoice.helpers.list import remove_none_from_list
+from app.helpers.list import remove_none_from_list
 
 
 def test_removes_none_elements_correctly() -> None:

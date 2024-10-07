@@ -7,6 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DEBUG = Env.bool("DEBUG")
 TEST = "test" in sys.argv or sys.argv[0].endswith("pytest") or Env.bool("TEST")
 
+DOMAIN_NAME = Env.str("DOMAIN_NAME")
+
 NO_CACHE = Env.bool("NO_CACHE")
 
 REDIS_HOST = Env.str("REDIS_HOST")

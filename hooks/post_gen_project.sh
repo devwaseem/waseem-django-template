@@ -18,18 +18,12 @@ poetry install --no-root
 # Install node dependencies
 npm install
 
-mkdir dist
+mkdir -p dist
 
 git init -b main
 git add .
 
 # poetry run pre-commit install
-
-# echo "Linting & Formatting..."
-# just lint
-
-# echo "Checking type errors..."
-# just type
 
 git add .
 git commit -m "Intial Commit"
@@ -39,13 +33,4 @@ nvim .env
 
 echo "Setup Complete..."
 
-# if [[ $? -eq 0 ]];
-# then
-#   just up
-#   just makemigrations
-#   just migrate
-#   if [[ $? -eq 0 ]];
-#   then
-#     echo "Setup Complete..."
-#   fi
-# fi
+cd {{cookiecutter.project_name}}

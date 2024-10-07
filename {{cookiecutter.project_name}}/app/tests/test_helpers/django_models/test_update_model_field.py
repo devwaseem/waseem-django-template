@@ -2,8 +2,8 @@ import faker
 import pytest
 from mixer.backend.django import mixer
 
-from optik_invoice.helpers import django_models
-from optik_invoice.models.account.user import User
+from app.helpers import django_models
+from app.models.account.user import User
 
 fake = faker.Faker()
 

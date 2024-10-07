@@ -1,6 +1,6 @@
 from typing import Any
 
-from optik_invoice.helpers.dict import remove_none_from_dict
+from app.helpers.dict import remove_none_from_dict
 
 
 def test_removes_none_correctly_for_root_with_empty_strings() -> None:

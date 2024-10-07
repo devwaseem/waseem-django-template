@@ -1,9 +1,8 @@
 # https://github.com/revsys/django-health-check
 
+from app.settings.components.caches import CACHES
 from app.settings.components.common import INSTALLED_APPS
 from app.settings.vars import REDIS_HOST, REDIS_PORT
-
-from .caches import CACHES
 
 INSTALLED_APPS += [
     "health_check",  # required
@@ -29,10 +28,6 @@ REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 HEALTHCHECK_CACHE_KEY = "health_check"
 
 CACHES[HEALTHCHECK_CACHE_KEY] = {
-    "BACKEND": "django_redis.cache.RedisCache",
+    "BACKEND": "django.core.cache.backends.redis.RedisCache",
     "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/3",
-    "OPTIONS": {
-        "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
-    },
 }
