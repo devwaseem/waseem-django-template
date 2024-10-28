@@ -7,12 +7,13 @@ set -o nounset
 APP_HOME="${APP_HOME:-/app}"
 
 # Database environment variables used to check the Postgresql connection.
-DATABASE_USER="${DATABASE_USER:-baserow}"
-DATABASE_HOST="${DATABASE_HOST:-db}"
-DATABASE_PORT="${DATABASE_PORT:-5432}"
-DATABASE_NAME="${DATABASE_NAME:-baserow}"
-DATABASE_PASSWORD="${DATABASE_PASSWORD:-baserow}"
+DATABASE_HOST="${DJANGO_DATABASE_HOST}"
+DATABASE_PORT="${DJANGO_DATABASE_PORT}"
+DATABASE_NAME="${POSTGRES_DB}"
+DATABASE_USER="${POSTGRES_USER}"
+DATABASE_PASSWORD="${POSTGRES_PASSWORD}"
 DATABASE_OPTIONS="${DATABASE_OPTIONS:-}"
+
 # Or you can provide a Postgresql connection url
 DATABASE_URL="${DATABASE_URL:-}"
 
@@ -32,8 +33,8 @@ import sys
 import psycopg2
 import json
 import os
-DATABASE_NAME=os.getenv('DATABASE_NAME')
-DATABASE_USER=os.getenv('DATABASE_USER')
+DATABASE_NAME=os.getenv('POSTGRES_DB')
+DATABASE_USER=os.getenv('POSTGRES_USER')
 DATABASE_HOST=os.getenv('DATABASE_HOST')
 DATABASE_PORT=os.getenv('DATABASE_PORT')
 DATABASE_PASSWORD=os.getenv('DATABASE_PASSWORD')
@@ -121,21 +122,22 @@ fi
 case "$1" in
 gunicorn)
   run_setup_commands_if_configured
-  exec /usr/local/bin/gunicorn ${GUNICORN_APPLICATION} --config $APP_HOME/gunicorn_config.py
+  exec gunicorn ${GUNICORN_APPLICATION} --config $APP_HOME/gunicorn_config.py
   ;;
 celery)
-  exec celery --app app worker -E -l INFO -Q ${CELERY_QUEUES} --concurrency ${CELERY_CONCURRENCY}
+  exec celery --app src.server worker -E -l INFO -Q ${CELERY_QUEUES} --concurrency=${CELERY_CONCURRENCY} --pool ${CELERY_POOL}
   ;;
 celery-beat)
-  exec celery --app app beat -l INFO
+  exec celery --app src.server beat -l INFO -s /data/celery/celerybeat-schedule
   ;;
 celery-flower)
   exec celery \
-    --app app \
+    --app src.server \
+    flower \
     -b "${CELERY_BROKER_URL}" \
-    --persistent=True --db="flower_db" \
-    --max_tasks=1000 \
-    flower
+    --basic-auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}" \
+    --persistent=True --db="/data/celery/flower_db" \
+    --max_tasks=1000
   ;;
 
 esac

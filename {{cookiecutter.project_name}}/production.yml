@@ -34,9 +34,9 @@ services:
             args:
                 POSTGRES_VERSION: 15
         image: production_web_server
-        container_name: app_production_server
         command: gunicorn
         volumes:
+            - tmp-data:/tmp
             - /data/static:/var/www/static:rw
             - /data/log:/var/log:rw
             - /data:/data:rw
@@ -52,32 +52,33 @@ services:
             - webnet
             - proxynet
 
-    celery_workers:
-        <<: *web
-        container_name: 'celery_workers'
-        command: celery
-        environment:
-            - CELERY_QUEUES=celery,emails
-            - CELERY_CONCURRENCY=1
+    worker_cpu:
+      <<: *web
+      command: celery
+      environment:
+        - CELERY_POOL=solo
+        - CELERY_CONCURRENCY=1
+        - CELERY_QUEUES=celery
+
+    worker_io:
+      <<: *web
+      command: celery
+      environment:
+        - CELERY_POOL=gevent
+        - CELERY_CONCURRENCY=10
+        - CELERY_QUEUES=celery_io
 
     celery_beat:
-        <<: *web
-        container_name: 'celery_beat'
-        command: celery-beat
+      <<: *web
+      command: celery-beat
 
     celery_flower:
-        image: mher/flower:latest
-        depends_on:
-            - 'redis'
-            - 'web'
-            - 'celery_workers'
-        env_file:
-            - .env
-        expose:
-            - '5555'
-        networks:
-            - webnet
-            - proxynet
+      <<: *web
+      command: celery-flower
+      ports:
+        - "5555:5555/tcp"
+      networks:
+          - webnet
 
     redis:
         restart: unless-stopped
@@ -152,6 +153,7 @@ volumes:
     caddy-config:
     caddy-data:
     redis-data:
+    tmp-data:
 
 networks:
     webnet:

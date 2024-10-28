@@ -49,13 +49,12 @@ RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --only=main --no-
 # Production build
 FROM python_base as production
 
-ARG UID=9999
-ARG GID=9999
+ARG UID=1000
+ARG GID=1000
 ARG APP_NAME="web"
-ARG POSTGRES_VERSION=15
 
-ENV UID=${UID:-9999}
-ENV GID=${GID:-9999}
+ENV UID=${UID:-1000}
+ENV GID=${GID:-1000}
 ENV PYTHONFAULTHANDLER=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONHASHSEED=random
@@ -80,14 +79,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   gettext \
   dos2unix \
   tini \
-  && \
-  # Postgresql repository has to be added manually to get pre-13 versions.
-  echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-  curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && \
-  apt-get update && \
-  apt-get install --no-install-recommends -y \
-  postgresql-client-$POSTGRES_VERSION \
   # Cleaning cache:
   && apt-get remove curl -y \
   && apt-get purge -y --auto-remove \

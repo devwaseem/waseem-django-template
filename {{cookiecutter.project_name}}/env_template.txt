@@ -33,12 +33,12 @@ AWS_S3_REGION_NAME=
 
 
 # Redis
-REDIS_HOST=localhost|redis
+REDIS_HOST="localhost" #localhost|redis
 REDIS_PORT=6379
 
 
 # MJML
-MJML_HOST=localhost|mjml
+MJML_HOST="localhost" # localhost|mjml
 MJML_PORT=28101
 
 
@@ -48,7 +48,7 @@ SSL_EMAIL=
 
 
 # Email
-EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend|anymail.backends.amazon_ses.EmailBackend
+EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend" # django.core.mail.backends.smtp.EmailBackend|anymail.backends.amazon_ses.EmailBackend
 EMAIL_HOST=
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
@@ -59,7 +59,7 @@ SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@example.com>"
 
 
 # Database
-DJANGO_DATABASE_HOST=localhost|pg_bouncer|postgres
+DJANGO_DATABASE_HOST=localhost # pg_bouncer|postgres
 DJANGO_DATABASE_PORT=5432
 POSTGRES_DB={{cookiecutter.project_name}}
 POSTGRES_USER={{cookiecutter.project_name}}
@@ -71,9 +71,9 @@ BACKUP_FILE_PREFIX={{cookiecutter.project_name}}
 
 # PGBOUNCER
 DB_HOST=postgres
-DB_NAME=${POSTGRES_DB}
-DB_USER=${POSTGRES_USER}
-DB_PASSWORD=${POSTGRES_PASSWORD}
+DB_NAME={{cookiecutter.project_name}}
+DB_USER={{cookiecutter.project_name}}
+DB_PASSWORD={{cookiecutter.project_name}}
 AUTH_TYPE=plain
 
 
