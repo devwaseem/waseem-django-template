@@ -12,7 +12,7 @@ chmod +x ./scripts/local/upx
 
 cp env_template.txt .env
 
-sed -iE 's/redis:6379/localhost:6379/g' .env
+sed -i -e 's/redis:6379/localhost:6379/g' .env
 
 
 # Install python dependencies
