@@ -6,7 +6,7 @@ authors = ["Waseem akram <waseem07799@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.12"
+python = "3.13"
 Django = { extras = ["argon2"], version = "^5.0" }
 argon2-cffi = "^21.3.0"
 boto3 = "^1.34.104"

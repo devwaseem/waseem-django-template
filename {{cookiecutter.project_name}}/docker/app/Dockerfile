@@ -14,7 +14,7 @@ COPY . .
 
 RUN npm run build
 
-FROM python:3.12.0-slim-bookworm as python_base
+FROM python:3.13.0-slim-bookworm as python_base
 
 ENV APP_HOME="/app"
 ENV VIRTUAL_ENV_PATH="$APP_HOME/.venv/"
