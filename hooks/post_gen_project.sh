@@ -32,5 +32,3 @@ git add .
 git commit -m "Intial Commit"
 
 echo "Setup Complete..."
-
-cd {{cookiecutter.project_name}}
