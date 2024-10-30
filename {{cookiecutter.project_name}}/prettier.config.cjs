@@ -11,7 +11,7 @@ module.exports = {
   proseWrap: "preserve",
   plugins: [
     "prettier-plugin-organize-imports",
-    require("prettier-plugin-tailwindcss"),
+    "prettier-plugin-tailwindcss",
   ],
   tailwindConfig: "./tailwind.config.cjs",
 };
