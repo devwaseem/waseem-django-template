@@ -32,7 +32,6 @@ include(
     "components/caches.py",
     "components/database.py",
     "components/storages.py",
-    "components/static.py",
     "components/logging.py",
     "components/emails.py",
     "components/security.py",
