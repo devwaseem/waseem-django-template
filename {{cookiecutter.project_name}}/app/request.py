@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from rest_framework.request import Request
 
-from app.models.user import User
+from app.models.account.user import User
 
 
 class HTTPAuthRequest(HttpRequest):

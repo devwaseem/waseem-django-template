@@ -120,12 +120,6 @@ MIDDLEWARE: list[str] = [
     # "django.middleware.cache.FetchFromCacheMiddleware",  # This must be last
 ]
 
-if DEBUG:
-    MIDDLEWARE += [
-        # Django Browser Reload
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
-    ]
-
 
 ROOT_URLCONF = "app.urls"
 
