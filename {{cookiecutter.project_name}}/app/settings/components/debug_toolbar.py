@@ -9,8 +9,8 @@ from app.settings.vars import DEBUG
 
 INSTALLED_APPS += [
     "debug_toolbar",
-    "debug_toolbar_line_profiler",
-    "template_profiler_panel",
+    # "debug_toolbar_line_profiler",
+    # "template_profiler_panel",
 ]
 MIDDLEWARE += [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -29,8 +29,8 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.signals.SignalsPanel",
     "debug_toolbar.panels.redirects.RedirectsPanel",
     "debug_toolbar.panels.profiling.ProfilingPanel",
-    "debug_toolbar_line_profiler.panel.ProfilingPanel",
-    "template_profiler_panel.panels.template.TemplateProfilerPanel",
+    # "debug_toolbar_line_profiler.panel.ProfilingPanel",
+    # "template_profiler_panel.panels.template.TemplateProfilerPanel",
 ]
 
 
