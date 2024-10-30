@@ -14,7 +14,7 @@ from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 from env import Env
 
-from app.settings.vars import BASE_DIR, DEBUG
+from app.settings.vars import BASE_DIR, DEBUG, STATIC_USE_WHITENOISE
 
 BASE_URL = Env("DOMAIN_NAME")
 SECRET_KEY = Env("SECRET_KEY")
@@ -119,6 +119,11 @@ MIDDLEWARE: list[str] = [
     "django_htmx.middleware.HtmxMiddleware",
     # "django.middleware.cache.FetchFromCacheMiddleware",  # This must be last
 ]
+
+if STATIC_USE_WHITENOISE:
+    MIDDLEWARE += [
+        "whitenoise.middleware.WhiteNoiseMiddleware",
+    ]
 
 
 ROOT_URLCONF = "app.urls"
