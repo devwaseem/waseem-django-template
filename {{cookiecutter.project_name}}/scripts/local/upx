@@ -15,12 +15,12 @@ tmux new -d -s $session
 # done
 
 docker-compose -f development.yml up -d
-# tmux send-keys -t $session:$window 'poetry run python manage.py runserver 0.0.0.0:8000' C-m
+# tmux send-keys -t $session:$window 'uv run python manage.py runserver 0.0.0.0:8000' C-m
 
 window=0
 sleep 1
 tmux rename-window -t $session:$window 'Code'
-tmux send-keys -t $session:$window 'poetry run nvim .' C-m
+tmux send-keys -t $session:$window 'uv run nvim .' C-m
 
 window=1
 

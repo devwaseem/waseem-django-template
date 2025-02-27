@@ -9,6 +9,12 @@ Docs: https://github.com/mozilla/django-csp
 """
 
 from app.settings.components.storages import MEDIA_URL, STATIC_URL
+from app.settings.components.vite import (
+    VITE_DEV_SERVER_HOST,
+    VITE_DEV_SERVER_PORT,
+    VITE_DEV_SERVER_URL,
+)
+from app.settings.vars import DEBUG
 
 CSP_INCLUDE_NONCE_IN = ("script-src", "connect-src")
 CSP_EXCLUDE_URL_PREFIXES = ("/admin",)
@@ -57,3 +63,11 @@ if MEDIA_URL.startswith("http"):
     CSP_IMG_SRC += (MEDIA_URL,)
     CSP_MEDIA_SRC += (MEDIA_URL,)
     CSP_CONNECT_SRC += (MEDIA_URL,)
+
+if DEBUG:
+    VITE_CSP_SETTINGS = (
+        VITE_DEV_SERVER_URL,
+        f"ws://{VITE_DEV_SERVER_HOST}:{VITE_DEV_SERVER_PORT}",
+    )
+    CSP_SCRIPT_SRC += VITE_CSP_SETTINGS
+    CSP_CONNECT_SRC += VITE_CSP_SETTINGS

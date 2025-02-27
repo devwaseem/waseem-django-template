@@ -1,8 +1,8 @@
 import os
+from typing import Any
 
 import django
 from celery import Celery
-from celery.schedules import crontab
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
 
@@ -14,11 +14,7 @@ app.config_from_object("app.celeryconfig")
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
-app.conf.beat_schedule = {
-    "Backup Database": {
-        "task": "backup_db",
-        "schedule": crontab(
-            minute="0", hour="1", day_of_week="0"
-        ),  # run every sundays at 1:00 AM
-    },
-}
+
+@app.on_after_configure.connect
+def setup_periodic_tasks(sender: Any, **kwargs: Any) -> None:
+    ...

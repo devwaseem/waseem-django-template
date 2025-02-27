@@ -12,11 +12,8 @@ chmod +x ./scripts/local/upx
 
 cp env_template.txt .env
 
-sed -i -e 's/redis:6379/localhost:6379/g' .env
-
-
 # Install python dependencies
-poetry install --no-root
+uv lock
 
 # Install node dependencies
 npm install
@@ -26,9 +23,9 @@ mkdir -p dist
 git init -b main
 git add .
 
-# poetry run pre-commit install
+# uv run pre-commit install
 
 git add .
-git commit -m "Intial Commit"
+git commit -m "Initial Commit"
 
 echo "Setup Complete..."

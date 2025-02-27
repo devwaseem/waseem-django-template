@@ -43,11 +43,11 @@ DEFAULT_DJANGO_APPS: list[str] = [
 
 
 THIRD_PARTY_APPS: list[str] = [
+    "frontend_kit",
     "storages",
     "django_extensions",
     "constance",
     "django_structlog",
-    "django_cotton",  # https://django-cotton.com/docs/quickstart
     "django_object_actions",  # https://github.com/crccheck/django-object-actions
     "solo",  # https://github.com/lazybird/django-solo
     # "rest_framework",
@@ -140,13 +140,6 @@ TEMPLATES = [
         ],
         "APP_DIRS": False,
         "OPTIONS": {
-            "loaders": [
-                "django_cotton.cotton_loader.Loader",
-                "django.template.loaders.app_directories.Loader",
-            ],
-            "builtins": [
-                "django_cotton.templatetags.cotton",
-            ],
             "context_processors": [
                 # Default template context processors:
                 "django.contrib.auth.context_processors.auth",

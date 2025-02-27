@@ -10,7 +10,7 @@ repos:
       - id: check-yaml
       - id: check-ast
       - id: debug-statements
-        language_version: python3.12
+        language_version: python3.13
 
   - repo: https://github.com/Riverside-Healthcare/djLint
     rev: v1.30.2
@@ -24,4 +24,13 @@ repos:
       - id: ruff
         args: [--fix, '--preview', '--show-source']
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: bash -c 'uv run mypy app'
+        language: system
+        types: [python]
+        pass_filenames: false
 

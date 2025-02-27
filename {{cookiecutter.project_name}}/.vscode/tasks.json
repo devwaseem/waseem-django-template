@@ -4,7 +4,7 @@
         {
             "label": "dev",
             "type": "shell",
-            "command": "LOG_DB=true poetry run python manage.py runserver_plus 0.0.0.0:8000",
+            "command": "LOG_DB=true uv run python manage.py runserver_plus 0.0.0.0:8000",
             "problemMatcher": []
         },
         {
@@ -16,67 +16,67 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "DISABLE_LOGGING=true TEST=true PYTHONBREAKPOINT=ipdb.set_trace poetry run pytest -s",
+            "command": "DISABLE_LOGGING=true TEST=true PYTHONBREAKPOINT=ipdb.set_trace uv run pytest -s",
             "problemMatcher": []
         },
         {
             "label": "lint",
             "type": "shell",
-            "command": "poetry run pre-commit run --all-files",
+            "command": "uv run pre-commit run --all-files",
             "problemMatcher": []
         },
         {
             "label": "type",
             "type": "shell",
-            "command": "poetry run mypy app",
+            "command": "uv run mypy app",
             "problemMatcher": []
         },
         {
             "label": "celery",
             "type": "shell",
-            "command": "LOG_DB=true poetry run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20",
+            "command": "LOG_DB=true uv run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20",
             "problemMatcher": []
         },
         {
             "label": "celery-beat",
             "type": "shell",
-            "command": "LOG_DB=true poetry run celery --app app beat -l INFO",
+            "command": "LOG_DB=true uv run celery --app app beat -l INFO",
             "problemMatcher": []
         },
         {
             "label": "flower",
             "type": "shell",
-            "command": "LOG_DB=true poetry run celery --app app flower",
+            "command": "LOG_DB=true uv run celery --app app flower",
             "problemMatcher": []
         },
         {
             "label": "makemigrations",
             "type": "shell",
-            "command": "poetry run python manage.py makemigrations",
+            "command": "uv run python manage.py makemigrations",
             "problemMatcher": []
         },
         {
             "label": "migrate",
             "type": "shell",
-            "command": "poetry run python manage.py migrate",
+            "command": "uv run python manage.py migrate",
             "problemMatcher": []
         },
         {
             "label": "dbshell",
             "type": "shell",
-            "command": "poetry run python manage.py dbshell",
+            "command": "uv run python manage.py dbshell",
             "problemMatcher": []
         },
         {
             "label": "notebook",
             "type": "shell",
-            "command": "LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true poetry run python manage.py shell_plus --notebook --no-browser",
+            "command": "LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --notebook --no-browser",
             "problemMatcher": []
         },
         {
             "label": "shell",
             "type": "shell",
-            "command": "poetry run python manage.py shell_plus",
+            "command": "uv run python manage.py shell_plus",
             "problemMatcher": []
         },
         {

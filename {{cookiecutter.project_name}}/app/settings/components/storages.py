@@ -3,8 +3,8 @@ import re
 from env import Env
 
 from app.settings.components.aws import AWS_S3_CUSTOM_DOMAIN
+from app.settings.components.vite import VITE_OUTPUT_DIR
 from app.settings.vars import (
-    BASE_DIR,
     DEBUG,
     MEDIA_USE_S3,
     STATIC_USE_S3,
@@ -77,9 +77,7 @@ if STATIC_USE_S3:
 
 STATIC_ROOT = STORAGES["staticfiles"]["OPTIONS"]["location"]  # type: ignore
 
-STATICFILES_DIRS = [
-    BASE_DIR / Env.str("VITE_APP_OUTPUT_DIR"),
-]
+STATICFILES_DIRS = [VITE_OUTPUT_DIR]
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",

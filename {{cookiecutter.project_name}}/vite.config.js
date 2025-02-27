@@ -1,74 +1,59 @@
-import inject from '@rollup/plugin-inject';
-import { glob } from 'glob';
-import { cpus } from 'os';
-import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
-import tailwindcss from 'tailwindcss';
+import { glob } from "glob";
+import path from "path";
+import { defineConfig, loadEnv } from "vite";
+import tailwindcss from '@tailwindcss/vite'
 
-const dirs = ['assets', 'app/templates'];
-
-let inputFiles = [];
-
-for (let dir of dirs) {
-    const files = await glob(dir + '/**/*.{js,ts,css}', {
-        ignore: ['node_modules/**', 'dist/**', '**/*.d.ts'],
-    });
-    inputFiles = [...inputFiles, ...files];
-}
-
-console.log(`Found ${inputFiles.length} files to build...`);
-
-let rollupInput = {};
-
-for (let file of inputFiles) {
-    rollupInput[file] = file;
-}
-
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, process.cwd());
-    const isDevelopment = mode == "development";
-    const outputDir = env.VITE_APP_OUTPUT_DIR
-    if (!outputDir) {
-        throw Error('Set the output dir using {VITE_APP_OUTPUT_DIR} env variable')
+async function buildRollupInput(frontendDirs) {
+  let rollupInput = {};
+  for (let dir of frontendDirs) {
+    dir = path.resolve(dir);
+    for (let subDir of ["pages", "shared", "layout"]) {
+      let subDirPath = dir + "/" + subDir;
+      let resolved_files = await glob(subDirPath + "/**/*.{js,ts}");
+      for (let file of resolved_files) {
+        let key = path.resolve(file).replace(dir, "");
+        if (key.startsWith("/")) {
+          key = key.slice(1);
+        }
+        key = key.replace(/(index)?\.(js|ts|css)$/g, "");
+        key = key.replace(/\//g, "-");
+        if (key.endsWith("-")) {
+          key = key.slice(0, -1);
+        }
+        rollupInput[key] = file;
+      }
     }
-    return {
-        root: '.',
-        resolve: {
-            alias: {
-                '@assets': path.resolve('./assets'),
-            },
-        },
-        server: {
-            hmr: false,
-        },
-        css: {
-            postcss: {
-             plugins: [tailwindcss()],
-            },
-        },
-        build: {
-            ssr: false,
-            outDir: outputDir,
-            assetsDir: '',
-            manifest: true,
-            emptyOutDir: true,
-            sourcemap: isDevelopment ? 'inline' : false,
-            minify: isDevelopment ? false : 'esbuild',
-            rollupOptions: {
-                maxParallelFileOps: Math.max(1, cpus().length - 1),
-                output: {
-                    compact: isDevelopment,
-                    entryFileNames: '[name].[hash].js',
-                    chunkFileNames: '[name].[hash].js',
-                    assetFileNames: 'assets/[name].[hash][extname]',
-                },
-                input: rollupInput,
-            },
-        },
-        plugins: [
-            inject({
-                htmx: 'htmx.org',
-            }),
-        ],
-    };
+  }
+  return rollupInput;
+}
+
+export default defineConfig(async ({ mode }) => {
+  const env = loadEnv(mode, process.cwd());
+  const isDevelopment = mode == "development";
+  const outputDir = env.VITE_APP_OUTPUT_DIR || "./dist";
+  return {
+    root: ".",
+    plugins: [
+      tailwindcss(),
+    ],
+    resolve: {
+      alias: {
+        "@": path.resolve("./frontend"),
+        "@pages": path.resolve("./frontend/pages"),
+        "@shared": path.resolve("./frontend/shared"),
+        "@layouts": path.resolve("./frontend/layouts"),
+      },
+    },
+    build: {
+      ssr: false,
+      outDir: outputDir,
+      manifest: true,
+      emptyOutDir: true,
+      sourcemap: isDevelopment ? "inline" : false,
+      minify: isDevelopment ? false : "esbuild",
+      rollupOptions: {
+        input: await buildRollupInput(["./frontend"]),
+      },
+    },
+  };
 });

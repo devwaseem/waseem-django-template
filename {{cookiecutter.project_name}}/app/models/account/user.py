@@ -1,4 +1,3 @@
-import uuid
 from typing import ClassVar
 
 from django.contrib.auth.hashers import make_password
@@ -57,8 +56,7 @@ class UserManager(BaseUserManager[AbstractUser]):
 class User(AbstractUser):
     """User class."""
 
-    internal_id = models.AutoField(primary_key=True)
-    id = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     username = None  # type:ignore
     email = models.EmailField(_("email address"), unique=True)
 

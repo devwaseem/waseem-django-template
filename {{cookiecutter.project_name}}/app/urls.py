@@ -88,7 +88,7 @@ urlpatterns = [
     ),
 ]
 
-if "drf_spectacular" in settings.INSTALLED_APPS:  # type: ignore
+if "drf_spectacular" in settings.INSTALLED_APPS:
     urlpatterns += [
         # schema
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -105,7 +105,7 @@ if "drf_spectacular" in settings.INSTALLED_APPS:  # type: ignore
         ),
     ]
 
-if "rest_framework" in settings.INSTALLED_APPS:  # type: ignore
+if "rest_framework" in settings.INSTALLED_APPS:
     urlpatterns += []
 
 

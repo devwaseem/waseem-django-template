@@ -1,41 +1,41 @@
 dev:
-  LOG_DB=true poetry run python manage.py runserver_plus 0.0.0.0:8000
+  LOG_DB=true uv run python manage.py runserver_plus 0.0.0.0:8000
 
 vite:
   npm run dev
 
 test *ARGS:
-    TEST=true PYTHONBREAKPOINT=ipdb.set_trace poetry run pytest -s  {{ ARGS }}
+    TEST=true PYTHONBREAKPOINT=ipdb.set_trace uv run pytest -s  {{ ARGS }}
 
 lint:
-  poetry run pre-commit run --all-files
+  uv run pre-commit run --all-files
 
 type *ARGS:
-  poetry run mypy app {{ ARGS }}
+  uv run mypy app {{ ARGS }}
 
 celery:
-  LOG_DB=true poetry run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20
+  LOG_DB=true uv run watchmedo auto-restart --directory=app --recursive --pattern '*.py' -- celery --app app worker -E -l INFO -Q celery --pool gevent --concurrency 20
 
 celery-beat:
-  LOG_DB=true poetry run celery --app app beat -l INFO
+  LOG_DB=true uv run celery --app app beat -l INFO
 
 flower:
-  LOG_DB=true poetry run celery --app app flower
+  LOG_DB=true uv run celery --app app flower
 
 makemigrations *ARGS:
-  poetry run python manage.py makemigrations {{ ARGS }}
+  uv run python manage.py makemigrations {{ ARGS }}
 
 migrate *ARGS:
-  poetry run python manage.py migrate {{ ARGS }}
+  uv run python manage.py migrate {{ ARGS }}
 
 dbshell *ARGS:
-  poetry run python manage.py dbshell {{ ARGS }}
+  uv run python manage.py dbshell {{ ARGS }}
 
 notebook:
-  LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true poetry run python manage.py shell_plus --notebook --no-browser
+  LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --notebook --no-browser
 
 shell:
-  poetry run python manage.py shell_plus
+  uv run python manage.py shell_plus
 
 up *ARGS:
   docker-compose -f development.yml up -d {{ ARGS }}
