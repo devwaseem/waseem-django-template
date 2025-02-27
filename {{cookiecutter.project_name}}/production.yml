@@ -43,7 +43,6 @@ services:
         depends_on:
             - postgres
             - redis
-            - mjml
         env_file:
             - .env
         expose:
@@ -112,19 +111,6 @@ services:
             interval: 10s
             timeout: 5s
             retries: 5
-        networks:
-            - webnet
-
-    mjml:
-        image: liminspace/mjml-tcpserver:0.11
-        container_name: mjml_tcpserver_production
-        restart: unless-stopped
-        environment:
-            HOST: '0.0.0.0'
-            PORT: '28101'
-            MJML_ARGS: '--mjml.minify=true --mjml.validationLevel=strict'
-        expose:
-            - '28101'
         networks:
             - webnet
 

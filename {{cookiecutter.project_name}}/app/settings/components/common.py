@@ -62,8 +62,6 @@ THIRD_PARTY_APPS: list[str] = [
     # "phonenumber_field", Uncomment to enable
     # https://github.com/theatlantic/django-nested-admin
     # "nested_admin",
-    # https://github.com/liminspace/django-mjml
-    # "mjml",
     # https://github.com/SmileyChris/easy-thumbnails
     # "easy_thumbnails",
     # https://github.com/pmclanahan/django-celery-email

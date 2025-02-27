@@ -37,11 +37,6 @@ REDIS_HOST=localhost|redis
 REDIS_PORT=6379
 
 
-# MJML
-MJML_HOST=localhost|mjml
-MJML_PORT=28101
-
-
 # Caddy
 DOMAIN_NAME=localhost:8000
 SSL_EMAIL=

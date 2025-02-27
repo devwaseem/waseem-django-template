@@ -45,7 +45,6 @@ include(
     "components/csp.py",
     "components/constance.py",
     "components/dbbackup.py",
-    "components/mjml.py",
     "components/rate_limit.py",
     "components/rest_framework.py",
 )
