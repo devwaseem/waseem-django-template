@@ -14,7 +14,8 @@ COPY . .
 
 RUN npm run build
 
-FROM python:3.13.0-slim-bookworm as python_base
+FROM python:3.13.1-slim-bookworm as python_base
+
 
 ENV APP_HOME="/app"
 ENV VIRTUAL_ENV_PATH="$APP_HOME/.venv/"
@@ -27,24 +28,15 @@ WORKDIR $APP_HOME
 # Use poetry to get all the deps
 FROM python_base as python_deps
 
-ENV POETRY_VERSION=1.8.3
-ENV POETRY_NO_INTERACTION=1
-ENV POETRY_VIRTUALENVS_CREATE=1
-ENV POETRY_VIRTUALENVS_IN_PROJECT=1
-ENV POETRY_HOME='/usr/local'
-ENV POETRY_VIRTUALENVS_PATH="${VIRTUAL_ENV_PATH}"
-ENV POETRY_CACHE_DIR='/tmp/poetry_cache'
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
-  build-essential
-
-RUN pip install poetry
-
-COPY ./pyproject.toml ./poetry.lock ./
-
-RUN touch README.md
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --only=main --no-root
+#https://docs.astral.sh/uv/guides/integration/docker/#caching
+ENV UV_LINK_MODE=copy
+# https://docs.astral.sh/uv/guides/integration/docker/#non-editable-installs
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=bind,source=uv.lock,target=uv.lock \
+  --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+  uv sync --no-dev --frozen --no-install-project --no-editable
 
 # Production build
 FROM python_base as production
@@ -72,15 +64,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # psycopg2 dependencies
   libpq-dev \
   # Other tools \
-  lsb-release \
-  ca-certificates \
-  curl \
-  gnupg2 \
   gettext \
   dos2unix \
   tini \
   # Cleaning cache:
-  && apt-get remove curl -y \
   && apt-get purge -y --auto-remove \
   && apt-get autoclean \
   && apt-get clean -y \
