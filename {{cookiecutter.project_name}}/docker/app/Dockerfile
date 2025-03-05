@@ -38,6 +38,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
   --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
   uv sync --no-dev --frozen --no-install-project --no-editable
 
+RUN find $VIRTUAL_ENV_PATH -type d -name '__pycache__' -exec rm -r {} +
+RUN find $VIRTUAL_ENV_PATH -name '*.dist-info' -type d -exec rm -r {} +
+RUN find $VIRTUAL_ENV_PATH -name '*.egg-info' -type d -exec rm -r {} +
+
 # Production build
 FROM python_base as production
 
