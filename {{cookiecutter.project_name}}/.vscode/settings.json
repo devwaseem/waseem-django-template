@@ -1,6 +1,6 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
     "python.analysis.packageIndexDepths": [
         {
@@ -13,5 +13,7 @@
             "depth": 5,
             "includeAllSymbols": true
         },
+    ],
+    "cSpell.words": [
     ]
 }
