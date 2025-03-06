@@ -4,7 +4,7 @@ import environ
 
 BASE_DIR = Path(__file__).parent
 
-environ.Env.read_env(BASE_DIR / ".env")
+environ.Env.read_env(BASE_DIR / ".env", overwrite=True)
 
 Env = environ.Env(
     # set casting, default value

@@ -1,5 +1,4 @@
 {% load static %}
-{% load load_js %}
 {% load django_browser_reload %}
 <!DOCTYPE html>
 <html class="overflow-hidden no-js" lang="en">
@@ -20,7 +19,6 @@
               rel="stylesheet">
         <meta name="csrf-token" content="{{ csrf_token }}" />
         <meta name="static-url" content="{{ static_url }}" />
-        {% load_asset global htmx.ts %}
         {% block extrahead %}
         {% endblock extrahead %}
     </head>
@@ -38,13 +36,6 @@
         {% endblock footer %}
         {% block extrabody %}
         {% endblock extrabody %}
-        {% load_asset global modal.ts %}
-        {% load_asset global formset.ts %}
-        {% block alpine_components %}
-        {% endblock alpine_components %}
-        {% load_asset global flowbite.ts %}
-        {% load_asset global alpine.ts %}
-        {% load_asset global main.ts %}
         {% django_browser_reload_script %}
     </body>
 </html>

@@ -14,6 +14,7 @@ from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 from env import Env
 
+from app.settings.components.djfk import DJFK_FRONTEND_DIR
 from app.settings.vars import BASE_DIR, DEBUG, STATIC_USE_WHITENOISE
 
 BASE_URL = Env("DOMAIN_NAME")
@@ -135,8 +136,9 @@ TEMPLATES = [
         "DIRS": [
             # Contains plain text templates, like `robots.txt`:
             BASE_DIR / "app" / "templates",
+            DJFK_FRONTEND_DIR,
         ],
-        "APP_DIRS": False,
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 # Default template context processors:
