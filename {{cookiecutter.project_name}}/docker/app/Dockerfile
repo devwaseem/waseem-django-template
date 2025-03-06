@@ -1,7 +1,13 @@
+ARG APP_HOME="/webapp"
+
+# --------------------------------------------------------------
 # Build frontend asset files
+# --------------------------------------------------------------
 FROM node:22-slim as frontend_builder
 
-ENV APP_HOME="/app"
+ARG APP_HOME
+
+ENV APP_HOME="$APP_HOME"
 ENV VITE_APP_OUTPUT_DIR="dist"
 
 WORKDIR $APP_HOME
@@ -14,19 +20,27 @@ COPY . .
 
 RUN npm run build
 
-FROM python:3.13.1-slim-bookworm as python_base
+# --------------------------------------------------------------
+# Builder
+# --------------------------------------------------------------
+FROM python:3.13.1-slim-bookworm as builder
 
-
-ENV APP_HOME="/app"
+ARG APP_HOME
+ENV APP_HOME="$APP_HOME"
 ENV VIRTUAL_ENV_PATH="$APP_HOME/.venv/"
 ENV DIST_DIR="$APP_HOME/dist/"
-ENV PATH="$VIRTUAL_ENV_PATH/bin:$PATH"
-ENV VITE_APP_OUTPUT_DIR="dist"
+ENV UV_PROJECT_ENVIRONMENT="${VIRTUAL_ENV_PATH}"
 
-WORKDIR $APP_HOME
-
-# Use poetry to get all the deps
-FROM python_base as python_deps
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  # Other tools \
+  gettext \
+  dos2unix \
+  tini \
+  # Cleaning cache:
+  && apt-get purge -y --auto-remove \
+  && apt-get autoclean \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
@@ -42,51 +56,76 @@ RUN find $VIRTUAL_ENV_PATH -type d -name '__pycache__' -exec rm -r {} +
 RUN find $VIRTUAL_ENV_PATH -name '*.dist-info' -type d -exec rm -r {} +
 RUN find $VIRTUAL_ENV_PATH -name '*.egg-info' -type d -exec rm -r {} +
 
+# --------------------------------------------------------------
+# Testing build
+# --------------------------------------------------------------
+FROM builder as tester
+
+ENV PYTHONPATH="$VIRTUAL_ENV_PATH/lib/python3.13/site-packages:$PYTHON_PATH" 
+ENV TEST=true
+
+COPY --from=builder ${VIRTUAL_ENV_PATH} ${VIRTUAL_ENV_PATH}
+
+RUN  pip install \
+  pytest \
+  pytest-sugar \
+  pytest-django \
+  pytest-cov \
+  coverage \
+  pytest-xdist \
+  pytest-mock \
+  pytest-env \
+  mixer
+
+COPY --from=frontend_builder ${DIST_DIR} ${DIST_DIR}
+
+COPY . ${APP_HOME}/
+
+WORKDIR $APP_HOME
+
+CMD ["pytest"]
+
+# --------------------------------------------------------------
 # Production build
-FROM python_base as production
+# --------------------------------------------------------------
+FROM gcr.io/distroless/base-debian12:nonroot as production
 
-ARG UID=1000
-ARG GID=1000
-ARG APP_NAME="web"
+ARG CHIPSET_ARCH=aarch64
+ARG APP_HOME
 
-ENV UID=${UID:-1000}
-ENV GID=${GID:-1000}
 ENV PYTHONFAULTHANDLER=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONHASHSEED=random
 ENV PYTHONDONTWRITEBYTECODE=1
 
-RUN groupadd -g "${GID}" $APP_NAME || exit 0
-RUN useradd -d $APP_HOME -g "${GID}" -u "${UID}" -l -r $APP_NAME  || exit 0
+ENV APP_HOME="$APP_HOME"
+ENV VIRTUAL_ENV_PATH="$APP_HOME/.venv"
+ENV DIST_DIR="$APP_HOME/dist/"
+ENV PATH="$VIRTUAL_ENV_PATH/bin:$PATH"
+ENV VITE_APP_OUTPUT_DIR="dist"
+ENV PYTHONPATH="/usr/lib/python3.13:$VIRTUAL_ENV_PATH/lib/python3.13/site-packages:$PYTHON_PATH" 
+ENV PYTHONHOME="/usr"
+ENV LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib:$VIRTUAL_ENV_PATH/lib:$LD_LIBRARY_PATH"
 
-RUN mkdir -p '/var/www/static' \
-  && chown -R $APP_NAME:$APP_NAME '/var/www/static'
+# COPY --from=builder /python-libs /
+COPY --from=builder /usr/local/bin/python* /usr/local/bin/
+COPY --from=builder /usr/local/lib/python3.13 /usr/lib/python3.13
+COPY --from=builder /usr/local/lib/libpython3.13.so.1.0 /usr/local/lib/libpython3.13.so.1.0
 
-USER root
+COPY --from=builder /etc/ld.so.cache /etc/ld.so.cache
+COPY --from=builder /lib/${CHIPSET_ARCH}-linux-gnu/ /lib/${CHIPSET_ARCH}-linux-gnu/
 
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg2 dependencies
-  libpq-dev \
-  # Other tools \
-  gettext \
-  dos2unix \
-  tini \
-  # Cleaning cache:
-  && apt-get purge -y --auto-remove \
-  && apt-get autoclean \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /usr/bin/tini /usr/bin/tini
+COPY --from=builder /usr/bin/gettext /usr/bin/gettext
 
-COPY --chown=$APP_NAME:$APP_NAME --from=python_deps ${VIRTUAL_ENV_PATH} ${VIRTUAL_ENV_PATH}
+USER nonroot
 
-COPY --chown=$APP_NAME:$APP_NAME --from=frontend_builder ${DIST_DIR} ${DIST_DIR}
+COPY --chown=nonroot:nonroot --from=builder ${VIRTUAL_ENV_PATH} ${VIRTUAL_ENV_PATH}
 
-COPY --chown=$APP_NAME:$APP_NAME . .
+COPY --chown=nonroot:nonroot --from=frontend_builder ${DIST_DIR} ${DIST_DIR}
 
-COPY --chown=$APP_NAME:$APP_NAME docker-entrypoint.sh /docker-entrypoint.sh
-RUN dos2unix /docker-entrypoint.sh && \
-  chmod a+x /docker-entrypoint.sh
+COPY --chown=nonroot:nonroot . ${APP_HOME}
 
-USER $APP_NAME
+WORKDIR $APP_HOME
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/bin/bash", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--"]

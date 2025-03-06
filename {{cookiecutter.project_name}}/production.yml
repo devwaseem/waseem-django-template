@@ -26,25 +26,43 @@ services:
         networks:
             - proxynet
 
-    web: &web
-        restart: unless-stopped
+    django: &django
         build:
             context: .
             dockerfile: docker/app/Dockerfile
             args:
+                ARCH: x86_64
                 POSTGRES_VERSION: 15
-        image: production_web_server
-        command: gunicorn
         volumes:
             - tmp-data:/tmp
             - /data/static:/var/www/static:rw
             - /data/log:/var/log:rw
             - /data:/data:rw
+        env_file:
+            - .env
+
+    django_migrate:
+        <<: *django
+        command: python3 manage.py migrate --noinput
+        depends_on:
+            - postgres
+        restart: "no"  # Ensure it doesn't restart
+
+    django_collectstatic:
+        <<: *django
+        command: python3 manage.py collectstatic --noinput
+        restart: "no"
+
+    web:
+        <<: *django
+        restart: unless-stopped
+        image: production_web_server
+        command: gunicorn app.wsgi:application --config /app/gunicorn_config.py
         depends_on:
             - postgres
             - redis
-        env_file:
-            - .env
+            - django_migrate
+            - django_collectstatic
         expose:
             - '3000'
         networks:
@@ -52,28 +70,44 @@ services:
             - proxynet
 
     worker_cpu:
-      <<: *web
-      command: celery
-      environment:
-        - CELERY_POOL=solo
-        - CELERY_CONCURRENCY=1
-        - CELERY_QUEUES=celery
+      <<: *django
+      restart: unless-stopped
+      command: celery --app app worker -E -l INFO -Q celery --concurrency 1 --pool solo
+      depends_on:
+        - postgres
+        - redis
+        - django_migrate
+        - django_collectstatic
 
     worker_io:
-      <<: *web
-      command: celery
-      environment:
-        - CELERY_POOL=gevent
-        - CELERY_CONCURRENCY=10
-        - CELERY_QUEUES=celery_io
+      <<: *django
+      restart: unless-stopped
+      command: celery --app app worker -E -l INFO -Q celery_io --concurrency 10 --pool gevent
+      depends_on:
+        - postgres
+        - redis
+        - django_migrate
+        - django_collectstatic
 
     celery_beat:
-      <<: *web
-      command: celery-beat
+      <<: *django
+      restart: unless-stopped
+      command: celery --app app beat -l INFO -s /data/celery/celerybeat-schedule
+      depends_on:
+        - postgres
+        - redis
+        - django_migrate
+        - django_collectstatic
 
     celery_flower:
-      <<: *web
-      command: celery-flower
+      <<: *django
+      restart: unless-stopped
+      command: celery --app app flower --basic-auth=admin:admin --persistent=True --db=/data/celery/flower_db --max_tasks=1000
+      depends_on:
+        - postgres
+        - redis
+        - django_migrate
+        - django_collectstatic
       ports:
         - "5555:5555/tcp"
       networks:
@@ -97,7 +131,6 @@ services:
             dockerfile: docker/postgres/Dockerfile
             args:
                 POSTGRES_VERSION: 15
-        container_name: web_production_postgres
         volumes:
             - /data/postgresql/data:/var/lib/postgresql/data
             - /data:/data:rw
@@ -117,23 +150,12 @@ services:
     pg_bouncer:
         restart: unless-stopped
         image: edoburu/pgbouncer
-        container_name: web_production_pgbouncer
         env_file:
             - .env
         expose:
             - '5432'
         networks:
             - webnet
-
-    awscli:
-        build:
-            context: .
-            dockerfile: docker/aws/Dockerfile
-        container_name: aws_cli
-        volumes:
-            - /data/db-backups:/backups
-        env_file:
-            - .env
 
 volumes:
     caddy-config:
