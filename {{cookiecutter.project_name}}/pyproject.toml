@@ -72,7 +72,6 @@ dev = [
   "django-coverage-plugin>=3.0.0,<4",
   "django-cprofile-middleware>=1.0.5,<2",
   "django-debug-toolbar~=4.4",
-  "django-debug-toolbar-line-profiling>=0.7.3,<0.8",
   "django-debug-toolbar-template-profiler>=2.1.0,<3",
   "django-silk~=5.1",
   "pyinstrument>=4.6.2,<5",
