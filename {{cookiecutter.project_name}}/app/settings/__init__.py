@@ -1,15 +1,6 @@
-"""
-This is a django-split-settings main file.
-For more information read this:
-https://github.com/sobolevn/django-split-settings
-Default environment is `development`.
-To change settings file:
-`DJANGO_ENV=production python manage.py runserver`
-"""
-
+from typing import TYPE_CHECKING
 
 import django_stubs_ext
-from celery.app.task import Task
 from split_settings.tools import include
 
 from app.settings.vars import (
@@ -22,7 +13,11 @@ from app.settings.vars import (
 )
 
 django_stubs_ext.monkeypatch()
-Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore[attr-defined] # noqa
+
+if TYPE_CHECKING:
+    from celery.app.task import Task
+
+    Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore[attr-defined] # noqa
 
 # Django settings
 # Include it first before third party

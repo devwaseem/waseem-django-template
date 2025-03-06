@@ -43,5 +43,5 @@ timeout = os.environ.get(
 
 accesslog = "-"
 errorlog = "-"
-chdir = "/app"
+chdir = os.environ["APP_HOME"]
 worker_tmp_dir = "/dev/shm"
