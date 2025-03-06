@@ -1,5 +1,5 @@
 [project]
-name = "{{cookiecutter.project_verbose_name}}"
+name = "{{cookiecutter.project_name}}"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Waseem akram", email = "waseem07799@gmail.com" }]
