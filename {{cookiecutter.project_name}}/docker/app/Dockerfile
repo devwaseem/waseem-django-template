@@ -1,4 +1,4 @@
-ARG APP_HOME="/webapp"
+ARG APP_HOME="/app"
 
 # --------------------------------------------------------------
 # Build frontend asset files
@@ -10,13 +10,14 @@ ARG APP_HOME
 ENV APP_HOME="$APP_HOME"
 ENV VITE_APP_OUTPUT_DIR="dist"
 
-WORKDIR $APP_HOME
 
 COPY package.json package-lock.json ./
 
 RUN npm install
 
-COPY . .
+COPY . ${APP_HOME}/
+
+WORKDIR $APP_HOME
 
 RUN npm run build
 

@@ -22,7 +22,10 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@assets/*": ["./assets/*"]
+      "@frontend/*": ["./frontend/*"],  
+      "@layouts/*": ["./frontend/layouts/*"],
+      "@pages/*": ["./frontend/pages/*"],
+      "@shared/*": ["./frontend/shared/*"],
     }
   },
   "include": [

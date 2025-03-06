@@ -1,4 +1,4 @@
-import { $byId } from 'frontend/shared/utils';
+import { $byId } from '@shared/utils';
 import AlpineInstance from 'alpinejs';
 
 AlpineInstance.data('ModalContainer', () => ({
