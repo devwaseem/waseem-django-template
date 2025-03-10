@@ -1,4 +1,4 @@
-from typing import Any, TypedDict
+from typing import TypedDict
 
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -33,7 +33,11 @@ def get_site_data(request: HttpRequest) -> DomainContext:
     )
 
 
-def allauth_settings(_request: HttpRequest) -> dict[str, Any]:
+class AllAuthSetting(TypedDict):
+    ACCOUNT_ALLOW_REGISTRATION: bool
+
+
+def allauth_settings(_request: HttpRequest) -> AllAuthSetting:
     """Expose some settings from django-allauth in templates."""
     return {
         "ACCOUNT_ALLOW_REGISTRATION": getattr(

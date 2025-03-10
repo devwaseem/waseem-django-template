@@ -1,3 +1,5 @@
+from typing import cast
+
 import faker
 import pytest
 from mixer.backend.django import mixer
@@ -11,7 +13,7 @@ fake = faker.Faker()
 @pytest.mark.django_db
 def test_throws_type_error_if_field_does_not_exist() -> None:
     expected_name = fake.name()
-    user: User = mixer.blend(User, name="SOMETHING")  # type: ignore
+    user = cast(User, mixer.blend(User, name="SOMETHING"))
 
     with pytest.raises(
         TypeError, match=f"__non_existent_field__ not found in {type(user)}"
@@ -26,7 +28,7 @@ def test_throws_type_error_if_field_does_not_exist() -> None:
 @pytest.mark.django_db
 def test_updates_field_correctly_if_field_exists() -> None:
     expected_name = fake.name()
-    user: User = mixer.blend(User, name="SOMETHING")  # type: ignore
+    user = cast(User, mixer.blend(User, name="SOMETHING"))
 
     django_models.update_model_field(
         instance=user,
@@ -39,7 +41,7 @@ def test_updates_field_correctly_if_field_exists() -> None:
 
 @pytest.mark.django_db
 def test_updates_field_correctly_with_cast_if_field_exists() -> None:
-    user: User = mixer.blend(User, name="SOMETHING")  # type: ignore
+    user = cast(User, mixer.blend(User, name="SOMETHING"))
 
     django_models.update_model_field(
         instance=user,

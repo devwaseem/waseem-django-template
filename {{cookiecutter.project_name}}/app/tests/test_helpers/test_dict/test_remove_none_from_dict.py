@@ -4,7 +4,7 @@ from app.helpers.dict import remove_none_from_dict
 
 
 def test_removes_none_correctly_for_root_with_empty_strings() -> None:
-    initial: dict[str, Any] = {
+    initial: dict[str, Any] = {  # type: ignore
         "a": 1,
         "b": None,
         "c": "",
@@ -29,7 +29,7 @@ def test_removes_none_correctly_for_root_with_empty_strings() -> None:
 
 
 def test_removes_none_correctly_for_nested_dict_with_empty_strings() -> None:
-    initial: dict[str, Any] = {
+    initial: dict[str, dict[str, str | None] | None] = {
         "nested": {
             "a": "1",
             "b": None,
@@ -49,7 +49,7 @@ def test_removes_none_correctly_for_nested_dict_with_empty_strings() -> None:
 
 
 def test_removes_none_and_empty_strings() -> None:
-    initial: dict[str, Any] = {
+    initial: dict[str, Any] = {  # type: ignore
         "a": 1,
         "b": "",
         "c": None,

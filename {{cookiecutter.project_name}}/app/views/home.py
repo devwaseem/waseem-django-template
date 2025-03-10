@@ -5,5 +5,5 @@ from frontend.pages.root.home import HomePage, HomePageProps
 
 
 class HomeView(View):
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, _request: HttpRequest) -> HttpResponse:
         return HomePage(props=HomePageProps()).as_response()

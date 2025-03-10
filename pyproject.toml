@@ -62,7 +62,7 @@ disable_error_code = ['import-untyped']
 
 allow_redefinition = false
 check_untyped_defs = true
-disallow_any_explicit = false
+disallow_any_explicit = true
 disallow_any_generics = true
 disallow_any_unimported = false
 disallow_incomplete_defs = true
