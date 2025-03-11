@@ -7,13 +7,12 @@
         "dev": "NODE_ENV=development vite dev",
         "build": "tsc & NODE_ENV=production vite build"
     },
-    "devDependencies": {},
-    "peerDependencies": {},
     "dependencies": {
         "@alpinejs/collapse": "^3.13.10",
         "@alpinejs/focus": "^3.13.10",
         "@alpinejs/mask": "^3.13.10",
         "@alpinejs/morph": "^3.13.10",
+        "@iamwaseem99/vite-plugin-django-frontend-kit": "^1.0.3",
         "@rollup/plugin-inject": "^5.0.5",
         "@ryangjchandler/alpine-tooltip": "^1.2.0",
         "@tailwindcss/aspect-ratio": "^0.4.2",
