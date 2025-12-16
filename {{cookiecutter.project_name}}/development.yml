@@ -24,7 +24,7 @@ services:
     ports:
       - "6379:6379"
 
-  postgres_17:
+  postgres:
     image: postgres:17
     container_name: {{cookiecutter.project_name}}_postgres
     volumes:
