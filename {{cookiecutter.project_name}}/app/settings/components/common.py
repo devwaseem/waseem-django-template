@@ -1,7 +1,7 @@
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
-from app.settings.vars import BASE_DIR, DEBUG, STATIC_USE_WHITENOISE
+from app.settings.flags import BASE_DIR, DEBUG, STATIC_USE_WHITENOISE
 from env import Env
 
 BASE_URL = Env("DOMAIN_NAME")

@@ -1,5 +1,5 @@
 from app.settings.components.aws import AWS_S3_REGION_NAME
-from app.settings.vars import DOMAIN_NAME
+from app.settings.flags import DOMAIN_NAME
 from env import Env
 
 # Timeouts

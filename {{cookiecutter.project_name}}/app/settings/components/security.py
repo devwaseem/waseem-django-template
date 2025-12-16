@@ -1,4 +1,4 @@
-from app.settings.vars import DEBUG
+from app.settings.flags import DEBUG
 from env import Env
 
 # Security

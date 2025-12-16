@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import django_stubs_ext
 from split_settings.tools import include
 
-from app.settings.vars import (
+from app.settings.flags import (
     DEBUG,
     ENABLE_CPROFILE,
     ENABLE_HEALTH_CHECK,

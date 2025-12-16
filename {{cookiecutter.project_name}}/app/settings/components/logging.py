@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.http import HttpRequest, HttpResponse
 from django_structlog import signals
 
-from app.settings.vars import DEBUG
+from app.settings.flags import DEBUG
 from env import Env
 
 if TYPE_CHECKING:

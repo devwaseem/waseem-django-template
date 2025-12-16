@@ -5,7 +5,7 @@ from typing import cast
 from django.http import HttpRequest
 
 from app.settings.components.common import INSTALLED_APPS, MIDDLEWARE
-from app.settings.vars import DEBUG
+from app.settings.flags import DEBUG
 
 INSTALLED_APPS += [
     "debug_toolbar",

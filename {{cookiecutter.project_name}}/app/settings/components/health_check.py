@@ -2,7 +2,7 @@
 
 from app.settings.components.caches import CACHES
 from app.settings.components.common import INSTALLED_APPS
-from app.settings.vars import REDIS_HOST, REDIS_PORT
+from app.settings.flags import REDIS_HOST, REDIS_PORT
 
 INSTALLED_APPS += [
     "health_check",  # required

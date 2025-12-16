@@ -4,7 +4,7 @@ from env import Env
 
 from app.settings.components.aws import AWS_S3_CUSTOM_DOMAIN
 from app.settings.components.vite import VITE_OUTPUT_DIR
-from app.settings.vars import (
+from app.settings.flags import (
     DEBUG,
     MEDIA_USE_S3,
     STATIC_USE_S3,

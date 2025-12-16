@@ -14,7 +14,7 @@ from app.settings.components.vite import (
     VITE_DEV_SERVER_PORT,
     VITE_DEV_SERVER_URL,
 )
-from app.settings.vars import DEBUG
+from app.settings.flags import DEBUG
 
 CSP_INCLUDE_NONCE_IN = ("script-src", "connect-src")
 CSP_EXCLUDE_URL_PREFIXES = ("/admin",)

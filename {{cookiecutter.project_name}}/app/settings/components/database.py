@@ -1,4 +1,4 @@
-from app.settings.vars import TEST
+from app.settings.flags import TEST
 from env import Env
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

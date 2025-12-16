@@ -1,5 +1,5 @@
 # Caching
-from app.settings.vars import NO_CACHE, REDIS_HOST, REDIS_PORT, TEST
+from app.settings.flags import NO_CACHE, REDIS_HOST, REDIS_PORT, TEST
 
 CACHES = {
     "default": {
