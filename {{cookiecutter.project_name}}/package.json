@@ -10,6 +10,7 @@
   "dependencies": {
     "@iamwaseem99/vite-plugin-django-frontend-kit": "^1.1.2",
     "@tailwindcss/vite": "^4.0.12",
+    "autoprefixer": "^10.4.23",
     "glob": "^13.0.0",
     "tailwindcss": "^4.1.18",
     "vite": "^7.3"
