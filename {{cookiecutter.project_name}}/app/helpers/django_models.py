@@ -12,7 +12,21 @@ def get_object_or_none(model_class: Type[T], **kwargs: object) -> T | None:
         return None
 
 
-def update_model_field(  # type: ignore
+def update_model_field_if_empty(
+    *,
+    instance: Model,
+    attr: str,
+    value: Any,
+) -> None:
+    if not hasattr(instance, attr):
+        raise KeyError(f"{attr} not found in {type(instance)}")
+
+    field_value = getattr(instance, attr)
+    if field_value is None or field_value == "":
+        setattr(instance, attr, value)
+
+
+def update_model_field(
     *,
     instance: Model,
     attr: str,

@@ -1,10 +1,8 @@
-from env import Env
-
 from app.settings.components.aws import AWS_S3_REGION_NAME
 from app.settings.vars import DOMAIN_NAME
+from env import Env
 
 # Timeouts
-# https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-EMAIL_TIMEOUT
 
 EMAIL_TIMEOUT = 5
 SERVER_EMAIL = Env.str(

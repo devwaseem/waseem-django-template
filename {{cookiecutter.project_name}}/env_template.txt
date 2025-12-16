@@ -1,7 +1,7 @@
 # Django - General
 DEBUG=true
 SECRET_KEY=secret
-
+BASE_URL=
 
 PYTHONBREAKPOINT="ipdb.set_trace"
 ENABLE_HEALTH_CHECK=false

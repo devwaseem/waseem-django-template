@@ -1,9 +1,7 @@
+from app.settings.vars import DEBUG
 from env import Env
 
-from app.settings.vars import DEBUG
-
 # Security
-# https://docs.djangoproject.com/en/3.2/topics/security/
 
 USE_SSL = Env.bool("USE_SSL")
 

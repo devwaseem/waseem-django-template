@@ -1,5 +1,4 @@
 # Caching
-# https://docs.djangoproject.com/en/3.2/topics/cache/
 from app.settings.vars import NO_CACHE, REDIS_HOST, REDIS_PORT, TEST
 
 CACHES = {

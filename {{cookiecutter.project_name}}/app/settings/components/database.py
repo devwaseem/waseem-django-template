@@ -1,14 +1,8 @@
-from env import Env
-
 from app.settings.vars import TEST
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+from env import Env
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     "default": {

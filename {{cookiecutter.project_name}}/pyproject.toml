@@ -1,124 +1,141 @@
 [project]
-name = "{{cookiecutter.project_name}}"
+name = "project"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Waseem akram", email = "waseem07799@gmail.com" }]
 requires-python = "==3.13.1"
 readme = "README.md"
 dependencies = [
-  "Django[argon2]<6.0",
-  "argon2-cffi>=21.3.0,<22",
-  "boto3>=1.34.104,<2",
-  "celery>=5.2.7,<6",
-  "django-admin-interface>=0.22.1,<0.23",
-  "django-allauth>=0.54.0,<0.55",
-  "django-anymail[amazon-ses]~=8.6",
-  "django-browser-reload>=1.7.0,<2",
+  "Django[argon2]>=6.0<7",
+  "argon2-cffi>=25,<26",
+  "boto3>=1.42,<2",
+  "celery>=5.6.0,<6",
+  "django-admin-interface>=0.31.1,<1",
+  "django-allauth>=65.13.1,<66",
+  "django-anymail>=13,<14",
+  "django-browser-reload>=1.21.0,<2",
   "django-celery-email>=3.0.0,<4",
-  "django-constance>=3.1.0,<4",
-  "django-csp~=3.7",
-  "django-dbbackup>=4.0.2,<5",
-  "django-environ>=0.9.0,<0.10",
+  "django-constance>=4.3.4,<5",
+  "django-csp>=4,<5",
+  "django-environ>=0.12,<0.20",
   "django-feather>=0.3.0,<0.4",
   "django-filter~=24.2",
   "django-frontend-kit<1.0.0",
-  "django-health-check~=3.18",
-  "django-htmx>=1.12.2,<2",
+  "django-health-check>=3.20,<4",
+  "django-htmx>=1.27,<2",
   "django-http-referrer-policy>=1.1.1,<2",
-  "django-ipware>=5.0.0,<6",
+  "django-ipware>=7.0.1,<8",
   "django-lifecycle>=1.2.3,<2",
-  "django-model-utils>=4.2.0,<5",
-  "django-nested-admin>=4.0.2,<5",
-  "django-object-actions>=4.2.0,<5",
-  "django-permissions-policy>=4.13.0,<5",
-  "django-phonenumber-field[phonenumberslite]>=7.0.0,<8",
+  "django-model-utils>=5.0,<6",
+  "django-nested-admin>=4.1.6,<5",
+  "django-object-actions>=5.0,<6",
+  "django-permissions-policy>=4.28.0,<5",
+  "django-phonenumber-field[phonenumberslite]>=8.4,<9",
   "django-ratelimit>=4.1.0,<5",
-  "django-redis>=5.2.0,<6",
-  "django-render-block>=0.9.2,<0.10",
+  "django-redis>=6.0,<7",
+  "django-render-block>=0.11,<1",
   "django-solo>=2.3.0,<3",
   "django-split-settings>=1.2.0,<2",
-  "django-storages[boto3]~=1.14",
+  "django-storages[boto3]>=1.14.6,<2",
   "django-structlog>=4.0.1,<5",
-  "django-unfold>=0.30.0,<0.31",
+  "django-unfold>=0.74.1,<1",
   "django-widget-tweaks>=1.4.12,<2",
-  "djangorestframework>=3.14.0,<4",
+  "djangorestframework>=3.16.0,<4",
   "drf-spectacular>=0.27.2,<0.28",
-  "easy-thumbnails>=2.8.3,<3",
-  "gevent>=24.2.1,<25",
-  "gunicorn>=20.1.0,<21",
-  "hiredis>=2.0.0,<3",
-  "mjml-python>=1.3.4",
+  "gevent>=25.9,<26",
+  "gunicorn>=23,<24",
+  "hiredis>=3.3.0,<4",
+  "mjml-python>=1.3.7",
   "numerize>=0.12,<0.13",
   "psycopg[binary]>=3.1.18,<4",
-  "pydantic>=1.10.21",
+  "pydantic>=2.12,<3",
   "python-dateutil>=2.8.2,<3",
-  "redis>=4.3.4,<5",
-  "rich>=13.7.1,<14",
-  "sentry-sdk[django]~=2.3",
-  "structlog>=22.1.0,<23",
-  "tenacity>=9.0.0",
+  "redis>=7.1,<8",
+  "rich>=14.2,<15",
+  "sentry-sdk[django]>=2.47,<3",
+  "structlog>=25.5.0,<26",
+  "tenacity>=9.1.2,<10",
   "types-python-dateutil>=2.8.19.3,<3",
-  "uvicorn[standard]>=0.19.0,<0.20",
-  "whitenoise[brotli]>=6.6.0,<7",
-  "django-stubs-ext>=5.1.3",
-  "django-extensions>=3.2.3,<4",
+  "uvicorn[standard]>=0.38.0,<1",
+  "whitenoise[brotli]>=6.11,<7",
+  "django-stubs-ext>=5.2.8<6",
+  "django-extensions>=4.1,<5",
   # "psycopg2-binary>=2.9.10",
+  "django-configuration>=0.0.3",
 ]
+
 
 [dependency-groups]
 dev = [
-  "celery-types>=0.17.0,<0.18",
-  "coverage>=7.4.0,<8",
-  "django-coverage-plugin>=3.0.0,<4",
-  "django-cprofile-middleware>=1.0.5,<2",
-  "django-debug-toolbar>=5.0.1,<6",
-  "django-debug-toolbar-template-profiler>=2.1.0,<3",
-  "django-silk~=5.1",
-  "pyinstrument>=4.6.2,<5",
-  "django-stubs[compatible-mypy]>=4.2.7,<5",
-  "djangorestframework-stubs[compatible-mypy]>=3.14.5,<4",
-  "djhtml>=3.0.6,<4",
-  "djlint>=1.19.13,<2",
-  "fabric2>=3.0.0,<4",
-  "flake8>=6.0.0,<7",
-  "hypothesis[django]>=6.61.0,<7",
-  "ipdb>=0.13.9,<0.14",
-  "jupyterlab>=3.5.0,<4",
-  "mixer>=7.2.2,<8",
-  "nplusone>=1.0.0,<2",
-  "pre-commit>=2.20.0,<3",
-  "pudb>=2022.1.3,<2023",
-  "pytest>=7.4.4,<8",
-  "pytest-cov>=4.0.0,<5",
-  "pytest-describe>=2.1.0,<3",
-  "pytest-django>=4.5.2,<5",
-  "pytest-mock>=3.10.0,<4",
-  "pytest-subtests>=0.13.1,<0.14",
-  "pytest-sugar>=0.9.6,<0.10",
-  "pytest-xdist>=3.1.0,<4",
-  "ruff>=0.1.11,<0.2",
-  "traitlets>=5.13.0,<6",
-  "types-requests>=2.28.11.15,<3",
-  "watchdog>=2.2.0,<3",
-  "werkzeug>=2.2.3,<3",
+    { include-group = "test" },
+    { include-group = "types" },
+    { include-group = "code-checks" },
+    "debugpy>=1.8.9,<2",
+    "django-debug-toolbar-template-profiler>=2.1.0,<3",
+    "django-debug-toolbar>=5.0,<6",
+    "django-extensions>=4.1",
+    "django-silk>=5.0.2,<6",
+    "djhtml>=3.0.6,<4",
+    "fabric2>=3.0.0,<4",
+    "flower>=2.0.1,<3",
+    "ipdb>=0.13.9,<0.14",
+    "ipywidgets>=8.1.1,<9",
+    "jupyterlab>=4,<5",
+    "nplusone>=1.0.0,<2",
+    "pre-commit>=3.5.0,<4",
+    "traitlets>=5.13.0,<6",
+    "watchdog>=2.2.0,<3",
+    "werkzeug~=3.0",
+    "pudb>=2025.1",
+    "jupyterlab-vim>=4.1.4",
+    "pyinstrument>=4.6.2,<5",
+]
+
+types = [
+    "mypy>=1.17,<2",
+    "celery-types>=0.17.0,<1",
+    "djangorestframework-stubs[compatible-mypy]>=3.16.1,<4",
+    "types-requests>=2.28.11.15,<3",
+]
+
+code-checks = [
+    "bandit[sarif]>=1.8.6",
+    "djlint>=1.19.13,<2",
+    "flake8>=6.0.0,<7",
+    "ruff>=0.12.3",
+]
+
+test = [
+    "coverage>=7.4.0,<8",
+    "django-coverage-plugin>=3.0.0,<4",
+    "mixer>=7.2.2,<8",
+    "pytest-cov>=4.0.0,<5",
+    "pytest-describe>=2.1.0,<3",
+    "pytest-django>=4.5.2,<5",
+    "pytest-env>=1.1.5,<2",
+    "pytest-mock>=3.10.0,<4",
+    "pytest-playwright>=0.7.0",
+    "pytest-randomly>=3.16.0,<4",
+    "pytest-sugar>=0.9.6,<0.10",
+    "pytest-xdist>=3.1.0,<4",
+    "pytest>=8.3.4,<9",
 ]
 
 
-[tool.pyright]
-exclude = [".venv"]
-venvPath = "."
-venv = ".venv"
-
 [tool.basedpyright]
-include = ["app"]
+include = ["src", "llm_toolkit"]
 venvPath = "./.venv"
-pythonVersion = "3.13.1"
+pythonVersion = "3.12"
 pythonPlatform = "Linux"
 typeCheckingMode = "off"
 
 reportMissingTypeStubs = false
 reportIncompatibleVariableOverride = false
 reportUnusedParameter = false
+reportExplicitAny = false
+reportUnannotatedClassAttribute = false
+reportAny = false
+reportUnusedCallResult = false
 
 [tool.djlint]
 custom_html = "mjml,mj-head,mj-\\w+,c-\\w+,c-\\w{\\.\\w+}*"

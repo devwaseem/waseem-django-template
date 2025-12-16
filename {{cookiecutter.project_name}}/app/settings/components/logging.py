@@ -1,9 +1,4 @@
 # Logging
-# https://docs.djangoproject.com/en/3.2/topics/logging/
-
-# See also:
-# 'Do not log' by Nikita Sobolev (@sobolevn)
-# https://sobolevn.me/2020/03/do-not-log
 
 from typing import TYPE_CHECKING
 
@@ -12,9 +7,9 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.dispatch import receiver
 from django.http import HttpRequest, HttpResponse
 from django_structlog import signals
-from env import Env
 
 from app.settings.vars import DEBUG
+from env import Env
 
 if TYPE_CHECKING:
     from collections.abc import Callable
