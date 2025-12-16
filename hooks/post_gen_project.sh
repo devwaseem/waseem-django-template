@@ -4,12 +4,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# Give execution permissions
-chmod +x ./scripts/local/backup
-chmod +x ./scripts/local/restore
-chmod +x ./scripts/local/up
-chmod +x ./scripts/local/upx
-
 cp env_template.txt .env
 
 # Install python dependencies
