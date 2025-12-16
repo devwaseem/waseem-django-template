@@ -1,10 +1,7 @@
-from typing import NamedTuple
-
-from frontend_kit.page import Page
+from frontend.layouts.base import BaseLayout
 
 
-class HomePageProps(NamedTuple): ...
-
-
-class HomePage(Page):
-    props: HomePageProps
+class HomePage(BaseLayout):
+    def __init__(self, name: str) -> None:
+        super().__init__()
+        self.name = name

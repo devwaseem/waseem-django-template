@@ -1,46 +1,17 @@
 {
-    "name": "{{ cookiecutter.project_name }}",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "NODE_ENV=development vite dev",
-        "build": "tsc & NODE_ENV=production vite build"
-    },
-    "dependencies": {
-        "@alpinejs/collapse": "^3.13.10",
-        "@alpinejs/focus": "^3.13.10",
-        "@alpinejs/mask": "^3.13.10",
-        "@alpinejs/morph": "^3.13.10",
-        "@iamwaseem99/vite-plugin-django-frontend-kit": "^1.0.3",
-        "@rollup/plugin-inject": "^5.0.5",
-        "@ryangjchandler/alpine-tooltip": "^1.2.0",
-        "@tailwindcss/aspect-ratio": "^0.4.2",
-        "@tailwindcss/container-queries": "^0.1.1",
-        "@tailwindcss/forms": "^0.5.7",
-        "@tailwindcss/line-clamp": "^0.4.4",
-        "@tailwindcss/typography": "^0.5.12",
-        "@tailwindcss/vite": "^4.0.9",
-        "@types/alpinejs": "^3.13",
-        "alpinejs": "^3.13.10",
-        "autoprefixer": "^10.4.20",
-        "cross-env": "^7.0.3",
-        "esbuild": "^0.25.0",
-        "esbuild-plugin-manifest": "^1.0.3",
-        "esbuild-postcss": "^0.0.4",
-        "fast-glob": "^3.2.12",
-        "flowbite": "^2.4.1",
-        "fslightbox": "^3.4.1",
-        "glob": "^10.3.12",
-        "htmx.org": "^1.9.11",
-        "path": "^0.12.7",
-        "postcss": "^8.5.3",
-        "postcss-nested": "^6.0.1",
-        "sass": "^1.74.1",
-        "tailwindcss": "^4.0.9",
-        "tippy.js": "^6.3.7",
-        "toastify-js": "^1.12.0",
-        "typescript": "^5.4.5",
-        "vite": "^6.2.0"
-    }
+  "name": "{{ cookiecutter.project_name }}",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development vite dev",
+    "build": "tsc & NODE_ENV=production vite build"
+  },
+  "dependencies": {
+    "@iamwaseem99/vite-plugin-django-frontend-kit": "^1.1.2",
+    "@tailwindcss/vite": "^4.0.12",
+    "glob": "^13.0.0",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.3"
+  }
 }
