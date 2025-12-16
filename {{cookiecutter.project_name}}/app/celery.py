@@ -4,6 +4,7 @@ from typing import Any
 
 import django
 from celery import Celery, signals
+from celery.app.task import Task
 from django.conf import settings
 from django_structlog.celery.steps import DjangoStructLogInitStep
 
@@ -31,5 +32,4 @@ def setup_celery_logging(**_kwargs: Any) -> None:
 
 
 @app.on_after_configure.connect
-def setup_periodic_tasks(_sender: Any, **_kwargs: Any) -> None:
-    ...
+def setup_periodic_tasks(_sender: Any, **_kwargs: Any) -> None: ...

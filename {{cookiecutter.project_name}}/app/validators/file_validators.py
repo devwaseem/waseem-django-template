@@ -27,7 +27,7 @@ class FileSizeValidatorInMb:
         if code is not None:
             self.code = code
 
-    def __call__(self, value: Any) -> None:  # type: ignore # noqa
+    def __call__(self, value: Any) -> None:
         current_file_size = (value.size / 1024) / 1024
         max_file_size = self.max_size_in_mb * 1024 * 1024
         if value.size > max_file_size:

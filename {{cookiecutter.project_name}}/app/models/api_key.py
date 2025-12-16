@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Any
 from uuid import uuid4
 
 from django.db import models
@@ -10,15 +10,22 @@ class APIKey(TimeStampedModel):
     name = models.CharField(max_length=255, unique=True)
     key = models.CharField(max_length=255, unique=True)
 
-    def save(
+    def save(  # type: ignore
         self,
-        force_insert: bool = False,  # noqa
-        force_update: bool = False,  # noqa
-        using: str | None = None,
-        update_fields: Iterable[str] | None = None,
+        *args: Any,
+        force_insert: bool = False,
+        force_update: bool = False,
+        using: Any | None = None,
+        update_fields: Any | None = None,
     ) -> None:
         self.key = "sk-" + str(uuid4())
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(
+            *args,
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
     class Meta:
         verbose_name = "API Key"

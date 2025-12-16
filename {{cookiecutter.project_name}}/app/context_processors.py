@@ -24,8 +24,8 @@ def get_site_data(request: HttpRequest) -> DomainContext:
     base_url = f"{protocol}://{domain_name}"
 
     return DomainContext(
-        domain_name=domain_name,  # type: ignore
-        site_name=site_name,  # type: ignore
+        domain_name=domain_name,
+        site_name=site_name,
         protocol=protocol,
         base_url=base_url,
         static_url=STATIC_URL,

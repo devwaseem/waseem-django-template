@@ -7,7 +7,7 @@ from app.models.account.user import User
 
 @pytest.mark.django_db
 def test_returns_none_if_object_does_not_exist() -> None:
-    User.objects.filter(
+    User.objects.filter(  # type: ignore
         id=123
     ).delete()  # making sure user with id 123 does not exist
 

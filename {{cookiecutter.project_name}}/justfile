@@ -31,6 +31,9 @@ migrate *ARGS:
 dbshell *ARGS:
   uv run python manage.py dbshell {{ ARGS }}
 
+lab:
+  LOB_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --lab --no-browser
+
 notebook:
   LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --notebook --no-browser
 

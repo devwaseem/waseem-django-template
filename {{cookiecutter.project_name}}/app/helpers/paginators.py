@@ -71,8 +71,8 @@ class SimplePaginator:
         ]
         prev_page = None
         for page in pages_range:
-            if prev_page and (prev_page + 1) != page:  # type: ignore[unreachable]
-                pages.append(Page())  # type: ignore[unreachable]
+            if prev_page and (prev_page + 1) != page:
+                pages.append(Page())
             page_obj = Page(page=page)
             pages.append(page_obj)
             prev_page = page

@@ -17,7 +17,7 @@ class AllAuthAccountAdapter(DefaultAccountAdapter):  # type: ignore
     def is_open_for_signup(self, _request: HttpRequest) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
-    def send_mail(  # type: ignore
+    def send_mail(
         self,
         template_prefix: str,
         email: str,
@@ -43,7 +43,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):  # type: ignore
     ) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
-    def populate_user(  # type: ignore
+    def populate_user(
         self,
         request: HttpRequest,
         sociallogin: SocialLogin,

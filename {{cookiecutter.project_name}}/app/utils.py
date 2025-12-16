@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 
 
-def render_multiple_templates(  # type: ignore
+def render_multiple_templates(
     *,
     request: HttpRequest,
     template_name_list: tuple[str, ...] | list[str],
