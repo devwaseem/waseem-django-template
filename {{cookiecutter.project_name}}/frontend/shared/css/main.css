@@ -28,10 +28,11 @@ input[type='time'], input[type='week'], textarea, select {
     @apply p-1 bg-gray-200 rounded
 }
 
-.markdown-content > code::before {
-    content: '';
-}
-
-.markdown-content > code::after {
-    content: '';
+@utility prose {
+  code {
+    &::before,
+    &::after {
+      content: none;
+    }
+  }
 }

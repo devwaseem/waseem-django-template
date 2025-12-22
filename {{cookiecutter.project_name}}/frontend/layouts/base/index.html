@@ -6,14 +6,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
-        <title>Home</title>
+        <title>{{ page.title }}</title>
         {% fk_preloads %}
         {% fk_stylesheets %}
         {% fk_head_scripts %}
+        <style>
+          [x-cloak] {
+              display: none;
+          }
+        </style>
     </head>
-    <body>
+    <body x-cloak>
         {% block body %}
         {% endblock body %}
         {% fk_body_scripts %}
+        <ol id="sonner-toast-container"
+            position="bottom-center"
+            max-toasts="3"
+            duration="5000"
+            rich-colors="true"
+            theme="light">
+        </ol>
     </body>
 </html>
