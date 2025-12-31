@@ -8,7 +8,7 @@ TIMEOUT=${UVICORN_TIMEOUT:-90}
 
 echo "Starting Uvicorn with $WORKERS workers on port $PORT"
 
-exec uvicorn src.server.asgi:application \
+exec uvicorn app.asgi:application \
   --host 0.0.0.0 \
   --port "$PORT" \
   --workers "$WORKERS" \
