@@ -1,7 +1,9 @@
 ARG PYTHON_VERSION=3.14
 ARG APP_HOME="/app"
 
-# ── Build frontend asset files ───────────────────────────────────────────
+# --------------------------------------------------------------
+# Build frontend asset files
+# --------------------------------------------------------------
 FROM node:22-slim AS frontend_builder
 
 ARG APP_HOME
@@ -18,7 +20,9 @@ COPY . .
 
 RUN npm run build
 
-# ── Builder Base ────────────────────────────────────────────────────────
+# --------------------------------------------------------------
+# Builder
+# --------------------------------------------------------------
 FROM python:${PYTHON_VERSION}-slim-trixie AS builder-base
 
 ARG PYTHON_VERSION
@@ -93,6 +97,7 @@ ENV APP_HOME="$APP_HOME"
 ENV VIRTUAL_ENV_PATH="$APP_HOME/.venv"
 ENV DIST_DIR="$APP_HOME/dist/"
 ENV VITE_APP_OUTPUT_DIR="dist"
+ENV PATH="/$APP_HOME/.venv/bin:$PATH"
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONFAULTHANDLER=1
