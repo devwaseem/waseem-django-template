@@ -1,14 +1,15 @@
 # Django - General
-DEBUG=true
-SECRET_KEY=secret
+DEBUG=false
+# WARNING: generate a secure random value for production
+SECRET_KEY=replace-me
 BASE_URL=
 
 PYTHONBREAKPOINT="ipdb.set_trace"
-ENABLE_HEALTH_CHECK=false
+ENABLE_HEALTH_CHECK={{ cookiecutter.enable_healthcheck | lower }}
 ENABLE_SILK_PROFILING=false
 ENABLE_CPROFILE=false
 ENABLE_PYINSTRUMENT=false
-ENABLE_SENTRY=false
+ENABLE_SENTRY={{ cookiecutter.enable_sentry | lower }}
 
 
 DJANGO_STATIC_HOST=
@@ -19,8 +20,10 @@ MEDIA_USE_S3=false
 
 
 # Security
+# Comma-separated list for production, e.g. example.com,api.example.com
 ALLOWED_HOSTS=
 CSRF_TRUSTED_ORIGINS=
+# Enable in production
 USE_SSL=false
 USE_X_FORWARDED_HOST=false
 
@@ -43,25 +46,23 @@ SSL_EMAIL=
 
 
 # Email
-EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend|anymail.backends.amazon_ses.EmailBackend
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
-EMAIL_PORT=1025|587
+EMAIL_PORT=1025
 EMAIL_USE_TLS=false
 DEFAULT_FROM_EMAIL="{{cookiecutter.project_verbose_name}} <admin@example.com>"
 SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@example.com>"
 
 
 # Database
-DJANGO_DATABASE_HOST=localhost|pg_bouncer|postgres
+DJANGO_DATABASE_HOST=localhost
 DJANGO_DATABASE_PORT=5432
 POSTGRES_DB={{cookiecutter.project_name}}
 POSTGRES_USER={{cookiecutter.project_name}}
 POSTGRES_PASSWORD={{cookiecutter.project_name}}
 CONN_MAX_AGE=60
-BACKUP_DIR_PATH="/db-backups"
-BACKUP_FILE_PREFIX={{cookiecutter.project_name}}
 
 
 # PGBOUNCER
@@ -75,10 +76,6 @@ AUTH_TYPE=plain
 # Celery
 CELERY_BROKER_URL="redis://redis:6379/1"
 CELERY_RESULT_BACKEND="redis://redis:6379/1"
-CELERY_FLOWER_USER=
-CELERY_FLOWER_PASSWORD=
-CELERY_AUTOSCALE_WORKERS_MIN=1
-CELERY_AUTOSCALE_WORKERS_MAX=3
 
 
 # Gunicorn

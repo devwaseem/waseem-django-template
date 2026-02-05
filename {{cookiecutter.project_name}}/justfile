@@ -10,6 +10,16 @@ test *ARGS:
 lint:
   uv run pre-commit run --all-files
 
+setup:
+  uv sync --dev
+  npm install
+
+format:
+  uv run ruff format app
+
+typecheck *ARGS:
+  uv run mypy app {{ ARGS }}
+
 type *ARGS:
   uv run mypy app {{ ARGS }}
 
@@ -32,7 +42,7 @@ dbshell *ARGS:
   uv run python manage.py dbshell {{ ARGS }}
 
 lab:
-  LOB_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --lab --no-browser
+  LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --lab --no-browser
 
 notebook:
   LOG_DB=true DJANGO_ALLOW_ASYNC_UNSAFE=true uv run python manage.py shell_plus --notebook --no-browser

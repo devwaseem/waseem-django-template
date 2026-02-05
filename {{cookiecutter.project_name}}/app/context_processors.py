@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpRequest
 
-from app.settings.components.storages import MEDIA_URL, STATIC_URL
 
 
 class DomainContext(TypedDict):
@@ -28,8 +27,8 @@ def get_site_data(request: HttpRequest) -> DomainContext:
         site_name=site_name,
         protocol=protocol,
         base_url=base_url,
-        static_url=STATIC_URL,
-        media_url=MEDIA_URL,
+        static_url=settings.STATIC_URL,
+        media_url=settings.MEDIA_URL,
     )
 
 

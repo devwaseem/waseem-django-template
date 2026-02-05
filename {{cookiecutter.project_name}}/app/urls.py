@@ -7,11 +7,6 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from django_ratelimit.exceptions import Ratelimited
 
-from app.settings.flags import (
-    DEBUG,
-    ENABLE_HEALTH_CHECK,
-    ENABLE_SILK_PROFILING,
-)
 from app.views.home import HomeView
 
 
@@ -70,7 +65,7 @@ urlpatterns = [
     ),
 ]
 
-if DEBUG:  # pragma: no cover
+if settings.DEBUG:  # pragma: no cover
     import debug_toolbar
 
     urlpatterns = [
@@ -84,13 +79,13 @@ if DEBUG:  # pragma: no cover
         *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     ]
 
-if ENABLE_SILK_PROFILING:
+if getattr(settings, "ENABLE_SILK_PROFILING", False):
     urlpatterns += [
         # Django silk
         path("silk/", include("silk.urls", namespace="silk")),
     ]
 
-if ENABLE_HEALTH_CHECK:
+if getattr(settings, "ENABLE_HEALTH_CHECK", False):
     urlpatterns += [
         path(r"ht/", include("health_check.urls")),
     ]

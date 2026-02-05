@@ -1,6 +1,5 @@
 from django.conf import settings
 
-from app.settings.flags import TEST
 from env import Env
 
 timezone = settings.TIME_ZONE
@@ -20,7 +19,7 @@ broker_connection_timeout = 30
 broker_channel_error_retry = True
 
 
-if TEST:
+if settings.TEST:
     task_always_eager = True
     task_eager_propagates = True
 

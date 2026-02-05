@@ -152,37 +152,29 @@ def test_url_handlers_render_expected_responses(monkeypatch: Any) -> None:
     )
 
 
-def test_optional_url_patterns_can_be_enabled(monkeypatch: Any) -> None:
+def test_optional_url_patterns_can_be_enabled() -> None:
     """Optional URL patterns are added when flags are enabled."""
-    original_health = app_urls.ENABLE_HEALTH_CHECK
-    original_silk = app_urls.ENABLE_SILK_PROFILING
+    installed_apps = [
+        *settings.INSTALLED_APPS,
+        "silk",
+        "health_check",
+    ]
+    with override_settings(
+        INSTALLED_APPS=installed_apps,
+        ENABLE_HEALTH_CHECK=True,
+        ENABLE_SILK_PROFILING=True,
+    ):
+        updated_urls = importlib.reload(app_urls)
 
-    try:
-        monkeypatch.setattr("app.settings.flags.ENABLE_HEALTH_CHECK", True)
-        monkeypatch.setattr("app.settings.flags.ENABLE_SILK_PROFILING", True)
-        installed_apps = [
-            *settings.INSTALLED_APPS,
-            "silk",
-            "health_check",
-        ]
-        with override_settings(INSTALLED_APPS=installed_apps):
-            updated_urls = importlib.reload(app_urls)
+    routes = {
+        getattr(pattern.pattern, "_route", "")
+        or pattern.pattern.regex.pattern
+        for pattern in updated_urls.urlpatterns
+    }
+    assert "silk/" in routes
+    assert "ht/" in routes
 
-        routes = {
-            getattr(pattern.pattern, "_route", "")
-            or pattern.pattern.regex.pattern
-            for pattern in updated_urls.urlpatterns
-        }
-        assert "silk/" in routes
-        assert "ht/" in routes
-    finally:
-        monkeypatch.setattr(
-            "app.settings.flags.ENABLE_HEALTH_CHECK", original_health
-        )
-        monkeypatch.setattr(
-            "app.settings.flags.ENABLE_SILK_PROFILING", original_silk
-        )
-        importlib.reload(app_urls)
+    importlib.reload(app_urls)
 
 
 def test_miscellaneous_imports_cover_modules() -> None:

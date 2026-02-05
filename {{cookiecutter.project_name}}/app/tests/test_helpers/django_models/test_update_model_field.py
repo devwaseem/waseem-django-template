@@ -4,8 +4,8 @@ import faker
 import pytest
 from mixer.backend.django import mixer
 
+from app.account.models import User
 from app.helpers import django_models
-from app.models.account.user import User
 
 fake = faker.Faker()
 

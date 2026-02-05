@@ -10,7 +10,10 @@ from django_structlog.celery.steps import DjangoStructLogInitStep
 
 Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore[attr-defined] # noqa
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE",
+    "{{ cookiecutter.django_settings_module_default }}",
+)
 
 django.setup()
 

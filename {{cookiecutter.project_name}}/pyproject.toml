@@ -3,7 +3,7 @@ name = "project"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Waseem akram", email = "waseem07799@gmail.com" }]
-requires-python = "==3.13.1"
+requires-python = ">=3.14,<3.15"
 readme = "README.md"
 dependencies = [
   "Django[argon2]>=6.0<7",
@@ -15,6 +15,7 @@ dependencies = [
   "django-anymail>=13,<14",
   "django-browser-reload>=1.21.0,<2",
   "django-celery-email>=3.0.0,<4",
+  "django-cotton==2.6.1",
   "django-constance>=4.3.4,<5",
   "django-environ>=0.12,<0.20",
   "django-feather>=0.3.0,<0.4",
@@ -34,7 +35,6 @@ dependencies = [
   "django-redis>=6.0,<7",
   "django-render-block>=0.11,<1",
   "django-solo>=2.3.0,<3",
-  "django-split-settings>=1.2.0,<2",
   "django-storages[boto3]>=1.14.6,<2",
   "django-structlog>=4.0.1,<5",
   "django-unfold>=0.74.1,<1",
@@ -120,7 +120,7 @@ test = [
 [tool.basedpyright]
 include = ["src", "llm_toolkit"]
 venvPath = "./.venv"
-pythonVersion = "3.12"
+pythonVersion = "3.14"
 pythonPlatform = "Linux"
 typeCheckingMode = "off"
 
@@ -139,7 +139,7 @@ custom_html = "mjml,mj-head,mj-\\w+"
 
 # https://mypy.readthedocs.io/en/stable/config_file.html
 
-python_version = "3.13"
+python_version = "3.14"
 mypy_path = "."
 
 
@@ -187,61 +187,12 @@ ignore_missing_model_attributes = true
 
 [tool.django-stubs]
 module = "django-stubs"
-django_settings_module = "app.settings"
+django_settings_module = "app.settings.base"
 
 [[tool.mypy.overrides]]
 module = "*.migrations.*"
 # Django migrations should not produce any errors:
 ignore_errors = true
-
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "app.settings"
-filterwarnings = ["ignore::DeprecationWarning"]
-addopts = [
-    "--tb=native",
-    "--color=yes",
-    "--strict-markers",
-    "--strict-config",
-]
-markers = [
-    "unit: mark as Unit Tests",
-    "integration: mark as Integration",
-    "e2e: mark as End to End",
-    "slow: mark test as slow.",
-]
-
-[tool.ruff.lint.isort]
-known-first-party = ["app"]
-
-[tool.coverage.run]
-branch = true
-disable_warnings = ["no-data-collected"]
-omit = [
-    "./app/settings/*",
-    "./app/tests/*",
-    "./app/migrations/*",
-    "./app/celery.py",
-    "./app/celeryconfig.py",
-    "./app/schema.py",
-    "./app/wsgi.py",
-    "./app/asgi.py",
-    "app/**/tests/*",
-]
-
-[tool.coverage.report]
-exclude_also = [
-    "def __repr__",
-    "if self\\.debug",
-    "if TYPE_CHECKING",
-    "if DEBUG",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if 0:",
-    "if __name__ == .__main__.:",
-    "@(abc\\.)?abstractmethod",
-    "pass",
-    "pragma: no cover",
-]
 
 
 [tool.bandit]
@@ -375,9 +326,8 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.ruff.lint.isort]
-known-first-party = ["src"]
-
-known-third-party = ["src"]
+known-first-party = ["app"]
+known-third-party = []
 
 [tool.ruff.lint.per-file-ignores]
 "**/admin/*" = [
@@ -395,7 +345,7 @@ known-third-party = ["src"]
 ]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "app.settings"
+DJANGO_SETTINGS_MODULE = "app.settings.test"
 filterwarnings = ["ignore::DeprecationWarning"]
 
 
