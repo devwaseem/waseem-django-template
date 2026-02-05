@@ -47,7 +47,7 @@ THIRD_PARTY_APPS: list[str] = [
     # Django HTMX
     # "django_htmx",
     # django-phonenumber-field
-    # "phonenumber_field", Uncomment to enable
+    "phonenumber_field",
     # https://github.com/theatlantic/django-nested-admin
     # "nested_admin",
     # https://github.com/SmileyChris/easy-thumbnails
@@ -88,7 +88,7 @@ MIDDLEWARE: list[str] = [
     # "app.settings.components.logging.LoggingContextVarsMiddleware",
     "django_structlog.middlewares.RequestMiddleware",
     # Content Security Policy:
-    "csp.middleware.CSPMiddleware",
+    "django.middleware.csp.ContentSecurityPolicyMiddleware",
     # Django:
     "django.middleware.security.SecurityMiddleware",
     # django-permissions-policy
@@ -137,7 +137,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
                 # Django CSP
-                "csp.context_processors.nonce",
+                "django.template.context_processors.csp",
                 # Custom
                 "app.context_processors.get_site_data",
             ],

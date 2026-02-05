@@ -6,6 +6,4 @@ class Config(AppConfig):
     name = "app"
 
     def ready(self) -> None:
-        import app.schema  # noqa: F401
-
         return super().ready()

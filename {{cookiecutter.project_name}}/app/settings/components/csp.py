@@ -1,12 +1,9 @@
 """
-This file contains a definition for Content-Security-Policy headers.
-
-Read more about it:
-https://developer.mozilla.org/ru/docs/Web/HTTP/Headers/Content-Security-Policy
-
-We are using `django-csp` to provide these headers.
-Docs: https://github.com/mozilla/django-csp
+Content Security Policy (CSP) settings using Django's built-in support.
+Docs: https://docs.djangoproject.com/en/6.0/howto/csp/
 """
+
+from django.utils.csp import CSP
 
 from app.settings.components.storages import MEDIA_URL, STATIC_URL
 from app.settings.components.vite import (
@@ -16,58 +13,32 @@ from app.settings.components.vite import (
 )
 from app.settings.flags import DEBUG
 
-CSP_INCLUDE_NONCE_IN = ("script-src", "connect-src")
-CSP_EXCLUDE_URL_PREFIXES = ("/admin",)
-CSP_SCRIPT_SRC: tuple[str, ...] = (
-    "'self'",
-    "blob:",
-    "'unsafe-eval'",
-    "https://unpkg.com",
-)
-
-CSP_IMG_SRC: tuple[str, ...] = (
-    "'self'",
-    "data:",  # Required by tailwind
-    "http:",
-    "https:",
-)
-CSP_FONT_SRC: tuple[str, ...] = (
-    "'self'",
-    "https://fonts.googleapis.com",  # Google Fonts
-    "https://fonts.gstatic.com",
-    "data:",
-    "'unsafe-inline'",
-)
-CSP_STYLE_SRC: tuple[str, ...] = (
-    "'self'",
-    "https://fonts.googleapis.com",
-    "https://unpkg.com",
-    "'unsafe-inline'",
-)
-CSP_MEDIA_SRC: tuple[str, ...] = (
-    "'self'",
-    "data:",
-)
-CSP_DEFAULT_SRC: tuple[str, ...] = ("'self'",)
-CSP_CONNECT_SRC: tuple[str, ...] = ("'self'",)
+SECURE_CSP: dict[str, list[str]] = {
+    "default-src": [CSP.SELF],
+    "script-src": [CSP.SELF, CSP.NONCE],
+    "style-src": [CSP.SELF, CSP.NONCE, "https://fonts.googleapis.com"],
+    "font-src": [CSP.SELF, "https://fonts.gstatic.com", "data:"],
+    "img-src": [CSP.SELF, "data:", "https:"],
+    "connect-src": [CSP.SELF],
+    "media-src": [CSP.SELF, "data:"],
+}
 
 if STATIC_URL.startswith("http"):
-    CSP_SCRIPT_SRC += (STATIC_URL,)
-    CSP_IMG_SRC += (STATIC_URL,)
-    CSP_FONT_SRC += (STATIC_URL,)
-    CSP_STYLE_SRC += (STATIC_URL,)
-    CSP_MEDIA_SRC += (STATIC_URL,)
-    CSP_CONNECT_SRC += (STATIC_URL,)
+    for directive in (
+        "script-src",
+        "style-src",
+        "font-src",
+        "img-src",
+        "connect-src",
+        "media-src",
+    ):
+        SECURE_CSP[directive].append(STATIC_URL)
 
 if MEDIA_URL.startswith("http"):
-    CSP_IMG_SRC += (MEDIA_URL,)
-    CSP_MEDIA_SRC += (MEDIA_URL,)
-    CSP_CONNECT_SRC += (MEDIA_URL,)
+    for directive in ("img-src", "media-src", "connect-src"):
+        SECURE_CSP[directive].append(MEDIA_URL)
 
 if DEBUG:
-    VITE_CSP_SETTINGS = (
-        VITE_DEV_SERVER_URL,
-        f"ws://{VITE_DEV_SERVER_HOST}:{VITE_DEV_SERVER_PORT}",
-    )
-    CSP_SCRIPT_SRC += VITE_CSP_SETTINGS
-    CSP_CONNECT_SRC += VITE_CSP_SETTINGS
+    vite_ws = f"ws://{VITE_DEV_SERVER_HOST}:{VITE_DEV_SERVER_PORT}"
+    SECURE_CSP["script-src"].append(VITE_DEV_SERVER_URL)
+    SECURE_CSP["connect-src"].extend([VITE_DEV_SERVER_URL, vite_ws])

@@ -2,7 +2,7 @@ from env import Env
 from storages.backends.s3boto3 import S3Boto3Storage
 
 AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_DEFAULT_ACL = "public-read"
+AWS_DEFAULT_ACL = None
 AWS_S3_FILE_OVERWRITE = True
 AWS_S3_VERIFY = True
 AWS_QUERYSTRING_AUTH = False
@@ -20,16 +20,16 @@ AWS_S3_HOST = f"{AWS_S3_REGION_NAME}.amazonaws.com"
 
 class StaticStorage(S3Boto3Storage):  # type: ignore
     location = "static"
-    default_acl = "public-read"
+    default_acl = None
 
 
 class PublicMediaStorage(S3Boto3Storage):  # type: ignore
     location = "media"
-    default_acl = "public-read"
+    default_acl = None
     file_overwrite = False
 
 
 class DBBackupStorage(S3Boto3Storage):  # type: ignore
     location = "db-backups"
-    default_acl = "private"
+    default_acl = None
     file_overwrite = False

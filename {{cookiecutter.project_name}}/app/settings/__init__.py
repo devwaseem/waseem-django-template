@@ -41,7 +41,6 @@ include(
     "components/constance.py",
     "components/dbbackup.py",
     "components/rate_limit.py",
-    "components/rest_framework.py",
 )
 
 if ENABLE_HEALTH_CHECK:

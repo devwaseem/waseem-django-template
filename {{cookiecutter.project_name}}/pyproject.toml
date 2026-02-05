@@ -16,7 +16,6 @@ dependencies = [
   "django-browser-reload>=1.21.0,<2",
   "django-celery-email>=3.0.0,<4",
   "django-constance>=4.3.4,<5",
-  "django-csp>=4,<5",
   "django-environ>=0.12,<0.20",
   "django-feather>=0.3.0,<0.4",
   "django-filter~=24.2",
@@ -40,8 +39,6 @@ dependencies = [
   "django-structlog>=4.0.1,<5",
   "django-unfold>=0.74.1,<1",
   "django-widget-tweaks>=1.4.12,<2",
-  "djangorestframework>=3.16.0,<4",
-  "drf-spectacular>=0.27.2,<0.28",
   "gevent>=25.9,<26",
   "gunicorn>=23,<24",
   "hiredis>=3.3.0,<4",
@@ -93,7 +90,6 @@ dev = [
 types = [
     "mypy>=1.17,<2",
     "celery-types>=0.17.0,<1",
-    "djangorestframework-stubs[compatible-mypy]>=3.16.1,<4",
     "types-requests>=2.28.11.15,<3",
 ]
 
@@ -107,13 +103,13 @@ code-checks = [
 test = [
     "coverage>=7.4.0,<8",
     "django-coverage-plugin>=3.0.0,<4",
+    "faker>=5.4.0,<12.1",
     "mixer>=7.2.2,<8",
     "pytest-cov>=4.0.0,<5",
     "pytest-describe>=2.1.0,<3",
     "pytest-django>=4.5.2,<5",
     "pytest-env>=1.1.5,<2",
     "pytest-mock>=3.10.0,<4",
-    "pytest-playwright>=0.7.0",
     "pytest-randomly>=3.16.0,<4",
     "pytest-sugar>=0.9.6,<0.10",
     "pytest-xdist>=3.1.0,<4",
@@ -147,7 +143,7 @@ python_version = "3.13"
 mypy_path = "."
 
 
-plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+plugins = ["mypy_django_plugin.main"]
 
 exclude = '''(?x)(
     ^manage\.py$ |
@@ -197,6 +193,55 @@ django_settings_module = "app.settings"
 module = "*.migrations.*"
 # Django migrations should not produce any errors:
 ignore_errors = true
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "app.settings"
+filterwarnings = ["ignore::DeprecationWarning"]
+addopts = [
+    "--tb=native",
+    "--color=yes",
+    "--strict-markers",
+    "--strict-config",
+]
+markers = [
+    "unit: mark as Unit Tests",
+    "integration: mark as Integration",
+    "e2e: mark as End to End",
+    "slow: mark test as slow.",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.coverage.run]
+branch = true
+disable_warnings = ["no-data-collected"]
+omit = [
+    "./app/settings/*",
+    "./app/tests/*",
+    "./app/migrations/*",
+    "./app/celery.py",
+    "./app/celeryconfig.py",
+    "./app/schema.py",
+    "./app/wsgi.py",
+    "./app/asgi.py",
+    "app/**/tests/*",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "if self\\.debug",
+    "if TYPE_CHECKING",
+    "if DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+    "pass",
+    "pragma: no cover",
+]
 
 
 [tool.bandit]
@@ -364,12 +409,12 @@ addopts = [
     '--strict-config',
     # '--durations=0',
     # '--durations-min=0.5',
-    '--cov=src/',
+    '--cov=app/',
     '--cov-report=html',
     '--cov-config=pyproject.toml',
     '--cov-report=xml',
     # '--doctest-modules',
-    # '--cov-report=term',
+    '--cov-report=term',
 ]
 
 markers = [
@@ -389,6 +434,7 @@ branch = true
 disable_warnings = ["no-data-collected"]
 omit = [
     './app/settings/*',
+    './app/conftest.py',
     './app/tests/*',
     './app/migrations/*',
     './app/celery.py',
