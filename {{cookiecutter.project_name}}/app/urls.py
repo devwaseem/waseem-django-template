@@ -86,6 +86,26 @@ if getattr(settings, "ENABLE_SILK_PROFILING", False):
     ]
 
 if getattr(settings, "ENABLE_HEALTH_CHECK", False):
+    from health_check.views import HealthCheckView
+    from redis import Redis
+
     urlpatterns += [
-        path(r"ht/", include("health_check.urls")),
+        path(
+            "healthz/",
+            HealthCheckView.as_view(
+                checks=[
+                    "health_check.Cache",
+                    "health_check.Database",
+                    "health_check.Disk",
+                    "health_check.Mail",
+                    "health_check.Memory",
+                    "health_check.Storage",
+                    "health_check.contrib.celery.Ping",
+                    (
+                        "health_check.contrib.redis.Redis",
+                        {"client": Redis.from_url(settings.REDIS_URL)},
+                    ),
+                ],
+            ),
+        ),
     ]

@@ -37,10 +37,12 @@ NPLUSONE_LOGGER = structlog.getLogger("django")
 NPLUSONE_LOG_LEVEL = logging.WARNING
 NPLUSONE_WHITELIST = [{"model": "admin.LogEntry", "field": "user"}]
 
-# Dev CSP: allow Vite dev server
+# Dev CSP: allow Vite dev server runtime
 vite_ws = f"ws://{VITE_DEV_SERVER_HOST}:{VITE_DEV_SERVER_PORT}"  # noqa: F405
-SECURE_CSP["script-src"].append(VITE_DEV_SERVER_URL)  # type: ignore[name-defined]  # noqa: F405
-SECURE_CSP["connect-src"].extend([VITE_DEV_SERVER_URL, vite_ws])  # type: ignore[name-defined]  # noqa: F405
+SECURE_CSP["script-src"].append(VITE_DEV_SERVER_ORIGIN)  # type: ignore[name-defined]  # noqa: F405
+SECURE_CSP["style-src"].remove(CSP.NONCE)  # type: ignore[name-defined]  # noqa: F405
+SECURE_CSP["style-src"].extend([VITE_DEV_SERVER_ORIGIN, CSP.UNSAFE_INLINE])  # type: ignore[name-defined]  # noqa: F405
+SECURE_CSP["connect-src"].extend([VITE_DEV_SERVER_ORIGIN, vite_ws])  # type: ignore[name-defined]  # noqa: F405
 
 LOGGING = {
     "version": 1,

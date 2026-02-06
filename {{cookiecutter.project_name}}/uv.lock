@@ -267,30 +267,30 @@ wheels = [
 
 [[package]]
 name = "boto3"
-version = "1.42.42"
+version = "1.42.43"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "botocore" },
     { name = "jmespath" },
     { name = "s3transfer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/ac/9ef2cc431e00ecbf1ac197938ddea120e75b516b4c57028a1fd517d3e882/boto3-1.42.42.tar.gz", hash = "sha256:8c2537156f5ccd72bbbfe4fc27a8a80bf3e4f80523f306417f3fb6023d13edda", size = 112831, upload-time = "2026-02-04T20:28:45.494Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c2/47/29afb754de7df0a0ebceaa9d83e209136ef7b62744259a6c09862fef4765/boto3-1.42.43.tar.gz", hash = "sha256:01fc5501209b23849fb30b01c6c086583ac91c40842a76083662fbfb84a82491", size = 112844, upload-time = "2026-02-05T20:31:44.974Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/0a/3966f239e1d9da93cb755dc0213835ce4e9ed93645192878d0a055ecdc31/boto3-1.42.42-py3-none-any.whl", hash = "sha256:8c78169ef47dc29863ebb11ba99134b1b418d3dfdd836419830f22552f8afe43", size = 140599, upload-time = "2026-02-04T20:28:43.056Z" },
+    { url = "https://files.pythonhosted.org/packages/80/92/584447b14ae70f57f133a4bc64393902a72a3087486a7c09ce1bab25263c/boto3-1.42.43-py3-none-any.whl", hash = "sha256:44ddcaa37c350333c5a4799f533e786a595a97f1ee2fd7fc3e394cdebeb15e44", size = 140603, upload-time = "2026-02-05T20:31:43.698Z" },
 ]
 
 [[package]]
 name = "botocore"
-version = "1.42.42"
+version = "1.42.43"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jmespath" },
     { name = "python-dateutil" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7d/96/4eca9755ca444402c46c73cc8ff252c8eb73ab0ccf35ca76d89e7b7820ac/botocore-1.42.42.tar.gz", hash = "sha256:cb75639f5ba7bf73b83ac18bcd87f07b7f484f302748da974dad2801a83a1d60", size = 14926585, upload-time = "2026-02-04T20:28:33.66Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/af/d6/def916ad1d13de5d511074afcde538a958e2e8a7c7020fb698d1f392f63b/botocore-1.42.43.tar.gz", hash = "sha256:41d04ead0b0862eec21f841811fb5764fe370a2df9b319e0d5297325c50fba1b", size = 14934077, upload-time = "2026-02-05T20:31:35.15Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e6/51/aac7e419521d5519e13087a7198623655648c939822bd7f4bdc9ccbe07f9/botocore-1.42.42-py3-none-any.whl", hash = "sha256:1c9df5fc31e9073a9aa956271c4007d72f5d342cafca5f4154ea099bc6f83085", size = 14600186, upload-time = "2026-02-04T20:28:29.268Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/a8/95656f91b795eb47b73a00d36c51c7a5729eafa632c7348caa068ff63e50/botocore-1.42.43-py3-none-any.whl", hash = "sha256:1c0e30f62e274978ac3bcab253e3a859febea634b72b5e343589db7d17f83cd6", size = 14610179, upload-time = "2026-02-05T20:31:32.727Z" },
 ]
 
 [[package]]
@@ -857,15 +857,15 @@ wheels = [
 
 [[package]]
 name = "django-frontend-kit"
-version = "0.6.0"
+version = "0.7.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "django-render-block" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/92/5c/3019e7113e5a038d345d471c8a66a40de17863f1046010a461df25f66ff1/django_frontend_kit-0.6.0.tar.gz", hash = "sha256:0afb7b911e023ea661bfbab08587a1e10bf105918dd5e75c605db64486a9d932", size = 13920, upload-time = "2026-01-27T10:00:05.933Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/35/1d6e79b6047c0bdfc45562be3021bd0015086a5e2c1771bfeec0e861bf28/django_frontend_kit-0.7.1.tar.gz", hash = "sha256:4af1d9ee5198d96b9436d242f5ed4be89696320c0aadcaeea38a16729d29e175", size = 14342, upload-time = "2026-02-06T05:33:07.013Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/31/53/efc5f32175e021cca04cb4741dda5c2e3a1f9f24a840f41e7db0e51340e0/django_frontend_kit-0.6.0-py3-none-any.whl", hash = "sha256:f75feef56e37056b296564f2a1c21e26c7fb0b4afac851aa725e35d7f28d93f4", size = 15684, upload-time = "2026-01-27T10:00:04.106Z" },
+    { url = "https://files.pythonhosted.org/packages/40/6b/4f20d18f8c64916435b0296956d009257696c3aa710fead1cb28c9f16907/django_frontend_kit-0.7.1-py3-none-any.whl", hash = "sha256:0c44e036260afa7d1c0d796c8a34d200a05f8dbe0bce4261b5a365cc5863ee42", size = 16088, upload-time = "2026-02-06T05:33:05.369Z" },
 ]
 
 [[package]]

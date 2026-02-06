@@ -10,7 +10,7 @@
         {% fk_preloads %}
         {% fk_stylesheets %}
         {% fk_head_scripts %}
-        <style>
+        <style nonce="{{ csp_nonce }}">
           [x-cloak] {
               display: none;
           }

@@ -36,6 +36,7 @@ NO_CACHE = Env.bool("NO_CACHE")
 
 REDIS_HOST = Env.str("REDIS_HOST")
 REDIS_PORT = Env.str("REDIS_PORT")
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 
 ENABLE_HEALTH_CHECK = Env.bool("ENABLE_HEALTH_CHECK")
 ENABLE_SILK_PROFILING = Env.bool("ENABLE_SILK_PROFILING")
@@ -333,7 +334,10 @@ if TEST or NO_CACHE:
 VITE_OUTPUT_DIR = Env.str("VITE_OUTPUT_DIR", "./dist")
 VITE_DEV_SERVER_HOST = "localhost"
 VITE_DEV_SERVER_PORT = 5173
-VITE_DEV_SERVER_URL = "http://localhost:5173/"
+VITE_DEV_SERVER_ORIGIN = (
+    f"http://{VITE_DEV_SERVER_HOST}:{VITE_DEV_SERVER_PORT}"
+)
+VITE_DEV_SERVER_URL = f"{VITE_DEV_SERVER_ORIGIN}/"
 
 # AWS / S3
 AWS_S3_SIGNATURE_VERSION = "s3v4"
@@ -446,8 +450,16 @@ STATICFILES_FINDERS = [
 # CSP (Django built-in)
 SECURE_CSP: dict[str, list[str]] = {
     "default-src": [CSP.SELF],
-    "script-src": [CSP.SELF, CSP.NONCE],
-    "style-src": [CSP.SELF, CSP.NONCE, "https://fonts.googleapis.com"],
+    "script-src": [
+        CSP.SELF,
+        CSP.NONCE,
+        "https://cdn.jsdelivr.net/",
+    ],
+    "style-src": [
+        CSP.SELF,
+        CSP.NONCE,
+        "https://fonts.googleapis.com",
+    ],
     "font-src": [CSP.SELF, "https://fonts.gstatic.com", "data:"],
     "img-src": [CSP.SELF, "data:", "https:"],
     "connect-src": [CSP.SELF],
@@ -645,7 +657,6 @@ if ENABLE_HEALTH_CHECK:
         "MEMORY_MIN": 100,
     }
 
-    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
     HEALTHCHECK_CACHE_KEY = "health_check"
     CACHES[HEALTHCHECK_CACHE_KEY] = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",

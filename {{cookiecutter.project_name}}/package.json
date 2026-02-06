@@ -9,16 +9,16 @@
   },
   "dependencies": {
     "@iamwaseem99/vite-plugin-django-frontend-kit": "^1.1.2",
-    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.0.12",
+    "@tailwindcss/vite": "^4.1.18",
     "autoprefixer": "^10.4.23",
     "glob": "^13.0.0",
     "tailwindcss": "^4.1.18",
     "vanilla-sonner": "^0.5.2",
-    "vite": "^7.3"
+    "vite": "^7.3.1"
   },
   "devDependencies": {
-    "prettier": "^3.7.4"
+    "prettier": "^3.8.1"
   }
 }

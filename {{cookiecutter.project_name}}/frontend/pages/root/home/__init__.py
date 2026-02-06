@@ -3,5 +3,5 @@ from frontend.layouts.base import BaseLayout
 
 class HomePage(BaseLayout):
     def __init__(self, name: str) -> None:
-        super().__init__()
+        super().__init__(title="Home")
         self.name = name

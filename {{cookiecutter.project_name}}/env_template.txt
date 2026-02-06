@@ -36,7 +36,7 @@ AWS_S3_REGION_NAME=
 
 
 # Redis
-REDIS_HOST=localhost|redis
+REDIS_HOST=localhost
 REDIS_PORT=6379
 
 
@@ -60,22 +60,22 @@ SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@example.com>"
 DJANGO_DATABASE_HOST=localhost
 DJANGO_DATABASE_PORT=5432
 POSTGRES_DB={{cookiecutter.project_name}}
-POSTGRES_USER={{cookiecutter.project_name}}
-POSTGRES_PASSWORD={{cookiecutter.project_name}}
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 CONN_MAX_AGE=60
 
 
 # PGBOUNCER
 DB_HOST=postgres
 DB_NAME={{cookiecutter.project_name}}
-DB_USER={{cookiecutter.project_name}}
-DB_PASSWORD={{cookiecutter.project_name}}
+DB_USER=postgres
+DB_PASSWORD=postgres
 AUTH_TYPE=plain
 
 
 # Celery
-CELERY_BROKER_URL="redis://redis:6379/1"
-CELERY_RESULT_BACKEND="redis://redis:6379/1"
+CELERY_BROKER_URL="redis://localhost:6379/1"
+CELERY_RESULT_BACKEND="redis://localhost:6379/1"
 
 
 # Gunicorn
