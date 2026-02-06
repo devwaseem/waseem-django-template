@@ -26,6 +26,11 @@ CSRF_TRUSTED_ORIGINS=
 # Enable in production
 USE_SSL=false
 USE_X_FORWARDED_HOST=false
+# Runtime protections (production defaults shown)
+SECURE_REFERRER_POLICY=strict-origin-when-cross-origin
+SECURE_CROSS_ORIGIN_OPENER_POLICY=same-origin
+SECURE_CROSS_ORIGIN_EMBEDDER_POLICY=credentialless
+SECURE_CROSS_ORIGIN_RESOURCE_POLICY=same-site
 
 
 # Django AWS

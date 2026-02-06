@@ -36,13 +36,28 @@ npm run dev
 - `just lint`
 - `just typecheck`
 - `just migrate`
+- `just docs`
 
 ## Healthcheck
 If enabled (`ENABLE_HEALTH_CHECK=true`), the endpoint is available at:
 ```
 /healthz/
 ```
+Readiness checks are available at:
+```
+/readyz/
+```
+
+## Documentation
+```bash
+uv run mkdocs serve
+```
 
 ## Notes
 - Set `SECRET_KEY` to a secure random value for production.
 - Set `ALLOWED_HOSTS` for production.
+- Run `uv run python manage.py check --deploy` before shipping.
+
+## Static & Media
+- Local/Whitenoise: set `STATIC_USE_WHITENOISE=true`, run `collectstatic`
+- S3: set `STATIC_USE_S3=true` and/or `MEDIA_USE_S3=true` with AWS creds

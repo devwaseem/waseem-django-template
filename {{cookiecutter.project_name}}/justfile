@@ -17,6 +17,12 @@ setup:
 format:
   uv run ruff format app
 
+docs:
+  uv run mkdocs serve
+
+docs-build:
+  uv run mkdocs build
+
 typecheck *ARGS:
   uv run mypy app {{ ARGS }}
 

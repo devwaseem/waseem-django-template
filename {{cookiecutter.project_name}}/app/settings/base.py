@@ -73,7 +73,7 @@ SECURE_SSL_REDIRECT = USE_SSL
 
 # https://github.com/DmytroLitvinov/django-http-referrer-policy
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
-REFERRER_POLICY = "same-origin"
+REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 # https://github.com/adamchainz/django-permissions-policy#setting
 PERMISSIONS_POLICY: dict[str, str | list[str]] = {}
@@ -108,20 +108,8 @@ THIRD_PARTY_APPS: list[str] = [
     "django_structlog",
     "django_object_actions",  # https://github.com/crccheck/django-object-actions
     "solo",  # https://github.com/lazybird/django-solo
-    # django-widget-tweaks
-    # "widget_tweaks",
-    # Django feather (Feather icons)
-    # "django_feather",
-    # Django HTMX
-    # "django_htmx",
-    # django-phonenumber-field
+    "widget_tweaks",  # django-widget-tweaks
     "phonenumber_field",
-    # https://github.com/theatlantic/django-nested-admin
-    # "nested_admin",
-    # https://github.com/SmileyChris/easy-thumbnails
-    # "easy_thumbnails",
-    # https://github.com/pmclanahan/django-celery-email
-    # "djcelery_email",
 ]
 
 PROJECT_APPS: list[str] = [

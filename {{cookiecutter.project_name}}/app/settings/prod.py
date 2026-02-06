@@ -1,10 +1,18 @@
 from __future__ import annotations
 
+from django.core.exceptions import ImproperlyConfigured
+
 from env import Env
 
 from .base import *  # noqa: F403
 
 DEBUG = False
+
+if not ALLOWED_HOSTS:  # type: ignore[name-defined]  # noqa: F405
+    raise ImproperlyConfigured("ALLOWED_HOSTS must be set in production.")
+
+if not SECRET_KEY or SECRET_KEY == "replace-me":  # type: ignore[name-defined]  # noqa: F405
+    raise ImproperlyConfigured("SECRET_KEY must be set to a secure value.")
 
 USE_X_FORWARDED_HOST = Env.bool("USE_X_FORWARDED_HOST")
 SECURE_PROXY_SSL_HEADER = (
@@ -16,6 +24,19 @@ SECURE_HSTS_SECONDS = 63072000  # 2 years
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-SECURE_REFERRER_POLICY = "same-origin"
-SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
-SECURE_CROSS_ORIGIN_RESOURCE_POLICY = "same-site"
+SECURE_REFERRER_POLICY = Env.str(
+    "SECURE_REFERRER_POLICY",
+    default="strict-origin-when-cross-origin",
+)
+SECURE_CROSS_ORIGIN_OPENER_POLICY = Env.str(
+    "SECURE_CROSS_ORIGIN_OPENER_POLICY",
+    default="same-origin",
+)
+SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = Env.str(
+    "SECURE_CROSS_ORIGIN_EMBEDDER_POLICY",
+    default="credentialless",
+)
+SECURE_CROSS_ORIGIN_RESOURCE_POLICY = Env.str(
+    "SECURE_CROSS_ORIGIN_RESOURCE_POLICY",
+    default="same-site",
+)
