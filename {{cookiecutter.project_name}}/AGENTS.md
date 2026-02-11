@@ -16,6 +16,8 @@ architecture so they can work safely in this repository.
 - Avoid assumptions about product behavior, business rules, and data contracts.
 - Confirm open design decisions before implementation when they affect
   architecture, API shape, persistence, or security.
+- Use UUIDs by default for new identifiers (including model primary keys)
+  unless an existing schema or integration requires a different type.
 - Avoid `async_to_sync` and `sync_to_async` where possible. If introducing them
   is the only practical option, ask for explicit approval first.
 - Do not edit generated assets under `dist/` directly.
@@ -118,6 +120,12 @@ just test -m unit
 - Prefer domain-oriented organization for new business logic (for example,
   `app/<domain>/domain/` when appropriate).
 - Keep views and API handlers thin; move business rules into reusable services.
+- Keep orchestration layers (views/tasks/commands) focused on control flow and
+  delegate business rules to domain services.
+- Keep clear responsibility boundaries between transport/orchestration, domain
+  logic, and persistence layers.
+- Design for testability by injecting dependencies and keeping contracts
+  explicit at service boundaries.
 - Prefer async end-to-end by default: async views, async domain services, async
   ORM methods (`aget`, `acreate`, `aexists`, `asave`), and async HTTP clients
   for external calls.
@@ -138,6 +146,20 @@ just test -m unit
 
 - Document public modules, classes, and functions with useful docstrings.
 - Prefer small, composable functions with clear inputs and outputs.
+
+### SOLID principles
+
+- Single Responsibility Principle (SRP): each module/class/function should have
+  one clear reason to change; avoid mixing orchestration, business logic, and
+  persistence concerns in one place.
+- Open/Closed Principle (OCP): prefer extension (new strategies/services,
+  composition, adapters) over modifying stable code paths.
+- Liskov Substitution Principle (LSP): replacements for an abstraction must
+  preserve behavior and contracts (return types, invariants, error semantics).
+- Interface Segregation Principle (ISP): expose narrow, purpose-specific
+  interfaces/functions; avoid large "god" services.
+- Dependency Inversion Principle (DIP): depend on abstractions/protocols for
+  external integrations and boundary components; keep concrete wiring at edges.
 
 ### Python (Django)
 
@@ -181,6 +203,12 @@ just test -m unit
 ## Error handling and safety
 
 - Validate input early and return consistent error states.
+- Prefer Celery native retries (`autoretry_for`, backoff, jitter) for background
+  task retries instead of manual retry orchestration.
+- Use `tenacity` only where local retry behavior is explicitly needed inside a
+  function/service.
+- Do not use broad exception handling; catch only the exceptions you can handle
+  meaningfully and let other exceptions bubble up.
 - Use `url_has_allowed_host_and_scheme` for redirect safety.
 - Prefer `HttpResponseRedirect` for redirects.
 - Use `typing.cast` only when narrowing types is required.
