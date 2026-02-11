@@ -27,7 +27,7 @@ ENABLE_SENTRY = False
 
 INSTALLED_APPS = [
     app
-    for app in INSTALLED_APPS  # type: ignore[name-defined]  # noqa: F405
+        for app in INSTALLED_APPS  # noqa: F405
     if app
     not in {
         "health_check",
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     middleware
-    for middleware in MIDDLEWARE  # type: ignore[name-defined]  # noqa: F405
+        for middleware in MIDDLEWARE  # noqa: F405
     if middleware
     not in {
         "silk.middleware.SilkyMiddleware",

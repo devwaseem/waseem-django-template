@@ -13,20 +13,17 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 INTERNAL_IPS = ["127.0.0.1"]
 
-INSTALLED_APPS += [  # type: ignore[name-defined]  # noqa: F405
+INSTALLED_APPS += [  # noqa: F405
     "django_browser_reload",
     "debug_toolbar",
     "nplusone.ext.django",
     "django_extensions",
 ]
 
-MIDDLEWARE += [  # type: ignore[name-defined]  # noqa: F405
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-]
-
 MIDDLEWARE = [
     "nplusone.ext.django.NPlusOneMiddleware",
-    *MIDDLEWARE,  # type: ignore[name-defined]
+    *MIDDLEWARE,  # noqa: F405
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -39,10 +36,10 @@ NPLUSONE_WHITELIST = [{"model": "admin.LogEntry", "field": "user"}]
 
 # Dev CSP: allow Vite dev server runtime
 vite_ws = f"ws://{VITE_DEV_SERVER_HOST}:{VITE_DEV_SERVER_PORT}"  # noqa: F405
-SECURE_CSP["script-src"].append(VITE_DEV_SERVER_ORIGIN)  # type: ignore[name-defined]  # noqa: F405
-SECURE_CSP["style-src"].remove(CSP.NONCE)  # type: ignore[name-defined]  # noqa: F405
-SECURE_CSP["style-src"].extend([VITE_DEV_SERVER_ORIGIN, CSP.UNSAFE_INLINE])  # type: ignore[name-defined]  # noqa: F405
-SECURE_CSP["connect-src"].extend([VITE_DEV_SERVER_ORIGIN, vite_ws])  # type: ignore[name-defined]  # noqa: F405
+SECURE_CSP["script-src"].append(VITE_DEV_SERVER_ORIGIN)  # noqa: F405
+SECURE_CSP["style-src"].remove(CSP.NONCE)  # noqa: F405
+SECURE_CSP["style-src"].extend([VITE_DEV_SERVER_ORIGIN, CSP.UNSAFE_INLINE])  # noqa: F405
+SECURE_CSP["connect-src"].extend([VITE_DEV_SERVER_ORIGIN, vite_ws])  # noqa: F405
 
 LOGGING = {
     "version": 1,
@@ -141,7 +138,7 @@ LOGGING = {
 }
 
 if Env.bool("LOG_DB"):
-    LOGGING["loggers"]["django.db"] = {  # type: ignore
+    LOGGING["loggers"]["django.db"] = {  # type: ignore[index]
         "handlers": ["plain_console"],
         "propagate": False,
         "level": "DEBUG",

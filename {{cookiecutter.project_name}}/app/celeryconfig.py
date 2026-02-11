@@ -14,7 +14,7 @@ worker_send_task_events = True
 task_send_sent_event = True
 broker_connection_retry_on_startup = True
 broker_connection_retry = True
-broker_connection_max_retries = None  # Retry forever
+broker_connection_max_retries: int | None = None  # Retry forever
 broker_connection_timeout = 30
 broker_channel_error_retry = True
 

@@ -329,7 +329,7 @@ VITE_DEV_SERVER_URL = f"{VITE_DEV_SERVER_ORIGIN}/"
 
 # AWS / S3
 AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_DEFAULT_ACL = None
+AWS_DEFAULT_ACL: str | None = None
 AWS_S3_FILE_OVERWRITE = True
 AWS_S3_VERIFY = True
 AWS_QUERYSTRING_AUTH = False
@@ -607,7 +607,7 @@ if Env.bool("LOG_DB"):
     }
 
 # Constance
-CONSTANCE_CONFIG: dict[str, Any] = {}  # type: ignore
+CONSTANCE_CONFIG: dict[str, Any] = {}
 
 # DBBackup
 DBBACKUP_STORAGE = "app.settings.base.DBBackupStorage"

@@ -8,16 +8,16 @@ from .base import *  # noqa: F403
 
 DEBUG = False
 
-if not ALLOWED_HOSTS:  # type: ignore[name-defined]  # noqa: F405
+if not ALLOWED_HOSTS:  # noqa: F405
     raise ImproperlyConfigured("ALLOWED_HOSTS must be set in production.")
 
-if not SECRET_KEY or SECRET_KEY == "replace-me":  # type: ignore[name-defined]  # noqa: F405
+if not SECRET_KEY or SECRET_KEY == "replace-me":  # noqa: F405
     raise ImproperlyConfigured("SECRET_KEY must be set to a secure value.")
 
 USE_X_FORWARDED_HOST = Env.bool("USE_X_FORWARDED_HOST")
 SECURE_PROXY_SSL_HEADER = (
     "HTTP_X_FORWARDED_PROTO",
-    "https" if USE_SSL else "http",  # type: ignore[name-defined]  # noqa: F405
+    "https" if USE_SSL else "http",  # noqa: F405
 )
 
 SECURE_HSTS_SECONDS = 63072000  # 2 years

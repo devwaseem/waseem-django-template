@@ -23,7 +23,7 @@ from app.types import JSON
 from app.utils import render_multiple_templates
 
 
-class _SuperUserView(SuperUserLoginRequiredMixin, View):
+class _SuperUserView(SuperUserLoginRequiredMixin, View):  # type: ignore[misc]
     """Simple view to exercise superuser mixin."""
 
     def get(self, _request: HttpRequest) -> HttpResponse:
@@ -34,7 +34,7 @@ class _SuperUserView(SuperUserLoginRequiredMixin, View):
 @pytest.mark.django_db
 def test_superuser_login_required_mixin_allows_superuser() -> None:
     """Superuser mixin allows a superuser through."""
-    user = User.objects.create_user(  # type: ignore[call-arg]
+    user = User.objects.create_user(
         email="root@example.com",
         password="strong-password",
         is_staff=True,
@@ -51,7 +51,7 @@ def test_superuser_login_required_mixin_allows_superuser() -> None:
 @pytest.mark.django_db
 def test_superuser_login_required_mixin_blocks_non_superuser() -> None:
     """Superuser mixin redirects non-superusers."""
-    user = User.objects.create_user(  # type: ignore[call-arg]
+    user = User.objects.create_user(
         email="staff@example.com",
         password="strong-password",
         is_staff=True,

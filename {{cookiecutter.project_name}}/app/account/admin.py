@@ -11,16 +11,14 @@ class UserAdmin(BaseUserAdmin[User]):
     list_display = (
         "email",
         "name",
-        "phone_number",
         "is_staff",
-        "is_insolvency_professional",
     )
     search_fields = ("name", "email")
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (
             _("Personal info"),
-            {"fields": ("name", "phone_number", "is_insolvency_professional")},
+            {"fields": ("name",)},
         ),
         (
             _("Permissions"),
@@ -46,8 +44,6 @@ class UserAdmin(BaseUserAdmin[User]):
                     "password1",
                     "password2",
                     "name",
-                    "phone_number",
-                    "is_insolvency_professional",
                 ),
             },
         ),

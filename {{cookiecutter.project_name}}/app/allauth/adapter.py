@@ -8,7 +8,7 @@ from django.conf import settings
 from django.http import HttpRequest
 
 from app.context_processors import get_site_data
-from app.models.account.user import User
+from app.account.models import User
 
 
 class AllAuthAccountAdapter(DefaultAccountAdapter):  # type: ignore

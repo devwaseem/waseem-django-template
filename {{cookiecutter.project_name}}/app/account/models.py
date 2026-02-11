@@ -8,7 +8,6 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext as _
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserManager(BaseUserManager["User"]):
@@ -69,12 +68,11 @@ class User(AbstractUser):
     name = models.CharField(_("Name"), blank=True, max_length=255)
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
-    phone_number = PhoneNumberField(_("Phone number"), blank=True)
-    is_insolvency_professional = models.BooleanField(
-        _("Is insolvency professional"),
-        default=False,
-    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = []
     objects = UserManager()  # type:ignore
+
+     class Meta:
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")

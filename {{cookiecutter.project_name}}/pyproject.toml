@@ -203,7 +203,7 @@ ignore_errors = true
 
 
 [tool.bandit]
-exclude_dirs = ['**/*_test.py', '**/test_*.py']
+exclude_dirs = ['**/*_test.py', '**/test_*.py', '.venv', 'venv']
 
 [tool.ruff]
 

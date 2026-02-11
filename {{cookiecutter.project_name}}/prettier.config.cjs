@@ -9,9 +9,5 @@ module.exports = {
   arrowParens: "always",
   requirePragma: false,
   proseWrap: "preserve",
-  plugins: [
-    "prettier-plugin-organize-imports",
-    "prettier-plugin-tailwindcss",
-  ],
-  tailwindConfig: "./tailwind.config.cjs",
+  plugins: ["prettier-plugin-tailwindcss"],
 };
