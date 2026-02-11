@@ -11,6 +11,7 @@ Env = environ.Env(
     DEBUG=(bool, False),
     TEST=(bool, False),
     ACCOUNT_ALLOW_REGISTRATION=(bool, True),
+    SITE_ID=(int, 1),
     REDIS_PORT=(int, 6379),
     DJANGO_DATABASE_PORT=(int, 5432),
     CONN_MAX_AGE=(int, 60),

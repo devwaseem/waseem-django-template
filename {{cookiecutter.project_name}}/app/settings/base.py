@@ -97,6 +97,7 @@ DEFAULT_DJANGO_APPS: list[str] = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "django.contrib.sites",
     "django.contrib.sitemaps",
 ]
 
@@ -117,10 +118,8 @@ PROJECT_APPS: list[str] = [
 ]
 
 ALL_AUTH_APPS: list[str] = [
-    # NOTE: Uncomment below lines to enable authentication
-    # "allauth",
-    # "allauth.account",
-    # "allauth.socialaccount",
+    "allauth",
+    "allauth.account",
 ]
 
 INSTALLED_APPS = [
@@ -146,6 +145,7 @@ MIDDLEWARE: list[str] = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Django HTTP Referrer Policy:
@@ -189,6 +189,7 @@ TEMPLATES = [
                 "django.template.context_processors.csp",
                 # Custom
                 "app.context_processors.get_site_data",
+                "app.context_processors.allauth_settings",
             ],
         },
     },
@@ -240,8 +241,10 @@ AUTH_USER_MODEL = "app.User"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    # "allauth.account.auth_backends.AuthenticationBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+SITE_ID = Env.int("SITE_ID", default=1)
 
 LOGIN_URL = reverse_lazy("account_login")
 LOGIN_REDIRECT_URL = "/"
@@ -272,11 +275,10 @@ ACCOUNT_FORMS = {
     "reset_password": CUSTOM_ALLAUTH_CONFIG_PATH + ".forms.ResetPasswordForm",
 }
 ACCOUNT_ALLOW_REGISTRATION = Env.bool("ACCOUNT_ALLOW_REGISTRATION")
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD: str | None = None
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 

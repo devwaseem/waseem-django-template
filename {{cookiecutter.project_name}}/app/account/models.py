@@ -73,6 +73,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS: ClassVar[list[str]] = []
     objects = UserManager()  # type:ignore
 
-     class Meta:
+    class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")

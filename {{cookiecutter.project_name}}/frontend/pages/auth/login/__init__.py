@@ -1,4 +1,5 @@
-from app.account.forms import LoginForm
+from allauth.account.forms import LoginForm
+
 from frontend.layouts.base import BaseLayout
 
 
