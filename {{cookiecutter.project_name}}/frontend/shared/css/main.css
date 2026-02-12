@@ -1,38 +1,222 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
+@theme {
+    --color-base-100: oklch(1 0 0);
+    --color-base-200: oklch(0.97 0 0);
+    --color-base-300: oklch(0.922 0 0);
+    --color-base-content: oklch(0.145 0 0);
+
+    --color-primary: oklch(0.62 0.21 45);
+    --color-primary-content: oklch(0.985 0 0);
+
+    --color-secondary: oklch(0.97 0 0);
+    --color-secondary-content: oklch(0.205 0 0);
+
+    --color-accent: oklch(0.97 0 0);
+    --color-accent-content: oklch(0.205 0 0);
+
+    --color-neutral: oklch(0.205 0 0);
+    --color-neutral-content: oklch(0.985 0 0);
+
+    --color-info: oklch(0.722 0.11 236.311);
+    --color-info-content: oklch(0.985 0 0);
+
+    --color-success: oklch(0.627 0.265 149.213);
+    --color-success-content: oklch(0.985 0 0);
+
+    --color-warning: oklch(0.857 0.17 76.069);
+    --color-warning-content: oklch(0.205 0 0);
+
+    --color-destructive: oklch(0.577 0.245 27.325);
+    --color-destructive-content: oklch(0.985 0 0);
+
+    --color-muted: oklch(0.97 0 0);
+    --color-muted-content: oklch(0.556 0 0);
+
+    --color-ring: oklch(0.62 0.21 45);
+
+    --radius: 0.5rem;
+}
+
+@layer base {
+    * {
+        @apply border-base-300 outline-ring/50;
+    }
+
+    body {
+        @apply bg-base-100 text-base-content;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply ring-offset-base-100 focus-visible:ring-ring inline-flex h-10 cursor-pointer items-center justify-center rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
+        @apply bg-primary text-primary-content shadow-sm;
+
+        &:hover {
+            @apply bg-primary/90;
+        }
+
+        &.btn-secondary {
+            @apply bg-secondary text-secondary-content shadow-xs;
+
+            &:hover {
+                @apply bg-secondary/80;
+            }
+        }
+
+        &.btn-outline {
+            @apply border-base-300 bg-base-100 border shadow-xs;
+
+            &:hover {
+                @apply bg-accent text-accent-content;
+            }
+        }
+
+        &.btn-ghost {
+            @apply shadow-none;
+
+            &:hover {
+                @apply bg-accent text-accent-content;
+            }
+        }
+
+        &.btn-link {
+            @apply text-primary h-auto bg-transparent p-0 underline-offset-4 shadow-none;
+
+            &:hover {
+                @apply underline;
+            }
+        }
+
+        &.btn-sm {
+            @apply h-9 px-3;
+        }
+
+        &.btn-lg {
+            @apply h-11 px-8;
+        }
+
+        &.btn-icon {
+            @apply h-10 w-10 p-0;
+        }
+    }
+
+    .card {
+        @apply bg-base-100 text-base-content border-base-300 rounded-lg border shadow-sm;
+
+        .card-header {
+            @apply flex flex-col space-y-1.5 p-6;
+        }
+
+        .card-title {
+            @apply text-2xl leading-none font-semibold tracking-tight;
+        }
+
+        .card-description {
+            @apply text-muted-content text-sm;
+        }
+
+        .card-content {
+            @apply p-6 pt-0;
+        }
+
+        .card-footer {
+            @apply flex items-center p-6 pt-0;
+        }
+    }
+
+    .badge {
+        @apply focus:ring-ring inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none;
+        @apply bg-primary text-primary-content border-transparent;
+
+        &:hover {
+            @apply bg-primary/80;
+        }
+
+        &.badge-secondary {
+            @apply bg-secondary text-secondary-content;
+
+            &:hover {
+                @apply bg-secondary/80;
+            }
+        }
+
+        &.badge-destructive {
+            @apply bg-destructive text-destructive-content;
+
+            &:hover {
+                @apply bg-destructive/80;
+            }
+        }
+
+        &.badge-outline {
+            @apply text-base-content border-base-300 bg-transparent;
+        }
+    }
+
+    .input {
+        @apply border-base-300 bg-base-100 ring-offset-base-100 placeholder:text-muted-content focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-2 text-sm transition-shadow file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .label {
+        @apply text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+    }
+
+    .form-control {
+        @apply flex flex-col gap-2;
+    }
+
+    .alert {
+        @apply [&>svg]:text-base-content relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:top-4 [&>svg]:left-4 [&>svg~*]:pl-7;
+        @apply bg-base-100 text-base-content border-base-300;
+
+        &.alert-destructive {
+            @apply border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive;
+        }
+
+        &.alert-success {
+            @apply border-success/50 text-success [&>svg]:text-success;
+        }
+
+        &.alert-warning {
+            @apply border-warning/50 text-warning [&>svg]:text-warning;
+        }
+
+        &.alert-info {
+            @apply border-info/50 text-info [&>svg]:text-info;
+        }
+    }
+
+    .dropdown {
+        @apply relative inline-block;
+
+        .dropdown-content {
+            @apply bg-base-100 text-base-content border-base-300 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md;
+        }
+    }
+}
 
 input[type='search']::-webkit-search-decoration:hover,
 input[type='search']::-webkit-search-cancel-button:hover {
     cursor: pointer;
 }
 
-input[type=checkbox] {
-    @apply text-black rounded border border-gray-300 bg-white cursor-pointer focus:ring-black;
-}
-
-input[type='text'], input:where(:not([type])), input[type='email'],
-input[type='url'], input[type='password'], input[type='number'], input[type='date'],
-input[type='datetime-local'], input[type='month'], input[type='search'], input[type='tel'],
-input[type='time'], input[type='week'], textarea, select {
-    @apply p-2 pl-2.5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full shadow-sm;
-    @apply focus:ring-0 focus:outline-0 focus:border-black;
+input[type='checkbox'] {
+    @apply border-base-300 bg-base-100 text-primary focus:ring-ring focus:ring-offset-base-100 cursor-pointer rounded;
 }
 
 .markdown-content {
-    @apply prose prose-blue prose-table:rounded-lg prose-th:px-6 prose-th:py-3 prose-td:px-6 prose-td:py-4 prose-thead:text-xs prose-thead:text-gray-700 prose-thead:uppercase prose-thead:bg-gray-50 odd:prose-tr:bg-white even:prose-tr:bg-gray-50 prose-tr:border-b;
-}
-
-.markdown-content > code {
-    @apply p-1 bg-gray-200 rounded
+    @apply prose prose-zinc dark:prose-invert max-w-none;
 }
 
 @utility prose {
-  code {
-    &::before,
-    &::after {
-      content: none;
+    code {
+        &::before,
+        &::after {
+            content: none;
+        }
     }
-  }
 }

@@ -482,10 +482,9 @@ DEFAULT_FROM_EMAIL = Env.str(
     f"<no-reply@{DOMAIN_NAME}>",
 )
 
-EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
-CELERY_EMAIL_BACKEND = Env.str(
+EMAIL_BACKEND = Env.str(
     "EMAIL_BACKEND",
-    "django.core.mail.backends.smtp.EmailBackend",
+    "django.core.mail.backends.console.EmailBackend",
 )
 EMAIL_HOST = Env.str("EMAIL_HOST")
 EMAIL_HOST_USER = Env.str("EMAIL_HOST_USER")
@@ -494,10 +493,6 @@ EMAIL_PORT = Env.int("EMAIL_PORT")
 EMAIL_USE_TLS = Env.bool("EMAIL_USE_TLS")
 
 ANYMAIL = {"AMAZON_SES_CLIENT_PARAMS": {"region_name": AWS_S3_REGION_NAME}}
-
-CELERY_EMAIL_TASK_CONFIG = {
-    "queue": "celery",
-}
 
 # Logging
 LOGGING = {

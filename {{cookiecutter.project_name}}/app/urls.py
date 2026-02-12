@@ -1,11 +1,3 @@
-from allauth.account.views import (
-    LoginView,
-    PasswordResetDoneView,
-    PasswordResetFromKeyDoneView,
-    PasswordResetFromKeyView,
-    PasswordResetView,
-    SignupView,
-)
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -15,6 +7,12 @@ from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 from django_ratelimit.exceptions import Ratelimited
 
+from app.account.views import AccountLoginView
+from app.account.views import AccountResetPasswordDoneView
+from app.account.views import AccountResetPasswordFromKeyDoneView
+from app.account.views import AccountResetPasswordFromKeyView
+from app.account.views import AccountResetPasswordView
+from app.account.views import AccountSignupView
 from app.views.home import HomeView
 
 
@@ -51,40 +49,32 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(
         "login/",
-        LoginView.as_view(extra_context={"page": {"title": "Login"}}),
+        AccountLoginView.as_view(),
         name="account_login",
     ),
     path(
         "register/",
-        SignupView.as_view(extra_context={"page": {"title": "Register"}}),
+        AccountSignupView.as_view(),
         name="account_signup",
     ),
     path(
         "password/reset/",
-        PasswordResetView.as_view(
-            extra_context={"page": {"title": "Reset password"}}
-        ),
+        AccountResetPasswordView.as_view(),
         name="account_reset_password",
     ),
     path(
         "password/reset/done/",
-        PasswordResetDoneView.as_view(
-            extra_context={"page": {"title": "Reset password"}}
-        ),
+        AccountResetPasswordDoneView.as_view(),
         name="account_reset_password_done",
     ),
     re_path(
         r"^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$",
-        PasswordResetFromKeyView.as_view(
-            extra_context={"page": {"title": "Set new password"}}
-        ),
+        AccountResetPasswordFromKeyView.as_view(),
         name="account_reset_password_from_key",
     ),
     path(
         "password/reset/key/done/",
-        PasswordResetFromKeyDoneView.as_view(
-            extra_context={"page": {"title": "Password updated"}}
-        ),
+        AccountResetPasswordFromKeyDoneView.as_view(),
         name="account_reset_password_from_key_done",
     ),
     path("", HomeView.as_view(), name="home"),

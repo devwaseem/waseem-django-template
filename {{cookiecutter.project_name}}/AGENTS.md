@@ -34,14 +34,15 @@ architecture so they can work safely in this repository.
 - Auth engine is `django-allauth`, but auth UI uses custom frontend-kit templates.
 - Do not mount `include("allauth.urls")` for login/signup entry points.
 - Current auth routes are:
-  - `/login/` (`account_login`)
-  - `/register/` (`account_signup`)
-  - `/password/reset/` (`account_reset_password`)
-  - `/password/reset/done/` (`account_reset_password_done`)
-  - `/password/reset/key/<uidb36>-<key>/` (`account_reset_password_from_key`)
-  - `/password/reset/key/done/` (`account_reset_password_from_key_done`)
-- Auth templates live in `app/templates/account/` and should keep using existing
-  form components under `app/templates/components/form/`.
+    - `/login/` (`account_login`)
+    - `/register/` (`account_signup`)
+    - `/password/reset/` (`account_reset_password`)
+    - `/password/reset/done/` (`account_reset_password_done`)
+    - `/password/reset/key/<uidb36>-<key>/` (`account_reset_password_from_key`)
+    - `/password/reset/key/done/` (`account_reset_password_from_key_done`)
+- Auth pages live under `frontend/pages/auth/` and render through frontend-kit
+  page classes in `app/account/views.py`; keep using existing form components
+  under `app/templates/components/form/`.
 - `ACCOUNT_ALLOW_REGISTRATION` controls signup availability; preserve this
   behavior in templates and views.
 - `SITE_ID` must be set in env for `django.contrib.sites` and allauth flows.
