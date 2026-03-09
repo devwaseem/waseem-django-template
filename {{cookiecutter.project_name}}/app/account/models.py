@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import ClassVar
 
 from django.contrib.auth.hashers import make_password
@@ -60,7 +61,7 @@ class UserManager(BaseUserManager["User"]):
 class User(AbstractUser):
     """User model for email-based authentication."""
 
-    id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid7, editable=False)
     username = None  # type:ignore
     email = models.EmailField(_("email address"), unique=True)
 
@@ -71,7 +72,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = []
-    objects = UserManager()  # type:ignore
+    objects = UserManager()  # type: ignore[assignment]
 
     class Meta:
         verbose_name = _("User")

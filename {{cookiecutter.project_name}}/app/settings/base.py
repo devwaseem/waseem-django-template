@@ -148,8 +148,6 @@ MIDDLEWARE: list[str] = [
     "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # Django HTTP Referrer Policy:
-    "django_http_referrer_policy.middleware.ReferrerPolicyMiddleware",
     # Django HTMX
     "django_htmx.middleware.HtmxMiddleware",
     # "django.middleware.cache.FetchFromCacheMiddleware",  # This must be last
@@ -280,7 +278,7 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USER_MODEL_USERNAME_FIELD: str | None = None
-ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy("account_login")
 
 # Database
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

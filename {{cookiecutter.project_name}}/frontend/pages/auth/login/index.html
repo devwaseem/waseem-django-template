@@ -1,17 +1,15 @@
 {% extends "layouts/base/index.html" %}
 {% block body %}
     <div class="relative grid min-h-screen grid-cols-1 lg:grid-cols-2">
-        <div class="bg-zinc-950 text-zinc-50 relative hidden flex-col justify-between p-10 lg:flex">
+        <div class="bg-base-200 text-base-content relative hidden flex-col justify-between p-10 lg:flex">
             <div class="flex items-center gap-2 text-lg font-medium">
                 <i data-lucide="brain-circuit"></i>
                 {{ site_name|default:"Your App" }}
             </div>
             <div class="relative z-20 mt-auto">
                 <blockquote class="space-y-2">
-                    <p class="text-lg">
-                        &ldquo;A clean, reliable foundation for secure authentication and fast delivery.&rdquo;
-                    </p>
-                    <footer class="text-sm">Built with Django + Frontend Kit</footer>
+                    <p class="text-lg">Built for reliable operations and faster delivery.</p>
+                    <footer class="text-sm">Secure access with Django + Frontend Kit</footer>
                 </blockquote>
             </div>
         </div>
@@ -35,7 +33,10 @@
                             <div class="grid gap-2">
                                 {% include "components/form/input.html" with field=form.password input_class="input" %}
                             </div>
-                            <button type="submit" class="btn btn-primary w-full">Login</button>
+                            <button type="submit" class="btn btn-primary h-16 w-full">
+                                <span>Continue</span>
+                                <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                            </button>
                         </div>
                     </form>
                 </div>

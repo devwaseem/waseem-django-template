@@ -7,12 +7,15 @@ from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 from django_ratelimit.exceptions import Ratelimited
 
-from app.account.views import AccountLoginView
-from app.account.views import AccountResetPasswordDoneView
-from app.account.views import AccountResetPasswordFromKeyDoneView
-from app.account.views import AccountResetPasswordFromKeyView
-from app.account.views import AccountResetPasswordView
-from app.account.views import AccountSignupView
+from app.account.views import (
+    AccountLoginView,
+    AccountLogoutView,
+    AccountResetPasswordDoneView,
+    AccountResetPasswordFromKeyDoneView,
+    AccountResetPasswordFromKeyView,
+    AccountResetPasswordView,
+    AccountSignupView,
+)
 from app.views.home import HomeView
 
 
@@ -51,6 +54,11 @@ urlpatterns = [
         "login/",
         AccountLoginView.as_view(),
         name="account_login",
+    ),
+    path(
+        "logout/",
+        AccountLogoutView.as_view(),
+        name="account_logout",
     ),
     path(
         "register/",

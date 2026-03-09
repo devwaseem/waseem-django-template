@@ -35,6 +35,7 @@ architecture so they can work safely in this repository.
 - Do not mount `include("allauth.urls")` for login/signup entry points.
 - Current auth routes are:
     - `/login/` (`account_login`)
+    - `/logout/` (`account_logout`)
     - `/register/` (`account_signup`)
     - `/password/reset/` (`account_reset_password`)
     - `/password/reset/done/` (`account_reset_password_done`)

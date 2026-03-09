@@ -1,20 +1,23 @@
 from __future__ import annotations
 
-from django.urls import resolve
-from django.urls import reverse
+from django.urls import resolve, reverse
 
-from app.account.views import AccountLoginView
-from app.account.views import AccountResetPasswordDoneView
-from app.account.views import AccountResetPasswordFromKeyDoneView
-from app.account.views import AccountResetPasswordFromKeyView
-from app.account.views import AccountResetPasswordView
-from app.account.views import AccountSignupView
+from app.account.views import (
+    AccountLoginView,
+    AccountLogoutView,
+    AccountResetPasswordDoneView,
+    AccountResetPasswordFromKeyDoneView,
+    AccountResetPasswordFromKeyView,
+    AccountResetPasswordView,
+    AccountSignupView,
+)
 
 
 def test_auth_routes_resolve_to_custom_views() -> None:
     """Auth routes use custom frontend-kit account views."""
     cases = [
         ("account_login", reverse("account_login"), AccountLoginView),
+        ("account_logout", reverse("account_logout"), AccountLogoutView),
         ("account_signup", reverse("account_signup"), AccountSignupView),
         (
             "account_reset_password",
@@ -41,7 +44,7 @@ def test_auth_routes_resolve_to_custom_views() -> None:
         ),
     ]
 
-    for route_name, route_path, view_class in cases:
-        match = resolve(route_path)
+    for route_name, path, view_class in cases:
+        match = resolve(path)
         assert match.view_name == route_name
-        assert match.func.view_class is view_class
+        assert getattr(match.func, "view_class", None) is view_class

@@ -22,7 +22,6 @@ dependencies = [
   "django-frontend-kit<1.0.0",
   "django-health-check>=3.20,<4",
   "django-htmx>=1.27,<2",
-  "django-http-referrer-policy>=1.1.1,<2",
   "django-ipware>=7.0.1,<8",
   "django-lifecycle>=1.2.3,<2",
   "django-model-utils>=5.0,<6",
