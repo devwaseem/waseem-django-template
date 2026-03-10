@@ -4,6 +4,7 @@ import logging
 
 import structlog
 
+from app.telemetry import add_trace_context_to_event
 from env import Env
 
 from .base import *  # noqa: F403
@@ -50,6 +51,7 @@ LOGGING = {
             "processor": structlog.dev.ConsoleRenderer(),
             "foreign_pre_chain": [
                 structlog.contextvars.merge_contextvars,
+                add_trace_context_to_event,
                 structlog.processors.TimeStamper(fmt="iso"),
                 structlog.stdlib.add_logger_name,
                 structlog.stdlib.add_log_level,
@@ -67,6 +69,7 @@ LOGGING = {
             ),
             "foreign_pre_chain": [
                 structlog.contextvars.merge_contextvars,
+                add_trace_context_to_event,
                 structlog.processors.TimeStamper(fmt="iso"),
                 structlog.stdlib.add_logger_name,
                 structlog.stdlib.add_log_level,

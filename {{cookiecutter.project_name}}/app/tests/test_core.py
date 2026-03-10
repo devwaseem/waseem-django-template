@@ -8,16 +8,20 @@ from typing import Any
 
 import pytest
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 from django.test import RequestFactory
 from django.test.utils import override_settings
 from django.views import View
 from django_ratelimit.exceptions import Ratelimited
-from django.core.exceptions import PermissionDenied
+
 from app import urls as app_urls
 from app.account.models import User
 from app.context_processors import allauth_settings, get_site_data
-from app.middleware import disable_client_side_caching_middleware
+from app.middleware import (
+    csp_excluder,
+    disable_client_side_caching_middleware,
+)
 from app.permissions import SuperUserLoginRequiredMixin
 from app.types import JSON
 from app.utils import render_multiple_templates
@@ -117,6 +121,41 @@ def test_disable_client_side_caching_middleware_sets_headers() -> None:
     assert "Cache-Control" in response.headers
 
 
+@override_settings(CSP_EXCLUDE_PATH_PREFIXES=["/admin", "/internal"])
+def test_csp_excluder_strips_csp_headers_for_configured_paths() -> None:
+    request = RequestFactory().get("/admin/login/")
+
+    def get_response(_request: HttpRequest) -> HttpResponse:
+        response = HttpResponse("ok")
+        response.headers["Content-Security-Policy"] = "default-src 'self'"
+        response.headers["Content-Security-Policy-Report-Only"] = (
+            "default-src 'none'"
+        )
+        return response
+
+    middleware = csp_excluder(get_response)
+    response = middleware(request)
+
+    assert "Content-Security-Policy" not in response.headers
+    assert "Content-Security-Policy-Report-Only" not in response.headers
+
+
+@override_settings(CSP_EXCLUDE_PATH_PREFIXES=["/admin"])
+def test_csp_excluder_keeps_headers_for_non_configured_paths() -> None:
+    request = RequestFactory().get("/api/v1/example/")
+
+    def get_response(_request: HttpRequest) -> HttpResponse:
+        response = HttpResponse("ok")
+        response.headers["Content-Security-Policy"] = "default-src 'self'"
+        return response
+
+    middleware = csp_excluder(get_response)
+    response = middleware(request)
+
+    assert response.headers["Content-Security-Policy"] == "default-src 'self'"
+
+
+@pytest.mark.django_db
 def test_render_multiple_templates_combines_content() -> None:
     """Render helper concatenates multiple templates."""
     request = RequestFactory().get("/")
@@ -167,12 +206,11 @@ def test_optional_url_patterns_can_be_enabled() -> None:
         updated_urls = importlib.reload(app_urls)
 
     routes = {
-        getattr(pattern.pattern, "_route", "")
-        or pattern.pattern.regex.pattern
+        getattr(pattern.pattern, "_route", "") or pattern.pattern.regex.pattern
         for pattern in updated_urls.urlpatterns
     }
     assert "silk/" in routes
-    assert "ht/" in routes
+    assert "healthz/" in routes
 
     importlib.reload(app_urls)
 

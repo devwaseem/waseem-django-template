@@ -40,3 +40,11 @@ SECURE_CROSS_ORIGIN_RESOURCE_POLICY = Env.str(
     "SECURE_CROSS_ORIGIN_RESOURCE_POLICY",
     default="same-site",
 )
+
+LOGGING["handlers"]["json_console"]["formatter"] = "json"  # noqa: F405
+
+for logger_name, logger_config in LOGGING["loggers"].items():  # noqa: F405
+    if "plain_console" in logger_config.get("handlers", []):
+        raise ImproperlyConfigured(
+            f"Logger {logger_name} cannot use plain_console in production."
+        )

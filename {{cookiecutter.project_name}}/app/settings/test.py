@@ -24,10 +24,12 @@ ENABLE_SILK_PROFILING = False
 ENABLE_CPROFILE = False
 ENABLE_PYINSTRUMENT = False
 ENABLE_SENTRY = False
+ENABLE_OTEL = False
+OTEL_SDK_DISABLED = True
 
 INSTALLED_APPS = [
     app
-        for app in INSTALLED_APPS  # noqa: F405
+    for app in INSTALLED_APPS  # noqa: F405
     if app
     not in {
         "health_check",
@@ -46,7 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     middleware
-        for middleware in MIDDLEWARE  # noqa: F405
+    for middleware in MIDDLEWARE  # noqa: F405
     if middleware
     not in {
         "silk.middleware.SilkyMiddleware",

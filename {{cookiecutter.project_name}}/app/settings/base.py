@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from storages.backends.s3boto3 import S3Boto3Storage
 
 from app.helpers.network import get_ip_from_request
+from app.telemetry import add_trace_context_to_event
 from env import Env
 
 if TYPE_CHECKING:
@@ -43,6 +44,20 @@ ENABLE_SILK_PROFILING = Env.bool("ENABLE_SILK_PROFILING")
 ENABLE_CPROFILE = Env.bool("ENABLE_CPROFILE")
 ENABLE_PYINSTRUMENT = Env.bool("ENABLE_PYINSTRUMENT")
 ENABLE_SENTRY = Env.bool("ENABLE_SENTRY")
+ENABLE_OTEL = Env.bool("ENABLE_OTEL")
+
+OTEL_SDK_DISABLED = Env.bool("OTEL_SDK_DISABLED")
+OTEL_SERVICE_NAME = Env.str("OTEL_SERVICE_NAME")
+OTEL_SERVICE_NAMESPACE = Env.str("OTEL_SERVICE_NAMESPACE")
+OTEL_RESOURCE_ATTRIBUTES = Env.str("OTEL_RESOURCE_ATTRIBUTES")
+OTEL_EXPORTER_OTLP_ENDPOINT = Env.str("OTEL_EXPORTER_OTLP_ENDPOINT")
+OTEL_EXPORTER_OTLP_PROTOCOL = Env.str("OTEL_EXPORTER_OTLP_PROTOCOL")
+OTEL_EXPORTER_OTLP_HEADERS = Env.str("OTEL_EXPORTER_OTLP_HEADERS")
+OTEL_EXPORTER_OTLP_TIMEOUT = Env.int("OTEL_EXPORTER_OTLP_TIMEOUT")
+OTEL_TRACES_SAMPLER = Env.str("OTEL_TRACES_SAMPLER")
+OTEL_TRACES_SAMPLER_ARG = Env.float("OTEL_TRACES_SAMPLER_ARG")
+OTEL_METRIC_EXPORT_INTERVAL = Env.int("OTEL_METRIC_EXPORT_INTERVAL")
+OTEL_PYTHON_DJANGO_EXCLUDED_URLS = Env.str("OTEL_PYTHON_DJANGO_EXCLUDED_URLS")
 
 STATIC_USE_WHITENOISE = Env.bool("STATIC_USE_WHITENOISE")
 STATIC_USE_S3 = Env.bool("STATIC_USE_S3")
@@ -135,6 +150,7 @@ MIDDLEWARE: list[str] = [
     # "app.middleware.disable_client_side_caching_middleware", # Uncomment this line to disable client side caching # noqa
     # "django.middleware.cache.UpdateCacheMiddleware",  # This must be first on the list # noqa
     "django_structlog.middlewares.RequestMiddleware",
+    "app.middleware.csp_excluder",
     # Content Security Policy:
     "django.middleware.csp.ContentSecurityPolicyMiddleware",
     # Django:
@@ -366,7 +382,10 @@ DJANGO_STATIC_HOST = Env.str("DJANGO_STATIC_HOST")
 DJANGO_MEDIA_HOST = Env.str("DJANGO_MEDIA_HOST")
 
 MEDIA_LOCATION = "media"
-STATIC_LOCATION = "static" if DEBUG else "/var/www/static"
+STATIC_LOCATION = Env.str(
+    "STATIC_LOCATION",
+    "static" if DEBUG else "/var/www/static",
+)
 
 MEDIA_URL = f"{DJANGO_MEDIA_HOST}/media/"
 STATIC_URL = f"{DJANGO_STATIC_HOST}/static/"
@@ -436,6 +455,8 @@ STATICFILES_FINDERS = [
 ]
 
 # CSP (Django built-in)
+CSP_EXCLUDE_PATH_PREFIXES = ["/admin"]
+
 SECURE_CSP: dict[str, list[str]] = {
     "default-src": [CSP.SELF],
     "script-src": [
@@ -507,6 +528,7 @@ LOGGING = {
             "processor": structlog.processors.JSONRenderer(),
             "foreign_pre_chain": [
                 structlog.contextvars.merge_contextvars,
+                add_trace_context_to_event,
                 structlog.processors.TimeStamper(fmt="iso"),
                 structlog.stdlib.add_logger_name,
                 structlog.stdlib.add_log_level,
@@ -524,6 +546,7 @@ LOGGING = {
             ),
             "foreign_pre_chain": [
                 structlog.contextvars.merge_contextvars,
+                add_trace_context_to_event,
                 structlog.processors.TimeStamper(fmt="iso"),
                 structlog.stdlib.add_logger_name,
                 structlog.stdlib.add_log_level,
@@ -539,6 +562,7 @@ LOGGING = {
             "processor": structlog.dev.ConsoleRenderer(),
             "foreign_pre_chain": [
                 structlog.contextvars.merge_contextvars,
+                add_trace_context_to_event,
                 structlog.processors.TimeStamper(fmt="iso"),
                 structlog.stdlib.add_logger_name,
                 structlog.stdlib.add_log_level,

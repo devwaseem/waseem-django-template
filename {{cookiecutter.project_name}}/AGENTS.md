@@ -7,6 +7,15 @@ architecture so they can work safely in this repository.
 
 <Insert the project description here>
 
+## General Conventions
+
+- Frontend events: avoid inline `onclick`/`onkeydown` attributes. Keep
+  interaction logic in `entry.ts` files via event listeners.
+- Styling: prefer shared component classes in `frontend/shared/css/main.css`
+  before adding page-specific CSS.
+- Migrations: do not delete existing migrations; add new migrations to preserve
+  history.
+
 ## Rules
 
 - Ask clarifying questions before implementation whenever any requirement is
@@ -97,7 +106,7 @@ uv run djlint app --reformat
 ### Frontend formatting
 
 ```bash
-npx prettier --write "frontend/**/*.{ts,js,css,html}"
+npx prettier --write "frontend/**/*.{ts,js,css}"
 ```
 
 ## Testing (pytest)
