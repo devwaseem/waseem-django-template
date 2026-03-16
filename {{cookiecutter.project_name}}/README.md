@@ -16,8 +16,10 @@ npm install
 ### 3) Run dev server
 ```
 export DJANGO_SETTINGS_MODULE={{ cookiecutter.django_settings_module_default }}
-uv run python manage.py runserver
+uv run --env-file .env python manage.py runserver
 ```
+
+`.env` is loaded in local commands via `uv run --env-file .env`.
 
 ### 4) Run frontend
 ```
@@ -57,6 +59,7 @@ uv run mkdocs serve
 - Set `SECRET_KEY` to a secure random value for production.
 - Set `ALLOWED_HOSTS` for production.
 - Run `uv run python manage.py check --deploy` before shipping.
+- Run `uv run --env-file .env python manage.py check --deploy` in local/dev.
 
 ## Static & Media
 - Local/Whitenoise: set `STATIC_USE_WHITENOISE=true`, run `collectstatic`

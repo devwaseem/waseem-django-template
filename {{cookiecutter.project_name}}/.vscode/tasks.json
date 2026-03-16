@@ -28,7 +28,7 @@
         {
             "label": "type",
             "type": "shell",
-            "command": "uv run mypy app",
+            "command": "uv run basedpyright",
             "problemMatcher": []
         },
         {

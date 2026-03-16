@@ -174,7 +174,7 @@ just test -m unit
 
 ### Python (Django)
 
-- Use type annotations consistently; mypy is configured in `pyproject.toml`.
+- Use type annotations consistently; basedpyright is configured in `pyproject.toml`.
 - Prefer `from __future__ import annotations` in new modules.
 - Follow Ruff formatting (79-char lines, 4-space indentation).
 - Use guard clauses and early returns in views.
@@ -235,7 +235,7 @@ just test -m unit
 
 ## Tooling rules
 
-- Pre-commit runs Ruff, djLint, mypy, and repository hygiene checks.
+- Pre-commit runs Ruff, djLint, basedpyright, and repository hygiene checks.
 
 ## Helpful commands
 

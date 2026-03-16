@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls.static import static
+from django.conf.urls.static import static  # type: ignore
 from django.contrib import admin
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
@@ -90,7 +90,7 @@ if getattr(settings, "ENABLE_HEALTH_CHECK", False):
 
     redis_check = (
         "health_check.contrib.redis.Redis",
-        {"client": Redis.from_url(settings.REDIS_URL)},
+        {"client": Redis.from_url(settings.REDIS_URL)},  # type: ignore
     )
 
     health_checks = [

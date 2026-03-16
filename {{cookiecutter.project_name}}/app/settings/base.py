@@ -1,15 +1,16 @@
 from __future__ import annotations
 
+import importlib
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from types import SimpleNamespace
+from typing import TYPE_CHECKING, Any, Protocol, cast
 
 import django_stubs_ext
 import structlog
 from django.contrib.messages import constants as messages
 from django.http import HttpRequest
 from django.urls import reverse_lazy
-from django.utils.csp import CSP
 from django.utils.translation import gettext_lazy as _
 from storages.backends.s3boto3 import S3Boto3Storage
 
@@ -17,10 +18,35 @@ from app.helpers.network import get_ip_from_request
 from app.telemetry import add_trace_context_to_event
 from env import Env
 
+
+class _CSPValues(Protocol):
+    SELF: str
+    NONCE: str
+    UNSAFE_INLINE: str
+
+
+_FALLBACK_CSP = SimpleNamespace(
+    SELF="'self'",
+    NONCE="'nonce-{nonce}'",
+    UNSAFE_INLINE="'unsafe-inline'",
+)
+
+
+def _load_csp() -> _CSPValues:
+    try:
+        csp_module = importlib.import_module("django.utils.csp")
+    except ModuleNotFoundError:
+        return cast(_CSPValues, _FALLBACK_CSP)
+
+    return cast(_CSPValues, getattr(csp_module, "CSP", _FALLBACK_CSP))
+
+
+CSP = _load_csp()
+
 if TYPE_CHECKING:
     from celery.app.task import Task
 
-    Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore[attr-defined] # noqa
+    Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore[attr-defined]  # noqa
 
 django_stubs_ext.monkeypatch()
 
@@ -30,8 +56,8 @@ DEBUG = Env.bool("DEBUG")
 TEST = "test" in sys.argv or sys.argv[0].endswith("pytest") or Env.bool("TEST")
 
 DOMAIN_NAME = Env.str("DOMAIN_NAME")
-BASE_URL = Env("DOMAIN_NAME")
-SECRET_KEY = Env("SECRET_KEY")
+BASE_URL = DOMAIN_NAME
+SECRET_KEY = Env.str("SECRET_KEY")
 
 NO_CACHE = Env.bool("NO_CACHE")
 
@@ -86,22 +112,10 @@ CSRF_COOKIE_SAMESITE = "Lax"
 
 SECURE_SSL_REDIRECT = USE_SSL
 
-# https://github.com/DmytroLitvinov/django-http-referrer-policy
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
-REFERRER_POLICY = "strict-origin-when-cross-origin"
-
-# https://github.com/adamchainz/django-permissions-policy#setting
-PERMISSIONS_POLICY: dict[str, str | list[str]] = {}
-
 # Application definition
-
 ADMIN_APPS = [
     "admin_interface",
     "colorfield",
-    # "unfold",  # before django.contrib.admin
-    # "unfold.contrib.filters",  # optional, if special filters are needed
-    # "unfold.contrib.forms",  # optional, if special form elements are needed
-    # "unfold.contrib.inlines",  # optional, if special inlines are needed
     "django.contrib.admin",
 ]
 
@@ -122,10 +136,9 @@ THIRD_PARTY_APPS: list[str] = [
     "django_cotton",
     "constance",
     "django_structlog",
-    "django_object_actions",  # https://github.com/crccheck/django-object-actions
-    "solo",  # https://github.com/lazybird/django-solo
-    "widget_tweaks",  # django-widget-tweaks
-    "phonenumber_field",
+    "django_object_actions",
+    "solo",
+    "widget_tweaks",
 ]
 
 PROJECT_APPS: list[str] = [
@@ -146,17 +159,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE: list[str] = [
-    # Logging:
-    # "app.middleware.disable_client_side_caching_middleware", # Uncomment this line to disable client side caching # noqa
-    # "django.middleware.cache.UpdateCacheMiddleware",  # This must be first on the list # noqa
     "django_structlog.middlewares.RequestMiddleware",
     "app.middleware.csp_excluder",
-    # Content Security Policy:
     "django.middleware.csp.ContentSecurityPolicyMiddleware",
-    # Django:
     "django.middleware.security.SecurityMiddleware",
-    # django-permissions-policy
-    "django_permissions_policy.PermissionsPolicyMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -164,19 +170,15 @@ MIDDLEWARE: list[str] = [
     "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # Django HTMX
-    "django_htmx.middleware.HtmxMiddleware",
-    # "django.middleware.cache.FetchFromCacheMiddleware",  # This must be last
 ]
 
 if STATIC_USE_WHITENOISE:
-    MIDDLEWARE += [
+    MIDDLEWARE.insert(
+        MIDDLEWARE.index("django.middleware.security.SecurityMiddleware") + 1,
         "whitenoise.middleware.WhiteNoiseMiddleware",
-    ]
+    )
 
 ROOT_URLCONF = "app.urls"
-
-# Templates
 
 DJFK_FRONTEND_DIR = BASE_DIR / "frontend"
 DJFK_DEV_ENV = False
@@ -185,23 +187,19 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            # Contains plain text templates, like `robots.txt`:
             BASE_DIR / "app" / "templates",
             DJFK_FRONTEND_DIR,
         ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
-                # Default template context processors:
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.i18n",
                 "django.template.context_processors.media",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
-                # Django CSP
                 "django.template.context_processors.csp",
-                # Custom
                 "app.context_processors.get_site_data",
                 "app.context_processors.allauth_settings",
             ],
@@ -214,26 +212,14 @@ ASGI_APPLICATION = "app.asgi.application"
 
 APPEND_SLASH = True
 
-# Internationalization
-
 LANGUAGE_CODE = "en-us"
-
 USE_TZ = True
-
 TIME_ZONE = "UTC"
-
 LANGUAGES = (("en", _("English")),)
-
 USE_I18N = False
-
 USE_L10N = True
-
 DATE_INPUT_FORMATS = ("%d-%m-%Y", "%Y-%m-%d")
 
-# https://django-phonenumber-field.readthedocs.io/en/latest/reference.html#phonenumber-default-region
-PHONENUMBER_DEFAULT_REGION = "US"  # Defaults to India
-
-# Messages
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 MESSAGE_TAGS = {
     messages.DEBUG: "gray",
@@ -243,7 +229,6 @@ MESSAGE_TAGS = {
     messages.ERROR: "red",
 }
 
-# Authentication
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
@@ -265,23 +250,21 @@ LOGIN_REDIRECT_URL = "/"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",  # noqa
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",  # noqa
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",  # noqa
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
-# Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
-# Allauth
 CUSTOM_ALLAUTH_CONFIG_PATH = "app.allauth"
 ACCOUNT_ADAPTER = CUSTOM_ALLAUTH_CONFIG_PATH + ".adapter.AllAuthAccountAdapter"
 ACCOUNT_FORMS = {
@@ -296,18 +279,17 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USER_MODEL_USERNAME_FIELD: str | None = None
 ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy("account_login")
 
-# Database
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DATABASES = {
+DATABASES: dict[str, dict[str, Any]] = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": Env("POSTGRES_DB"),
-        "USER": Env("POSTGRES_USER"),
-        "PASSWORD": Env("POSTGRES_PASSWORD"),
-        "HOST": Env("DJANGO_DATABASE_HOST"),
-        "PORT": Env("DJANGO_DATABASE_PORT"),
-        "CONN_MAX_AGE": Env("CONN_MAX_AGE"),
+        "NAME": Env.str("POSTGRES_DB"),
+        "USER": Env.str("POSTGRES_USER"),
+        "PASSWORD": Env.str("POSTGRES_PASSWORD"),
+        "HOST": Env.str("DJANGO_DATABASE_HOST"),
+        "PORT": Env.int("DJANGO_DATABASE_PORT"),
+        "CONN_MAX_AGE": Env.int("CONN_MAX_AGE"),
         "OPTIONS": {
             "connect_timeout": 10,
             "options": "-c statement_timeout=15000ms",
@@ -321,8 +303,7 @@ if TEST:
         "NAME": ":memory:",
     }
 
-# Caching
-CACHES = {
+CACHES: dict[str, dict[str, str]] = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
@@ -331,10 +312,9 @@ CACHES = {
 
 if TEST or NO_CACHE:
     CACHES["default"] = {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache"
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
     }
 
-# Vite
 VITE_OUTPUT_DIR = Env.str("VITE_OUTPUT_DIR", "./dist")
 VITE_DEV_SERVER_HOST = "localhost"
 VITE_DEV_SERVER_PORT = 5173
@@ -343,7 +323,6 @@ VITE_DEV_SERVER_ORIGIN = (
 )
 VITE_DEV_SERVER_URL = f"{VITE_DEV_SERVER_ORIGIN}/"
 
-# AWS / S3
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 AWS_DEFAULT_ACL: str | None = None
 AWS_S3_FILE_OVERWRITE = True
@@ -372,53 +351,37 @@ class PublicMediaStorage(S3Boto3Storage):  # type: ignore
     file_overwrite = False
 
 
-class DBBackupStorage(S3Boto3Storage):  # type: ignore
-    location = "db-backups"
-    default_acl = None
-    file_overwrite = False
-
-
 DJANGO_STATIC_HOST = Env.str("DJANGO_STATIC_HOST")
 DJANGO_MEDIA_HOST = Env.str("DJANGO_MEDIA_HOST")
 
-MEDIA_LOCATION = "media"
-STATIC_LOCATION = Env.str(
+_media_location = "media"
+_static_location = Env.str(
     "STATIC_LOCATION",
     "static" if DEBUG else "/var/www/static",
 )
+_media_url = f"{DJANGO_MEDIA_HOST}/media/"
+_static_url = f"{DJANGO_STATIC_HOST}/static/"
 
-MEDIA_URL = f"{DJANGO_MEDIA_HOST}/media/"
-STATIC_URL = f"{DJANGO_STATIC_HOST}/static/"
+_default_storage_backend = "django.core.files.storage.FileSystemStorage"
+_default_storage_options: dict[str, str] = {
+    "location": _media_location,
+    "base_url": _media_url,
+}
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {
-            "location": MEDIA_LOCATION,
-            "base_url": MEDIA_URL,
-        },
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",  # noqa
-        "OPTIONS": {
-            "location": STATIC_LOCATION,
-            "base_url": STATIC_URL,
-        },
-    },
+_staticfiles_storage_backend = (
+    "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+)
+_staticfiles_storage_options: dict[str, str] = {
+    "location": _static_location,
+    "base_url": _static_url,
 }
 
 if STATIC_USE_WHITENOISE:
-    STORAGES["staticfiles"] = {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        "OPTIONS": {
-            "location": STATIC_LOCATION,
-            "base_url": STATIC_URL,
-        },
-    }
+    _staticfiles_storage_backend = (
+        "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    )
 
     def immutable_file_test(_: object, url: str) -> Any:
-        # Match filename with 12 hex digits before the extension
-        # e.g. app.db8f2edc0c8a.js
         import re
 
         return re.match(r"^.+\.\w+\..+$", url)
@@ -426,26 +389,37 @@ if STATIC_USE_WHITENOISE:
     WHITENOISE_IMMUTABLE_FILE_TEST = immutable_file_test
 
 if MEDIA_USE_S3:
-    MEDIA_LOCATION = "media"
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-    STORAGES["default"] = {
-        "BACKEND": "app.settings.base.PublicMediaStorage",
-        "OPTIONS": {
-            "location": MEDIA_LOCATION,
-        },
+    _media_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+    _default_storage_backend = "app.settings.base.PublicMediaStorage"
+    _default_storage_options = {
+        "location": _media_location,
     }
 
 if STATIC_USE_S3:
-    STATIC_LOCATION = "static"
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
-    STORAGES["staticfiles"] = {
-        "BACKEND": "app.settings.base.StaticStorage",
-        "OPTIONS": {
-            "location": STATIC_LOCATION,
-        },
+    _static_location = "static"
+    _static_url = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+    _staticfiles_storage_backend = "app.settings.base.StaticStorage"
+    _staticfiles_storage_options = {
+        "location": _static_location,
     }
 
-STATIC_ROOT = STORAGES["staticfiles"]["OPTIONS"]["location"]  # type: ignore
+MEDIA_LOCATION = _media_location
+STATIC_LOCATION = _static_location
+MEDIA_URL = _media_url
+STATIC_URL = _static_url
+
+STORAGES: dict[str, dict[str, Any]] = {
+    "default": {
+        "BACKEND": _default_storage_backend,
+        "OPTIONS": _default_storage_options,
+    },
+    "staticfiles": {
+        "BACKEND": _staticfiles_storage_backend,
+        "OPTIONS": _staticfiles_storage_options,
+    },
+}
+
+STATIC_ROOT = cast(str, STORAGES["staticfiles"]["OPTIONS"]["location"])
 
 STATICFILES_DIRS = [VITE_OUTPUT_DIR]
 
@@ -454,7 +428,6 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-# CSP (Django built-in)
 CSP_EXCLUDE_PATH_PREFIXES = ["/admin"]
 
 SECURE_CSP: dict[str, list[str]] = {
@@ -490,7 +463,6 @@ if MEDIA_URL.startswith("http"):
     for directive in ("img-src", "media-src", "connect-src"):
         SECURE_CSP[directive].append(MEDIA_URL)
 
-# Emails
 EMAIL_TIMEOUT = 5
 SERVER_EMAIL = Env.str(
     "SERVER_EMAIL",
@@ -511,10 +483,7 @@ EMAIL_HOST_PASSWORD = Env.str("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = Env.int("EMAIL_PORT")
 EMAIL_USE_TLS = Env.bool("EMAIL_USE_TLS")
 
-ANYMAIL = {"AMAZON_SES_CLIENT_PARAMS": {"region_name": AWS_S3_REGION_NAME}}
-
-# Logging
-LOGGING = {
+LOGGING: dict[str, Any] = {
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
@@ -619,24 +588,14 @@ LOGGING = {
 }
 
 if Env.bool("LOG_DB"):
-    LOGGING["loggers"]["django.db"] = {  # type: ignore
+    cast(dict[str, Any], LOGGING["loggers"])["django.db"] = {
         "handlers": ["json_console"],
         "propagate": False,
         "level": "DEBUG",
     }
 
-# Constance
 CONSTANCE_CONFIG: dict[str, Any] = {}
 
-# DBBackup
-DBBACKUP_STORAGE = "app.settings.base.DBBackupStorage"
-DBBACKUP_CLEANUP_KEEP = 7
-
-if DEBUG:
-    DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-    DBBACKUP_STORAGE_OPTIONS = {"location": "./data"}
-
-# Rate limiting
 RATELIMIT_HASH_ALGORITHM = "hashlib.md5"
 
 
@@ -644,20 +603,21 @@ def RATELIMIT_IP_META_KEY(request: HttpRequest) -> str | None:  # noqa
     return get_ip_from_request(request=request)
 
 
-# Optional integrations
 if ENABLE_HEALTH_CHECK:
-    INSTALLED_APPS += [
-        "health_check",
-        "health_check.db",
-        "health_check.cache",
-        "health_check.storage",
-        "health_check.contrib.migrations",
-        "health_check.contrib.celery",
-        "health_check.contrib.celery_ping",
-        "health_check.contrib.psutil",
-        "health_check.contrib.s3boto3_storage",
-        "health_check.contrib.redis",
-    ]
+    INSTALLED_APPS.extend(
+        [
+            "health_check",
+            "health_check.db",
+            "health_check.cache",
+            "health_check.storage",
+            "health_check.contrib.migrations",
+            "health_check.contrib.celery",
+            "health_check.contrib.celery_ping",
+            "health_check.contrib.psutil",
+            "health_check.contrib.s3boto3_storage",
+            "health_check.contrib.redis",
+        ]
+    )
 
     HEALTH_CHECK = {
         "DISK_USAGE_MAX": 90,
@@ -671,16 +631,18 @@ if ENABLE_HEALTH_CHECK:
     }
 
 if ENABLE_SILK_PROFILING:
-    INSTALLED_APPS += ["silk"]
-    MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
+    INSTALLED_APPS.append("silk")
+    MIDDLEWARE.append("silk.middleware.SilkyMiddleware")
     SILKY_PYTHON_PROFILER = True
 
 if ENABLE_CPROFILE:
-    MIDDLEWARE += ["django_cprofile_middleware.middleware.ProfilerMiddleware"]
+    MIDDLEWARE.append(
+        "django_cprofile_middleware.middleware.ProfilerMiddleware"
+    )
     DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = True
 
 if ENABLE_PYINSTRUMENT:
-    MIDDLEWARE += ["pyinstrument.middleware.ProfilerMiddleware"]
+    MIDDLEWARE.append("pyinstrument.middleware.ProfilerMiddleware")
     SECURE_CSP["script-src"].append(CSP.UNSAFE_INLINE)
 
 if ENABLE_SENTRY:
