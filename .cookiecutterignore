@@ -1,0 +1,17 @@
+{{cookiecutter.project_name}}/.venv
+{{cookiecutter.project_name}}/.venv/**
+{{cookiecutter.project_name}}/node_modules
+{{cookiecutter.project_name}}/node_modules/**
+{{cookiecutter.project_name}}/dist
+{{cookiecutter.project_name}}/dist/**
+{{cookiecutter.project_name}}/htmlcov
+{{cookiecutter.project_name}}/htmlcov/**
+{{cookiecutter.project_name}}/.pytest_cache
+{{cookiecutter.project_name}}/.pytest_cache/**
+{{cookiecutter.project_name}}/.ruff_cache
+{{cookiecutter.project_name}}/.ruff_cache/**
+{{cookiecutter.project_name}}/coverage.xml
+{{cookiecutter.project_name}}/**/__pycache__
+{{cookiecutter.project_name}}/*.pyc
+{{cookiecutter.project_name}}/*.pyo
+{{cookiecutter.project_name}}/.DS_Store
