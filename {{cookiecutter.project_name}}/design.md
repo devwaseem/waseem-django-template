@@ -8,7 +8,7 @@ UI baseline that is easy to extend without reworking foundational tokens.
 
 ## UI Tokens (Tailwind v4 `@theme`)
 
-The semantic tokens live in `frontend/shared/css/main.css`.
+The semantic tokens live in `hyper/shared/css/main.css`.
 
 ### Typography
 
@@ -40,7 +40,7 @@ The semantic tokens live in `frontend/shared/css/main.css`.
 ### Icons
 
 - Use Lucide icons in templates/components with: `<i data-lucide="iconname"></i>`.
-- Register icons in `frontend/shared/js/icons.ts`.
+- Register icons in `hyper/shared/js/icons.ts`.
 - Add icons intentionally; avoid importing a large unused set.
 
 ### Buttons

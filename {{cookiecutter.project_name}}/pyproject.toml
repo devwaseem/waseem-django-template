@@ -17,7 +17,7 @@ dependencies = [
   "django-constance>=4.3.4,<5",
   "django-feather>=0.3.0,<0.4",
   "django-filter~=24.2",
-  "django-frontend-kit<1.0.0",
+  "hyperdjango>=0.4.1",
   "django-health-check>=3.20,<4",
   "django-ipware>=7.0.1,<8",
   "django-lifecycle>=1.2.3,<2",
@@ -138,7 +138,7 @@ reportUnannotatedClassAttribute = false
 reportAny = false
 reportUnusedCallResult = false
 
-include = ["app", "frontend", "manage.py"]
+include = ["app", "hyper", "manage.py"]
 exclude = [
     "**/node_modules",
     "**/__pycache__",

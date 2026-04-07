@@ -11,7 +11,7 @@ architecture so they can work safely in this repository.
 
 - Frontend events: avoid inline `onclick`/`onkeydown` attributes. Keep
   interaction logic in `entry.ts` files via event listeners.
-- Styling: prefer shared component classes in `frontend/shared/css/main.css`
+- Styling: prefer shared component classes in `hyper/shared/css/main.css`
   before adding page-specific CSS.
 - Migrations: do not delete existing migrations; add new migrations to preserve
   history.
@@ -35,12 +35,12 @@ architecture so they can work safely in this repository.
 
 - Backend: Django + Celery, Python 3.14, uv-managed environment.
 - Frontend: Vite + Tailwind CSS v4, TypeScript.
-- Rendering: SSR-first templates via django-frontend-kit; datastar is optional
+- Rendering: SSR-first templates via HyperDjango; datastar is optional
   and may be used only when interactivity is required.
 
 ## Authentication conventions
 
-- Auth engine is `django-allauth`, but auth UI uses custom frontend-kit templates.
+- Auth engine is `django-allauth`, but auth UI uses custom HyperDjango templates.
 - Do not mount `include("allauth.urls")` for login/signup entry points.
 - Current auth routes are:
     - `/login/` (`account_login`)
@@ -50,8 +50,8 @@ architecture so they can work safely in this repository.
     - `/password/reset/done/` (`account_reset_password_done`)
     - `/password/reset/key/<uidb36>-<key>/` (`account_reset_password_from_key`)
     - `/password/reset/key/done/` (`account_reset_password_from_key_done`)
-- Auth pages live under `frontend/pages/auth/` and render through frontend-kit
-  page classes in `app/account/views.py`; keep using existing form components
+- Auth pages live under `hyper/routes/account/` with allauth view logic co-located
+  in each route `page.py`; keep using existing form components
   under `app/templates/components/form/`.
 - `ACCOUNT_ALLOW_REGISTRATION` controls signup availability; preserve this
   behavior in templates and views.
@@ -106,7 +106,7 @@ uv run djlint app --reformat
 ### Frontend formatting
 
 ```bash
-npx prettier --write "frontend/**/*.{ts,js,css}"
+npx prettier --write "hyper/**/*.{ts,js,css}"
 ```
 
 ## Testing (pytest)
@@ -197,13 +197,15 @@ just test -m unit
   `prettier-plugin-organize-imports`.
 - Tailwind class sorting is handled by `prettier-plugin-tailwindcss`.
 
-### Django Frontend Kit
+### HyperDjango
 
-- Layout templates should load the Django template tag library: `load fk_tags`.
-- Layouts inject assets via frontend-kit template tags: `fk_preloads`,
-  `fk_stylesheets`, `fk_head_scripts`, and `fk_body_scripts`.
-- Page templates should inherit layouts; avoid duplicating FK tags in pages.
-- Frontend entries live in `frontend/pages` and `frontend/layouts`.
+- Layout templates should load the Django template tag library: `load hyper_tags`.
+- Layouts inject assets via HyperDjango template tags: `hyper_preloads`,
+  `hyper_stylesheets`, `hyper_head_scripts`, and `hyper_body_scripts`.
+- Route modules under `hyper/routes/**/page.py` must expose
+  `class PageView(HyperView)` for route discovery.
+- Page templates should inherit layouts; avoid duplicating HyperDjango tags in pages.
+- Frontend entries live in `hyper/routes`, `hyper/layouts`, and `hyper/shared`.
 - Vite outputs assets to `./dist`.
 
 ### HTML/CSS
@@ -227,9 +229,9 @@ just test -m unit
 ## Repo layout
 
 - Backend code: `app/`.
-- Frontend pages: `frontend/pages/`.
-- Frontend layouts: `frontend/layouts/`.
-- Shared frontend utilities: `frontend/shared/`.
+- Hyper routes: `hyper/routes/`.
+- Hyper layouts: `hyper/layouts/`.
+- Shared frontend utilities: `hyper/shared/`.
 - Follow existing page-domain conventions (for example, `auth/`, `root/`) unless
   a migration plan says otherwise.
 

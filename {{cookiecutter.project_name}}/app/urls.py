@@ -6,8 +6,7 @@ from django.shortcuts import render
 from django.urls import include, path
 from django.views.generic import TemplateView
 from django_ratelimit.exceptions import Ratelimited
-
-from app.views.home import HomeView
+from hyperdjango.urls import include_routes
 
 
 def not_found() -> HttpResponse:
@@ -41,8 +40,7 @@ def handler500(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("app.account.urls")),
-    path("", HomeView.as_view(), name="home"),
+    *include_routes(),
     # Text and xml static files:
     path(
         "robots.txt",

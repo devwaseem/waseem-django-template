@@ -17,7 +17,7 @@ globals().update(_copy_base_settings())
 
 DEBUG = False
 TEST = True
-DJFK_DEV_ENV = True
+HYPER_DEV = True
 
 DATABASES = {
     "default": {

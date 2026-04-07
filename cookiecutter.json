@@ -6,7 +6,7 @@
   "enable_sentry": false,
   "_copy_without_render": [
     "*justfile",
-    "frontend/*",
+    "hyper/*",
     "app/**/*.html",
     "node_modules/**",
     "**/node_modules/**"

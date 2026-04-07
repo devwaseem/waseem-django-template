@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib
-import sys
 from pathlib import Path
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, Protocol, cast
@@ -9,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Protocol, cast
 import django_stubs_ext
 import structlog
 from django.contrib.messages import constants as messages
+from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpRequest
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -23,12 +23,14 @@ class _CSPValues(Protocol):
     SELF: str
     NONCE: str
     UNSAFE_INLINE: str
+    UNSAFE_EVAL: str
 
 
 _FALLBACK_CSP = SimpleNamespace(
     SELF="'self'",
     NONCE="'nonce-{nonce}'",
     UNSAFE_INLINE="'unsafe-inline'",
+    UNSAFE_EVAL="'unsafe-eval'",
 )
 
 
@@ -53,10 +55,8 @@ django_stubs_ext.monkeypatch()
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 DEBUG = Env.bool("DEBUG")
-TEST = "test" in sys.argv or sys.argv[0].endswith("pytest") or Env.bool("TEST")
 
-DOMAIN_NAME = Env.str("DOMAIN_NAME")
-BASE_URL = DOMAIN_NAME
+BASE_URL = Env.str("BASE_URL")
 SECRET_KEY = Env.str("SECRET_KEY")
 
 NO_CACHE = Env.bool("NO_CACHE")
@@ -131,7 +131,7 @@ DEFAULT_DJANGO_APPS: list[str] = [
 ]
 
 THIRD_PARTY_APPS: list[str] = [
-    "frontend_kit",
+    "hyperdjango",
     "storages",
     "django_cotton",
     "constance",
@@ -180,15 +180,17 @@ if STATIC_USE_WHITENOISE:
 
 ROOT_URLCONF = "app.urls"
 
-DJFK_FRONTEND_DIR = BASE_DIR / "frontend"
-DJFK_DEV_ENV = False
+HYPER_FRONTEND_DIR = BASE_DIR / "hyper"
+HYPER_VITE_OUTPUT_DIR = BASE_DIR / "dist"
+HYPER_VITE_DEV_SERVER_URL = "http://localhost:5173/"
+HYPER_DEV = False
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             BASE_DIR / "app" / "templates",
-            DJFK_FRONTEND_DIR,
+            HYPER_FRONTEND_DIR,
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -291,17 +293,17 @@ DATABASES: dict[str, dict[str, Any]] = {
         "PORT": Env.int("DJANGO_DATABASE_PORT"),
         "CONN_MAX_AGE": Env.int("CONN_MAX_AGE"),
         "OPTIONS": {
-            "connect_timeout": 10,
-            "options": "-c statement_timeout=15000ms",
+            "connect_timeout": Env.int("DB_CONNECT_TIMEOUT"),
         },
     },
 }
 
-if TEST:
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
-    }
+DB_STATEMENT_TIMEOUT_MS = Env.int("DB_STATEMENT_TIMEOUT_MS")
+if DB_STATEMENT_TIMEOUT_MS > 0:
+    DATABASES["default"]["OPTIONS"]["options"] = (
+        f"-c statement_timeout={DB_STATEMENT_TIMEOUT_MS}ms"
+    )
+
 
 CACHES: dict[str, dict[str, str]] = {
     "default": {
@@ -310,10 +312,6 @@ CACHES: dict[str, dict[str, str]] = {
     },
 }
 
-if TEST or NO_CACHE:
-    CACHES["default"] = {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    }
 
 VITE_OUTPUT_DIR = Env.str("VITE_OUTPUT_DIR", "./dist")
 VITE_DEV_SERVER_HOST = "localhost"
@@ -332,12 +330,26 @@ AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": "max-age=86400",
 }
 AWS_LOCATION = "media"
-AWS_ACCESS_KEY_ID = Env.str("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = Env.str("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = Env.str("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-AWS_S3_REGION_NAME = Env.str("AWS_S3_REGION_NAME")
-AWS_S3_HOST = f"{AWS_S3_REGION_NAME}.amazonaws.com"
+AWS_ACCESS_KEY_ID = ""
+AWS_SECRET_ACCESS_KEY = ""
+AWS_STORAGE_BUCKET_NAME = ""
+AWS_S3_CUSTOM_DOMAIN = ""
+AWS_S3_REGION_NAME = ""
+AWS_S3_HOST = ""
+
+if STATIC_USE_S3 or MEDIA_USE_S3:
+    AWS_ACCESS_KEY_ID = Env.str("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = Env.str("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = Env.str("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = Env.str("AWS_S3_REGION_NAME")
+
+    if not AWS_STORAGE_BUCKET_NAME.strip():
+        raise ImproperlyConfigured(
+            "AWS_STORAGE_BUCKET_NAME is required when S3 storage is enabled."
+        )
+
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_HOST = f"{AWS_S3_REGION_NAME}.amazonaws.com"
 
 
 class StaticStorage(S3Boto3Storage):  # type: ignore
@@ -355,10 +367,12 @@ DJANGO_STATIC_HOST = Env.str("DJANGO_STATIC_HOST")
 DJANGO_MEDIA_HOST = Env.str("DJANGO_MEDIA_HOST")
 
 _media_location = "media"
-_static_location = Env.str(
-    "STATIC_LOCATION",
-    "static" if DEBUG else "/var/www/static",
+_static_location_env = Env.str("STATIC_LOCATION", "").strip()
+_static_location = _static_location_env or (
+    "static" if DEBUG else "/var/www/static"
 )
+if not Path(_static_location).is_absolute():
+    _static_location = str((BASE_DIR / _static_location).resolve())
 _media_url = f"{DJANGO_MEDIA_HOST}/media/"
 _static_url = f"{DJANGO_STATIC_HOST}/static/"
 
@@ -428,13 +442,14 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-CSP_EXCLUDE_PATH_PREFIXES = ["/admin"]
+CSP_EXCLUDE_PATH_PREFIXES = ["/admin", "/healthz", "/readyz"]
 
 SECURE_CSP: dict[str, list[str]] = {
     "default-src": [CSP.SELF],
     "script-src": [
         CSP.SELF,
         CSP.NONCE,
+        CSP.UNSAFE_EVAL,
         "https://cdn.jsdelivr.net/",
     ],
     "style-src": [
@@ -466,11 +481,11 @@ if MEDIA_URL.startswith("http"):
 EMAIL_TIMEOUT = 5
 SERVER_EMAIL = Env.str(
     "SERVER_EMAIL",
-    default=f"<system@{DOMAIN_NAME}>",
+    default="<system@{{cookiecutter.project_name}}>",
 )
 DEFAULT_FROM_EMAIL = Env.str(
     "DEFAULT_FROM_EMAIL",
-    f"<no-reply@{DOMAIN_NAME}>",
+    "<no-reply@{{cookiecutter.project_name}}>",
 )
 
 EMAIL_BACKEND = Env.str(
@@ -625,9 +640,10 @@ if ENABLE_HEALTH_CHECK:
     }
 
     HEALTHCHECK_CACHE_KEY = "health_check"
+    HEALTHCHECK_REDIS_DB = Env.int("HEALTHCHECK_REDIS_DB")
     CACHES[HEALTHCHECK_CACHE_KEY] = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/3",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{HEALTHCHECK_REDIS_DB}",
     }
 
 if ENABLE_SILK_PROFILING:

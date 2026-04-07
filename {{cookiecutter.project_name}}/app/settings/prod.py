@@ -44,18 +44,6 @@ SECURE_REFERRER_POLICY = Env.str(
     "SECURE_REFERRER_POLICY",
     default="strict-origin-when-cross-origin",
 )
-SECURE_CROSS_ORIGIN_OPENER_POLICY = Env.str(
-    "SECURE_CROSS_ORIGIN_OPENER_POLICY",
-    default="same-origin",
-)
-SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = Env.str(
-    "SECURE_CROSS_ORIGIN_EMBEDDER_POLICY",
-    default="credentialless",
-)
-SECURE_CROSS_ORIGIN_RESOURCE_POLICY = Env.str(
-    "SECURE_CROSS_ORIGIN_RESOURCE_POLICY",
-    default="same-site",
-)
 
 LOGGING = base_settings.LOGGING
 LOGGING["handlers"]["json_console"]["formatter"] = "json"

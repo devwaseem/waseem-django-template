@@ -170,4 +170,4 @@ if Env.bool("LOG_DB"):
     }
 
 
-DJFK_DEV_ENV = True
+HYPER_DEV = True

@@ -11,12 +11,11 @@ Set these before deployment:
 - `ALLOWED_HOSTS`
 - `USE_SSL=true`
 
+## Base URL
+- `BASE_URL` controls canonical absolute URL generation.
+
 ## Runtime Protections
-Production defaults are controlled via:
 - `SECURE_REFERRER_POLICY`
-- `SECURE_CROSS_ORIGIN_OPENER_POLICY`
-- `SECURE_CROSS_ORIGIN_EMBEDDER_POLICY`
-- `SECURE_CROSS_ORIGIN_RESOURCE_POLICY`
 
 ## Static and Media
 - `DJANGO_STATIC_HOST` and `DJANGO_MEDIA_HOST` control URL prefixes.
@@ -25,6 +24,16 @@ Production defaults are controlled via:
   - Typical production path: `/var/www/static`
 - `STATIC_USE_WHITENOISE=true` enables local serving via Whitenoise.
 - `STATIC_USE_S3=true` and/or `MEDIA_USE_S3=true` switches to S3-backed storage.
+- `AWS_*` variables are required only when S3-backed storage is enabled.
+
+## Database
+- `DB_CONNECT_TIMEOUT` controls DB connect timeout in seconds.
+- `DB_STATEMENT_TIMEOUT_MS` controls server-side statement timeout in ms.
+  Set `0` to disable statement timeout.
+
+## Health Check
+- `HEALTHCHECK_REDIS_DB` controls the dedicated Redis DB index used by
+  the health-check cache alias.
 
 ## OpenTelemetry
 Key OTEL settings:
@@ -45,4 +54,4 @@ The project uses Django’s built-in CSP with nonces in production and a relaxed
 policy in development for Vite.
 
 - `CSP_EXCLUDE_PATH_PREFIXES` controls paths that should not emit CSP headers
-  (defaults to `['/admin']`).
+  (defaults to `['/admin', '/healthz', '/readyz']`).

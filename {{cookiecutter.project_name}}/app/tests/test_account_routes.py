@@ -2,32 +2,40 @@ from __future__ import annotations
 
 from django.urls import resolve, reverse
 
-from app.account.views import (
-    AccountLoginView,
-    AccountLogoutView,
-    AccountResetPasswordDoneView,
-    AccountResetPasswordFromKeyDoneView,
-    AccountResetPasswordFromKeyView,
-    AccountResetPasswordView,
-    AccountSignupView,
+from hyper.routes.account.login.page import PageView as AccountLoginPageView
+from hyper.routes.account.logout.page import PageView as AccountLogoutPageView
+from hyper.routes.account.password.reset.page import (
+    PageView as AccountResetPasswordPageView,
+)
+from hyper.routes.account.password.reset_done.page import (
+    PageView as AccountResetPasswordDonePageView,
+)
+from hyper.routes.account.password.reset_key.page import (
+    PageView as AccountResetPasswordFromKeyPageView,
+)
+from hyper.routes.account.password.reset_key_done.page import (
+    PageView as AccountResetPasswordFromKeyDonePageView,
+)
+from hyper.routes.account.register.page import (
+    PageView as AccountSignupPageView,
 )
 
 
 def test_auth_routes_resolve_to_custom_views() -> None:
-    """Auth routes use custom frontend-kit account views."""
+    """Auth routes use custom HyperDjango account views."""
     cases = [
-        ("account_login", reverse("account_login"), AccountLoginView),
-        ("account_logout", reverse("account_logout"), AccountLogoutView),
-        ("account_signup", reverse("account_signup"), AccountSignupView),
+        ("account_login", reverse("account_login"), AccountLoginPageView),
+        ("account_logout", reverse("account_logout"), AccountLogoutPageView),
+        ("account_signup", reverse("account_signup"), AccountSignupPageView),
         (
             "account_reset_password",
             reverse("account_reset_password"),
-            AccountResetPasswordView,
+            AccountResetPasswordPageView,
         ),
         (
             "account_reset_password_done",
             reverse("account_reset_password_done"),
-            AccountResetPasswordDoneView,
+            AccountResetPasswordDonePageView,
         ),
         (
             "account_reset_password_from_key",
@@ -35,12 +43,12 @@ def test_auth_routes_resolve_to_custom_views() -> None:
                 "account_reset_password_from_key",
                 kwargs={"uidb36": "abc", "key": "token"},
             ),
-            AccountResetPasswordFromKeyView,
+            AccountResetPasswordFromKeyPageView,
         ),
         (
             "account_reset_password_from_key_done",
             reverse("account_reset_password_from_key_done"),
-            AccountResetPasswordFromKeyDoneView,
+            AccountResetPasswordFromKeyDonePageView,
         ),
     ]
 

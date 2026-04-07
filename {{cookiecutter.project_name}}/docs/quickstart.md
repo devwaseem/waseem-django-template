@@ -13,11 +13,12 @@ npm install
 
 ## 3) Run Django
 ```bash
-export DJANGO_SETTINGS_MODULE=app.settings.dev
-uv run --env-file .env python manage.py runserver
+direnv allow
+uv run python manage.py runserver
 ```
 
-`.env` is loaded in local commands via `uv run --env-file .env`.
+`.envrc` watches `.env` and loads env vars automatically via direnv.
+If direnv is unavailable, use `uv run --env-file .env ...` for commands.
 
 ## 4) Run Vite
 ```bash

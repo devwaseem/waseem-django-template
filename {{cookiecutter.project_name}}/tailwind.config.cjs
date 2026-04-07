@@ -2,7 +2,7 @@
 
 export default {
     content: [
-      "./frontend/**/*.{html,js,ts,css,py}",
+      "./hyper/**/*.{html,js,ts,css,py}",
     ],
     theme: {
       extend: {},

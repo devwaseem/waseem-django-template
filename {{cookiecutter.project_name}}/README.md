@@ -15,11 +15,12 @@ npm install
 
 ### 3) Run dev server
 ```
-export DJANGO_SETTINGS_MODULE={{ cookiecutter.django_settings_module_default }}
-uv run --env-file .env python manage.py runserver
+direnv allow
+uv run python manage.py runserver
 ```
 
-`.env` is loaded in local commands via `uv run --env-file .env`.
+`.envrc` watches `.env` and loads it automatically via direnv.
+If you do not use direnv, run commands with `uv run --env-file .env ...`.
 
 ### 4) Run frontend
 ```

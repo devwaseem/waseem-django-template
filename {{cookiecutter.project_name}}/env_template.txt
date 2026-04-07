@@ -46,14 +46,11 @@ CSRF_TRUSTED_ORIGINS=
 # Enable in production
 USE_SSL=false
 USE_X_FORWARDED_HOST=false
-# Runtime protections (production defaults shown)
 SECURE_REFERRER_POLICY=strict-origin-when-cross-origin
-SECURE_CROSS_ORIGIN_OPENER_POLICY=same-origin
-SECURE_CROSS_ORIGIN_EMBEDDER_POLICY=credentialless
-SECURE_CROSS_ORIGIN_RESOURCE_POLICY=same-site
 
 
 # Django AWS
+# Required only when STATIC_USE_S3=true or MEDIA_USE_S3=true
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_STORAGE_BUCKET_NAME=
@@ -63,10 +60,11 @@ AWS_S3_REGION_NAME=
 # Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
+# Dedicated cache DB index for django-health-check cache probe
+HEALTHCHECK_REDIS_DB=3
 
 
 # Caddy
-DOMAIN_NAME=localhost:8000
 SSL_EMAIL=
 
 
@@ -84,6 +82,9 @@ SERVER_EMAIL="{{cookiecutter.project_verbose_name}} <system@example.com>"
 # Database
 DJANGO_DATABASE_HOST=localhost
 DJANGO_DATABASE_PORT=5432
+DB_CONNECT_TIMEOUT=10
+# Set to 0 to disable statement timeout
+DB_STATEMENT_TIMEOUT_MS=15000
 POSTGRES_DB={{cookiecutter.project_name}}
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres

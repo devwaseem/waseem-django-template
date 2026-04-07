@@ -17,10 +17,11 @@
         "types": ["vite/client"],
         "baseUrl": ".",
         "paths": {
-            "@frontend/*": ["./frontend/*"],
-            "@layouts/*": ["./frontend/layouts/*"],
-            "@pages/*": ["./frontend/pages/*"],
-            "@shared/*": ["./frontend/shared/*"]
+            "@/*": ["./hyper/*"],
+            "@layouts/*": ["./hyper/layouts/*"],
+            "@pages/*": ["./hyper/pages/*"],
+            "@routes/*": ["./hyper/routes/*"],
+            "@shared/*": ["./hyper/shared/*"]
         }
     },
     "include": ["./**/*.ts", "./**/*.js", "./**/*.d.ts"]
