@@ -8,12 +8,13 @@
         "build": "tsc && NODE_ENV=production vite build"
     },
     "dependencies": {
+        "@iconify-json/solar": "^1.2.5",
+        "@iconify/tailwind4": "^1.2.3",
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.1.18",
         "alpinejs": "^3.15.8",
         "autoprefixer": "^10.4.23",
-        "lucide": "^0.563.0",
         "tailwindcss": "^4.1.18",
         "vanilla-sonner": "^0.5.2",
         "vite": "^7.3.1"

@@ -1,1 +1,1 @@
-import '@shared/js/icons';
+export {};

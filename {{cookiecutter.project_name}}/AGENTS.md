@@ -196,6 +196,8 @@ just test -m unit
 - Prettier handles formatting; import ordering is managed by
   `prettier-plugin-organize-imports`.
 - Tailwind class sorting is handled by `prettier-plugin-tailwindcss`.
+- Icons use Iconify with Solar icon set; prefer classes like
+  `icon-[solar--arrow-right-linear]` in templates.
 
 ### HyperDjango
 

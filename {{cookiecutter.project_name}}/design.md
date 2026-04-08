@@ -39,9 +39,10 @@ The semantic tokens live in `hyper/shared/css/main.css`.
 
 ### Icons
 
-- Use Lucide icons in templates/components with: `<i data-lucide="iconname"></i>`.
-- Register icons in `hyper/shared/js/icons.ts`.
-- Add icons intentionally; avoid importing a large unused set.
+- Icon system: Iconify + Solar icons.
+- Use icon classes in templates/components, for example:
+  `class="icon-[solar--arrow-right-linear]"`.
+- Keep icon usage purposeful and avoid decorative icon noise.
 
 ### Buttons
 

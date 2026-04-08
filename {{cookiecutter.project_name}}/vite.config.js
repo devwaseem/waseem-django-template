@@ -65,7 +65,6 @@ export default defineConfig(async ({ mode }) => {
                 '@routes': routeRoot,
                 '@shared': sharedRoot,
                 '@layouts': layoutRoot,
-                lucide: path.resolve('./node_modules/lucide/dist/esm/lucide/src/lucide.js'),
             },
         },
         build: {
