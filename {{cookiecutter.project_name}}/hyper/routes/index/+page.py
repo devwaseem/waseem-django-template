@@ -1,7 +1,7 @@
-from hyper.layouts.base import BaseLayout
+from hyper.layouts.dashboard.layout import DashboardLayout
 
 
-class PageView(BaseLayout):
+class PageView(DashboardLayout):
     route_name = "home"
 
     def __init__(self) -> None:

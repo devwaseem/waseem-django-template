@@ -1,0 +1,96 @@
+{% extends "layouts/base/index.html" %}
+{% block body %}
+    <div class="flex h-screen max-h-screen overflow-hidden bg-base-100"
+         x-data="{ sidebarOpen: $persist(true).as('dashboard-sidebar-open') }">
+        <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
+               style="view-transition-name: dashboard-sidebar"
+               class="border-base-300 flex shrink-0 flex-col border-r bg-base-100 transition-all duration-300 ease-in-out">
+            <div class="border-base-300 flex h-16 shrink-0 items-center overflow-hidden border-b"
+                 :class="sidebarOpen ? 'justify-start px-6' : 'justify-center px-0'">
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center"
+                     :class="sidebarOpen ? 'mr-1' : ''">
+                    <span class="icon-[solar--widget-5-linear] h-5 w-5" aria-hidden="true"></span>
+                </div>
+                <span x-show="sidebarOpen"
+                      x-transition.opacity.duration.300ms
+                      class="text-lg font-semibold tracking-tight whitespace-nowrap">
+                    {{ dashboard_site_name }}
+                </span>
+            </div>
+            <nav class="flex-1 space-y-1 py-4" :class="sidebarOpen ? 'px-3' : 'px-2'">
+                {% for item in page.sidebar_items %}
+                    <a href="{{ item.href }}"
+                       class="group relative flex items-center py-2 text-sm font-medium transition-colors {% if item.active %}bg-base-200 text-base-content border-primary border-l-2{% else %}text-muted-content hover:bg-base-200 hover:text-base-content rounded-none{% endif %}"
+                       :class="sidebarOpen ? 'justify-start px-3' : '{% if item.active %}ml-[2px] justify-center border-l-0 px-0{% else %}justify-center px-0{% endif %}'">
+                        <span class="{{ item.icon }} h-5 w-5 shrink-0"
+                              :class="sidebarOpen ? 'mr-3' : ''"
+                              aria-hidden="true"></span>
+                        <span x-show="sidebarOpen"
+                              x-transition.opacity.duration.300ms
+                              class="whitespace-nowrap">{{ item.label }}</span>
+                        <div x-show="!sidebarOpen"
+                             x-cloak
+                             class="bg-neutral text-neutral-content pointer-events-none absolute left-full z-50 ml-2 px-2 py-1 text-xs font-medium whitespace-nowrap opacity-0 shadow-md transition-opacity group-hover:opacity-100">
+                            {{ item.label }}
+                        </div>
+                    </a>
+                {% endfor %}
+            </nav>
+            <div class="border-base-300 shrink-0 border-t p-4"
+                 :class="sidebarOpen ? '' : 'flex flex-col items-center px-2'">
+                <button type="button"
+                        @click="sidebarOpen = !sidebarOpen"
+                        class="group text-muted-content hover:text-base-content relative flex items-center py-2 text-sm font-medium transition-colors"
+                        :class="sidebarOpen ? 'w-full justify-start px-3' : 'justify-center'">
+                    <span class="h-5 w-5 shrink-0 transition-transform duration-300"
+                          :class="sidebarOpen ? 'icon-[solar--alt-arrow-left-linear] mr-3' : 'icon-[solar--alt-arrow-right-linear]'"
+                          aria-hidden="true"></span>
+                    <span x-show="sidebarOpen"
+                          x-transition.opacity.duration.300ms
+                          class="whitespace-nowrap">Collapse</span>
+                    <div x-show="!sidebarOpen"
+                         x-cloak
+                         class="bg-neutral text-neutral-content pointer-events-none absolute left-full z-50 ml-2 px-2 py-1 text-xs font-medium whitespace-nowrap opacity-0 shadow-md transition-opacity group-hover:opacity-100">
+                        Expand
+                    </div>
+                </button>
+                <div x-show="sidebarOpen"
+                     x-transition.opacity.duration.300ms
+                     class="text-muted-content mt-4 overflow-hidden px-3 text-xs whitespace-nowrap">
+                    <p class="mb-1">Starter dashboard shell</p>
+                    <p>Customize this layout for your app.</p>
+                </div>
+            </div>
+        </aside>
+        <div class="flex h-screen max-h-screen min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <header style="view-transition-name: dashboard-navbar"
+                    class="border-base-300 bg-base-100 flex h-16 shrink-0 items-center justify-between border-b px-6">
+                <div class="flex min-w-0 flex-1 items-center">
+                    <div>
+                        <p class="text-muted-content text-xs font-medium uppercase tracking-[0.2em]">Workspace</p>
+                        <h1 class="text-base-content text-lg font-semibold">{{ page.title }}</h1>
+                    </div>
+                </div>
+                <div class="ml-4 flex shrink-0 items-center gap-4">
+                    <button type="button" class="btn btn-outline btn-sm">
+                        <span class="icon-[solar--bell-linear] h-4 w-4" aria-hidden="true"></span>
+                        <span>Alerts</span>
+                    </button>
+                    <div class="border-base-300 flex items-center gap-3 border-l pl-4">
+                        <div class="bg-base-200 border-base-300 flex h-8 w-8 items-center justify-center border text-sm font-medium">
+                            {{ dashboard_site_name|first|upper }}
+                        </div>
+                        <div class="hidden sm:flex sm:flex-col">
+                            <span class="text-sm font-medium leading-none">Team Member</span>
+                            <span class="text-muted-content mt-1 text-xs">Signed in</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main class="min-h-0 flex-1 overflow-y-auto bg-base-100 p-6 lg:p-8">
+                {% block dashboard_content %}
+                {% endblock dashboard_content %}
+            </main>
+        </div>
+    </div>
+{% endblock body %}

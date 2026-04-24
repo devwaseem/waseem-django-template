@@ -1,25 +1,52 @@
-{% load widget_tweaks %}
-<div class="form-control w-full {{ class }}{% if field.field.disabled %} opacity-70{% endif %}">
-    {% if not hide_label and field.field.widget.input_type != "hidden" %}
-        <label for="{{ field.id_for_label }}" class="label {{ label_class }}">
-            <span class="{% if field.errors %}text-destructive{% endif %}">
-                {{ field.label }}
-                {% if field.field.required %}<span class="text-destructive">*</span>{% endif %}
-            </span>
-        </label>
-    {% endif %}
-    {% block input_field %}
-        {% render_field field|add_error_class:"border-destructive ring-destructive/20" class=input_class %}
-    {% endblock input_field %}
-    {% if field.help_text or field.errors %}
-        <div class="px-1">
-            {% if field.errors %}
-                {% for error in field.errors %}<p class="text-destructive text-[0.8rem] font-medium">{{ error }}</p>{% endfor %}
-            {% elif field.help_text %}
-                <div class="text-muted-content text-[0.8rem] [&_*]:text-muted-content [&_li]:text-[0.8rem] [&_ul]:list-disc [&_ul]:pl-4">
-                    {{ field.help_text|safe }}
-                </div>
-            {% endif %}
-        </div>
-    {% endif %}
-</div>
+{% load form_fields %}
+{% with input_id=field.id_for_label error_id=field.id_for_label|add:"-error" help_id=field.id_for_label|add:"-help" %}
+    <div class="form-control w-full{% if class %} {{ class }}{% endif %}{% if field.field.disabled %} opacity-70{% endif %}">
+        {% if not hide_label and field.field.widget.input_type != "hidden" %}
+            <label for="{{ field.id_for_label }}" class="label{% if label_class %} {{ label_class }}{% endif %}">
+                <span class="{% if field.errors %}text-destructive{% endif %}">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="text-destructive">*</span>{% endif %}
+                </span>
+            </label>
+        {% endif %}
+        {% block input_field %}
+            <div class="form-input-shell{% if leading_icon_class or leading_text %} has-leading-affordance{% endif %}{% if trailing_icon_class or trailing_text %} has-trailing-affordance{% endif %}{% if leading_text %} has-leading-text{% endif %}{% if trailing_text %} has-trailing-text{% endif %}">
+                {% if field.errors %}
+                    {% render_form_field field attrs=input_attrs error_class="border-destructive ring-destructive/20" class=input_class id=input_id aria_invalid="true" aria_describedby=error_id autocomplete=autocomplete inputmode=inputmode min=min max=max step=step rows=rows accept=accept multiple=multiple placeholder=placeholder %}
+                {% elif field.help_text %}
+                    {% render_form_field field attrs=input_attrs error_class="border-destructive ring-destructive/20" class=input_class id=input_id aria_invalid="false" aria_describedby=help_id autocomplete=autocomplete inputmode=inputmode min=min max=max step=step rows=rows accept=accept multiple=multiple placeholder=placeholder %}
+                {% else %}
+                    {% render_form_field field attrs=input_attrs error_class="border-destructive ring-destructive/20" class=input_class id=input_id aria_invalid="false" autocomplete=autocomplete inputmode=inputmode min=min max=max step=step rows=rows accept=accept multiple=multiple placeholder=placeholder %}
+                {% endif %}
+                {% if leading_icon_class %}
+                    <span class="{{ leading_icon_class }} form-input-affordance-icon left-3"
+                          aria-hidden="true"></span>
+                {% endif %}
+                {% if leading_text %}
+                    <span class="form-input-affordance-text left-3" aria-hidden="true">{{ leading_text }}</span>
+                {% endif %}
+                {% if trailing_text %}
+                    <span class="form-input-affordance-text right-3" aria-hidden="true">{{ trailing_text }}</span>
+                {% endif %}
+                {% if trailing_icon_class %}
+                    <span class="{{ trailing_icon_class }} form-input-affordance-icon right-3"
+                          aria-hidden="true"></span>
+                {% endif %}
+            </div>
+        {% endblock input_field %}
+        {% if field.errors or not hide_help and field.help_text %}
+            <div class="px-1">
+                {% if field.errors %}
+                    <div id="{{ error_id }}">
+                        {% for error in field.errors %}<p class="text-destructive text-[0.8rem] font-medium">{{ error }}</p>{% endfor %}
+                    </div>
+                {% elif field.help_text %}
+                    <div id="{{ help_id }}"
+                         class="text-muted-content text-[0.8rem] **:text-muted-content [&_li]:text-[0.8rem] [&_ul]:list-disc [&_ul]:pl-4">
+                        {{ field.help_text|safe }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endwith %}

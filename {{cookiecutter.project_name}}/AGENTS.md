@@ -41,6 +41,10 @@ architecture so they can work safely in this repository.
 ## Authentication conventions
 
 - Auth engine is `django-allauth`, but auth UI uses custom HyperDjango templates.
+- User model should follow Falcon's shape: email-only auth, UUIDv7 primary key,
+  no `internal_id`, and no custom `name` field. Use the inherited
+  `first_name` and `last_name` fields from `AbstractUser` when name parts are
+  needed.
 - Do not mount `include("allauth.urls")` for login/signup entry points.
 - Current auth routes are:
     - `/login/` (`account_login`)
@@ -51,7 +55,7 @@ architecture so they can work safely in this repository.
     - `/password/reset/key/<uidb36>-<key>/` (`account_reset_password_from_key`)
     - `/password/reset/key/done/` (`account_reset_password_from_key_done`)
 - Auth pages live under `hyper/routes/account/` with allauth view logic co-located
-  in each route `page.py`; keep using existing form components
+  in each route `+page.py`; keep using existing form components
   under `app/templates/components/form/`.
 - `ACCOUNT_ALLOW_REGISTRATION` controls signup availability; preserve this
   behavior in templates and views.
@@ -133,6 +137,29 @@ just test -m unit
 - Keep views and API handlers thin; move business rules into reusable services.
 - Keep orchestration layers (views/tasks/commands) focused on control flow and
   delegate business rules to domain services.
+- Route `+page.py` modules should stay transport-only: they should call domain
+  functions for reads, writes, side effects, and business decisions instead of
+  containing manual business logic.
+- For feature modules, put business logic in `app/<feature>/operations.py` as
+  functions and keep route pages limited to request parsing, calling
+  operations, and rendering responses.
+- Keep `operations.py` functions free of transport-layer framework helpers where
+  possible; prefer returning data or raising domain/model exceptions over using
+  HTTP-specific shortcuts.
+- Views/pages may use transport-layer Django helpers like `get_object_or_404`
+  for HTTP concerns such as initial existence validation, but business logic
+  should not live there.
+- Keep presentation formatting in the page/view layer. CSS classes, template
+  labels, and display-oriented row shaping should not live in `operations.py`
+  unless there is a concrete cross-page reuse need.
+- Keep page-context assembly in the page/view layer. `operations.py` should
+  return domain data and domain results, not template-context-shaped objects.
+- Prefer explicit destructive domain operations for clearing/removing data.
+  Do not silently delete or replace existing persisted data as a side effect of
+  another write operation unless that behavior is an intentional requirement.
+- Keep CSS/Tailwind class decisions in templates where possible. Do not build
+  presentation class strings in views/pages unless there is a concrete reuse or
+  maintainability need.
 - Keep clear responsibility boundaries between transport/orchestration, domain
   logic, and persistence layers.
 - Design for testability by injecting dependencies and keeping contracts
@@ -150,6 +177,11 @@ just test -m unit
 
 - Feature specs should live under `spec/`.
 - Read only the relevant module spec to keep context focused.
+- When the user makes an explicit architectural or design decision for this
+  repo, record it in `AGENTS.md` so future changes follow it consistently.
+- When recording user decisions in `AGENTS.md`, prefer general repository-wide
+  rules over feature-specific notes unless the decision is intentionally scoped
+  to one feature.
 
 ## Code style guidelines
 
@@ -157,6 +189,16 @@ just test -m unit
 
 - Document public modules, classes, and functions with useful docstrings.
 - Prefer small, composable functions with clear inputs and outputs.
+- Avoid trivial one-line helper functions unless they are reused or make a
+  genuinely hard-to-read call site clearer.
+- Prefer `NamedTuple` or `TypedDict` for structured data results when a typed
+  contract is needed between functions.
+- For UI-related state models, prefer `TypedDict` and build those objects in the
+  page/view layer to keep presentation shaping type-safe and separate from
+  domain operations.
+- When passing model collections into functions, prefer `QuerySet`s over model
+  instances when practical so the caller can add `select_related`,
+  `prefetch_related`, filtering, or ordering before handing data off.
 
 ### SOLID principles
 
@@ -204,7 +246,7 @@ just test -m unit
 - Layout templates should load the Django template tag library: `load hyper_tags`.
 - Layouts inject assets via HyperDjango template tags: `hyper_preloads`,
   `hyper_stylesheets`, `hyper_head_scripts`, and `hyper_body_scripts`.
-- Route modules under `hyper/routes/**/page.py` must expose
+- Route modules under `hyper/routes/**/+page.py` must expose
   `class PageView(HyperView)` for route discovery.
 - Page templates should inherit layouts; avoid duplicating HyperDjango tags in pages.
 - Frontend entries live in `hyper/routes`, `hyper/layouts`, and `hyper/shared`.

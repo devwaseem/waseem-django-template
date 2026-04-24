@@ -44,7 +44,7 @@ function discoverInputs(baseDirs) {
 
 export default defineConfig(async ({ mode }) => {
     const env = loadEnv(mode, process.cwd());
-    const isDevelopment = mode == 'development';
+    const isDevelopment = mode === 'development';
     const outputDir = env.VITE_APP_OUTPUT_DIR || './dist';
     const hyperRoot = path.resolve('./hyper');
     const pageRoot = path.resolve('./hyper/pages');
@@ -55,9 +55,17 @@ export default defineConfig(async ({ mode }) => {
 
     return {
         root: '.',
-        plugins: [
-            tailwindcss(),
-        ],
+        plugins: [tailwindcss()],
+        server: {
+            watch: {
+                ignored: [
+                    '**/node_modules/**',
+                    '**/.git/**',
+                    '**/dist/**',
+                    '**/.venv/**',
+                ],
+            },
+        },
         resolve: {
             alias: {
                 '@': hyperRoot,

@@ -1,10 +1,10 @@
 import Alpine from 'alpinejs';
-import 'https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.6/bundles/datastar.js';
 import { toast } from 'vanilla-sonner';
 import 'vanilla-sonner/style.css';
 
 import dropdown from '@shared/js/alpine/dropdown';
 import modal from '@shared/js/alpine/modal';
+import './toast';
 
 function toastErrors() {
     const errorValues = document.scripts.namedItem('toast-errors');
@@ -23,6 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[x-cloak]').forEach((el) => {
         el.removeAttribute('x-cloak');
     });
+});
+
+window.addEventListener('hyper:requestError', (event: Event) => {
+    const custom = event as CustomEvent;
+    const status = custom.detail.status;
+    if (status === 404) {
+        toast.error('Not Found');
+        return;
+    }
+
+    if (status === 403) {
+        toast.error("You don't have permission to run this action");
+        return;
+    }
+
+    if (status === 400 || status >= 500) {
+        toast.error(
+            'Something went wrong, please try again. If the problem persists, contact support.',
+        );
+    }
 });
 
 // @ts-ignore
@@ -46,5 +66,3 @@ window.Alpine = Alpine;
 
 Alpine.data('dropdown', dropdown);
 Alpine.data('modal', modal);
-
-Alpine.start();

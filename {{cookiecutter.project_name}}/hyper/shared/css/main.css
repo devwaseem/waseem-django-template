@@ -46,6 +46,15 @@
     --color-ring: oklch(0.51 0.18 260);
 
     --radius: 0px;
+
+    --layout-auth-page-padding: 1rem;
+    --layout-auth-page-padding-sm: 1.5rem;
+    --layout-auth-panel-max-width: 28rem;
+    --layout-auth-panel-margin-top: 2.5rem;
+    --layout-auth-panel-margin-top-sm: 4rem;
+    --layout-auth-panel-padding: 1.5rem;
+    --layout-auth-panel-padding-sm: 2rem;
+    --layout-login-panel-width: 21.875rem;
 }
 
 @layer base {
@@ -59,6 +68,88 @@
 }
 
 @layer components {
+    .auth-page {
+        @apply bg-base-200 min-h-screen;
+        padding: var(--layout-auth-page-padding);
+
+        @media (width >= 40rem) {
+            padding: var(--layout-auth-page-padding-sm);
+        }
+    }
+
+    .auth-panel {
+        @apply mx-auto w-full;
+        max-width: var(--layout-auth-panel-max-width);
+        margin-top: var(--layout-auth-panel-margin-top);
+        padding: var(--layout-auth-panel-padding);
+
+        @media (width >= 40rem) {
+            margin-top: var(--layout-auth-panel-margin-top-sm);
+            padding: var(--layout-auth-panel-padding-sm);
+        }
+    }
+
+    .auth-stack {
+        @apply flex flex-col;
+    }
+
+    .auth-stack-header {
+        @apply flex flex-col gap-2;
+    }
+
+    .auth-title {
+        @apply text-base-content text-2xl font-semibold tracking-tight;
+    }
+
+    .auth-lead {
+        @apply text-muted-content text-sm;
+    }
+
+    .auth-form {
+        @apply mt-6 space-y-4;
+    }
+
+    .auth-footer {
+        @apply text-muted-content mt-6 text-center text-sm;
+    }
+
+    .account-split-shell {
+        @apply relative grid min-h-screen grid-cols-1 lg:grid-cols-2;
+    }
+
+    .account-split-aside {
+        @apply bg-base-200 text-base-content relative hidden flex-col justify-between p-10 lg:flex;
+    }
+
+    .account-split-brand {
+        @apply flex items-center gap-2 text-lg font-medium;
+    }
+
+    .account-split-message {
+        @apply relative z-20 mt-auto;
+    }
+
+    .account-split-main {
+        @apply bg-base-100 relative flex flex-col items-center justify-center p-8;
+    }
+
+    .account-split-panel {
+        @apply mx-auto flex w-full flex-col justify-center space-y-6 text-center;
+        max-width: var(--layout-login-panel-width);
+    }
+
+    .account-split-panel-header {
+        @apply flex flex-col space-y-2;
+    }
+
+    .account-form-grid {
+        @apply grid gap-6;
+    }
+
+    .account-link-stack {
+        @apply text-muted-content space-y-2 px-8 text-center text-xs;
+    }
+
     .btn {
         @apply ring-offset-base-100 focus-visible:ring-ring inline-flex h-12 cursor-pointer items-center justify-between rounded-none px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
         @apply bg-primary text-primary-content shadow-none;
@@ -215,6 +306,50 @@
 
     .select {
         @apply appearance-none;
+    }
+
+    .form-input-shell {
+        @apply relative;
+
+        &.has-leading-affordance {
+            > .input,
+            > .select,
+            > .textarea {
+                @apply pl-10;
+            }
+        }
+
+        &.has-trailing-affordance {
+            > .input,
+            > .select,
+            > .textarea {
+                @apply pr-10;
+            }
+        }
+
+        &.has-leading-text {
+            > .input,
+            > .select,
+            > .textarea {
+                @apply pl-12;
+            }
+        }
+
+        &.has-trailing-text {
+            > .input,
+            > .select,
+            > .textarea {
+                @apply pr-12;
+            }
+        }
+    }
+
+    .form-input-affordance-icon {
+        @apply text-base-content pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2;
+    }
+
+    .form-input-affordance-text {
+        @apply text-muted-content pointer-events-none absolute top-1/2 -translate-y-1/2 text-xs font-medium;
     }
 
     .label {

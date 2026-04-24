@@ -1,0 +1,27 @@
+{% extends "layouts/base/index.html" %}
+{% block body %}
+    <div class="account-split-shell">
+        <aside class="account-split-aside">
+            <div class="account-split-brand">
+                {% block account_split_brand %}
+                {% endblock account_split_brand %}
+            </div>
+            <div class="account-split-message">
+                {% block account_split_message %}
+                {% endblock account_split_message %}
+            </div>
+        </aside>
+        <main class="account-split-main">
+            <div class="account-split-panel">
+                <div class="account-split-panel-header">
+                    <h1 class="auth-title">{% block account_title %}{% endblock account_title %}</h1>
+                    {% block account_description %}{% endblock account_description %}
+                </div>
+                {% block account_body %}
+                {% endblock account_body %}
+                {% block account_footer %}
+                {% endblock account_footer %}
+            </div>
+        </main>
+    </div>
+{% endblock body %}

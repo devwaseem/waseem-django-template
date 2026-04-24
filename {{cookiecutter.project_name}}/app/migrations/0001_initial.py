@@ -36,6 +36,22 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "first_name",
+                    models.CharField(
+                        blank=True,
+                        max_length=150,
+                        verbose_name="first name",
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True,
+                        max_length=150,
+                        verbose_name="last name",
+                    ),
+                ),
+                (
                     "is_staff",
                     models.BooleanField(
                         default=False,
@@ -73,12 +89,6 @@ class Migration(migrations.Migration):
                         max_length=254,
                         unique=True,
                         verbose_name="email address",
-                    ),
-                ),
-                (
-                    "name",
-                    models.CharField(
-                        blank=True, max_length=255, verbose_name="Name"
                     ),
                 ),
                 (

@@ -1,24 +1,25 @@
-{% extends "layouts/base/index.html" %}
-{% block body %}
-    <main class="bg-base-200 min-h-screen p-4 sm:p-6">
-        <section class="card mx-auto mt-10 w-full max-w-md p-6 sm:mt-16 sm:p-8">
-            <h1 class="text-base-content text-2xl font-semibold tracking-tight">Check your email</h1>
-            <p class="text-muted-content mt-3 text-sm">Are you sure you want to log out?</p>
-            <form method="post" action="{% url 'account_logout' %}" class="mt-4">
-                {% csrf_token %}
-                <button class="btn btn-danger w-full">
-                    <span>Log out</span>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="24"
-                         height="24"
-                         viewBox="0 0 24 24">
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5">
-                        <path d="M9.002 7c.012-2.175.109-3.353.877-4.121C10.758 2 12.172 2 15 2h1c2.829 0 4.243 0 5.122.879C22 3.757 22 5.172 22 8v8c0 2.828 0 4.243-.878 5.121C20.242 22 18.829 22 16 22h-1c-2.828 0-4.242 0-5.121-.879c-.768-.768-.865-1.946-.877-4.121" opacity="0.5" />
-                        <path stroke-linejoin="round" d="M15 12H2m0 0l3.5-3M2 12l3.5 3" />
-                        </g>
-                    </svg>
-                </button>
-            </form>
-        </section>
-    </main>
-{% endblock body %}
+{% extends "layouts/account_stack/index.html" %}
+{% block account_title %}Log out{% endblock account_title %}
+{% block account_description %}
+    <p class="auth-lead">Are you sure you want to log out?</p>
+{% endblock account_description %}
+{% block account_body %}
+    <form method="post" action="{% url 'account_logout' %}" class="mt-4">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger w-full">
+            <span>Log out</span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 aria-hidden="true"
+                 focusable="false">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5">
+                <path d="M9.002 7c.012-2.175.109-3.353.877-4.121C10.758 2 12.172 2 15 2h1c2.829 0 4.243 0 5.122.879C22 3.757 22 5.172 22 8v8c0 2.828 0 4.243-.878 5.121C20.242 22 18.829 22 16 22h-1c-2.828 0-4.242 0-5.121-.879c-.768-.768-.865-1.946-.877-4.121"
+                      opacity="0.5" />
+                <path stroke-linejoin="round" d="M15 12H2m0 0l3.5-3M2 12l3.5 3" />
+                </g>
+            </svg>
+        </button>
+    </form>
+{% endblock account_body %}

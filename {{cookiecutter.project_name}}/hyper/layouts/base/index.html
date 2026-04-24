@@ -1,11 +1,12 @@
-{% load hyper_tags %}
+{% load static hyper_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-screen overflow-hidden">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
+        <meta name="view-transition" content="same-origin" />
         <title>{{ page.title }}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,6 +15,7 @@
         {% hyper_preloads %}
         {% hyper_stylesheets %}
         {% hyper_head_scripts %}
+        <script src="{% static 'hyperdjango/hyper.js' %}"></script>
         <style nonce="{{ csp_nonce }}">
           [x-cloak] {
               display: none;
@@ -22,14 +24,15 @@
         {% block head_extras %}
         {% endblock head_extras %}
     </head>
-    <body x-cloak>
+    <body x-cloak class="h-screen overflow-hidden">
         {% block body %}
         {% endblock body %}
         {% hyper_body_scripts %}
         <ol id="sonner-toast-container"
-            position="bottom-center"
+            position="bottom-right"
             max-toasts="3"
             duration="5000"
+            close-button="true"
             rich-colors="true"
             theme="light">
         </ol>

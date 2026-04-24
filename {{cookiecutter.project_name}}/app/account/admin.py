@@ -10,15 +10,15 @@ class UserAdmin(BaseUserAdmin[User]):
     ordering = ["email"]
     list_display = (
         "email",
-        "name",
+        "get_full_name",
         "is_staff",
     )
-    search_fields = ("name", "email")
+    search_fields = ("first_name", "last_name", "email")
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (
             _("Personal info"),
-            {"fields": ("name",)},
+            {"fields": ("first_name", "last_name")},
         ),
         (
             _("Permissions"),
@@ -43,7 +43,8 @@ class UserAdmin(BaseUserAdmin[User]):
                     "email",
                     "password1",
                     "password2",
-                    "name",
+                    "first_name",
+                    "last_name",
                 ),
             },
         ),

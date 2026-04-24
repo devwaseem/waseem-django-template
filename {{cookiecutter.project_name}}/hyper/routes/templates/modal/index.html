@@ -1,0 +1,41 @@
+<div id="modal-{{ modal_id }}"
+     x-data="{ close() { document.getElementById('modal-{{ modal_id }}').remove() } }"
+     class="fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-neutral/75 transition-opacity"
+             aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:h-screen sm:align-middle"
+              aria-hidden="true"></span>
+        <div x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             @click.outside="close()"
+             class="border-base-300 relative inline-block w-full transform overflow-hidden border bg-base-100 p-6 text-left align-bottom shadow-xl transition-all sm:my-8 sm:max-w-lg sm:align-middle">
+            <button type="button"
+                    class="btn btn-ghost btn-sm absolute top-4 right-4 rounded-none"
+                    @click="close()"
+                    aria-label="Close modal">
+                <span class="icon-[solar--close-circle-linear] h-4 w-4" aria-hidden="true"></span>
+            </button>
+            {% if title %}
+                <div class="pr-10">
+                    <h3 class="text-base-content text-lg font-semibold" id="modal-title">{{ title }}</h3>
+                    {% if description %}<p class="text-muted-content mt-2 text-sm">{{ description }}</p>{% endif %}
+                </div>
+            {% endif %}
+            <div class="mt-6">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
+    </div>
+</div>

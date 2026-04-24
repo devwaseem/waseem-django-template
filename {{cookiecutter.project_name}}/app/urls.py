@@ -66,13 +66,8 @@ if settings.DEBUG:  # pragma: no cover
     import debug_toolbar
 
     urlpatterns = [
-        # Django silk
-        # path("silk/", include("silk.urls", namespace="silk")), # noqa
-        path("__reload__/", include("django_browser_reload.urls")),
-        # URLs specific only to django-debug-toolbar:
         path("__debug__/", include(debug_toolbar.urls)),
         *urlpatterns,
-        # Serving media files in development only:
         *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     ]
 

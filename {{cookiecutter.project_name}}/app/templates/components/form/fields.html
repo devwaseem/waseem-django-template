@@ -1,0 +1,11 @@
+{% include "components/form/non_field_errors.html" with form=form %}
+{% include "components/form/hidden_fields.html" with form=form %}
+{% for field in form.visible_fields %}
+    {% if field.field.widget.input_type == "textarea" %}
+        {% include "components/form/textarea.html" with field=field input_class=input_class|default:"textarea" %}
+    {% elif field.field.widget.input_type == "select" or field.field.widget.input_type == "selectmultiple" %}
+        {% include "components/form/select.html" with field=field input_class=input_class|default:"select" %}
+    {% else %}
+        {% include "components/form/input.html" with field=field input_class=input_class|default:"input" %}
+    {% endif %}
+{% endfor %}

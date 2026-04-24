@@ -14,12 +14,10 @@ class TimeStampedModel(models.Model):
 
 
 class UUIDModel(models.Model):
-    internal_id = models.AutoField[int, int](primary_key=True, editable=False)
     id = models.UUIDField[UUID, UUID](
-        unique=True,
-        default=uuid.uuid4,
+        default=uuid.uuid7,
+        primary_key=True,
         editable=False,
-        db_index=True,
     )
 
     class Meta:

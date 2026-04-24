@@ -12,7 +12,7 @@ from app.helpers.django_models import update_model_field_if_empty
 @pytest.mark.django_db
 def test_update_model_field_if_empty_raises_for_missing_attr() -> None:
     """update_model_field_if_empty raises when attribute is missing."""
-    user = mixer.blend(User, name="Jane")
+    user = mixer.blend(User, first_name="Jane")
 
     with pytest.raises(KeyError, match="missing not found"):
         update_model_field_if_empty(
@@ -25,18 +25,26 @@ def test_update_model_field_if_empty_raises_for_missing_attr() -> None:
 @pytest.mark.django_db
 def test_update_model_field_if_empty_updates_empty_value() -> None:
     """update_model_field_if_empty updates when field is empty."""
-    user = mixer.blend(User, name="")
+    user = mixer.blend(User, first_name="")
 
-    update_model_field_if_empty(instance=user, attr="name", value="New")
+    update_model_field_if_empty(
+        instance=user,
+        attr="first_name",
+        value="New",
+    )
 
-    assert user.name == "New"
+    assert user.first_name == "New"
 
 
 @pytest.mark.django_db
 def test_update_model_field_if_empty_leaves_existing_value() -> None:
     """update_model_field_if_empty keeps existing values."""
-    user = mixer.blend(User, name="Existing")
+    user = mixer.blend(User, first_name="Existing")
 
-    update_model_field_if_empty(instance=user, attr="name", value="New")
+    update_model_field_if_empty(
+        instance=user,
+        attr="first_name",
+        value="New",
+    )
 
-    assert user.name == "Existing"
+    assert user.first_name == "Existing"

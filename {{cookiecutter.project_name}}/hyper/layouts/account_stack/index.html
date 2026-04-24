@@ -1,0 +1,17 @@
+{% extends "layouts/base/index.html" %}
+{% block body %}
+    <main class="auth-page">
+        <section class="card auth-panel">
+            <div class="auth-stack">
+                <header class="auth-stack-header">
+                    <h1 class="auth-title">{% block account_title %}{% endblock account_title %}</h1>
+                    {% block account_description %}{% endblock account_description %}
+                </header>
+                {% block account_body %}
+                {% endblock account_body %}
+                {% block account_footer %}
+                {% endblock account_footer %}
+            </div>
+        </section>
+    </main>
+{% endblock body %}
