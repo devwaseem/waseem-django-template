@@ -300,6 +300,7 @@ dependencies = [
     { name = "jmespath" },
     { name = "s3transfer" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/31/9d/a9a7b5a9351e3ff0baae01136f71ba6fc4652fe0dc2da3b0a8ebdfc1be44/boto3-1.42.85.tar.gz", hash = "sha256:1cd3dcbfaba85c6071ba9397c1804b6a94a1a97031b8f1993fdba27c0c5d6eba", size = 112769, upload-time = "2026-04-07T19:40:53.834Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/78/ab/3167b8ec3cf1d87ad08d2ad5f15823a22945cae7870798274c283c3a18f1/boto3-1.42.85-py3-none-any.whl", hash = "sha256:4f6ac066e41d18ec33f532253fac0f35e0fdca373724458f983ce3d531340b7a", size = 140556, upload-time = "2026-04-07T19:40:52.186Z" },
 ]
@@ -728,19 +729,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/01/91/826ec2c0e81b36ed392995b23604cfb3bb993b6ee66017898c25d2fc33f0/django_allauth-65.15.1.tar.gz", hash = "sha256:94c5b9df0c3458019613983ba9e938518acf5c2e4cc6e0f262fc3684ffe45a95", size = 2216647, upload-time = "2026-04-02T09:18:57.62Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/20/a6cfe9d5b03bbc76af92060c86682c49df1b8a7a924179da3d20de71dd3a/django_allauth-65.15.1-py3-none-any.whl", hash = "sha256:c32a1031f5601cb66b0aba276fb482d5d1460045a8094795a4db2af0231ee432", size = 2023723, upload-time = "2026-04-02T09:18:33.177Z" },
-]
-
-[[package]]
-name = "django-browser-reload"
-version = "1.21.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "asgiref" },
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/79/ef/ab407c1a2f14e13c75a6419a2d124954aa0364f62580ad95a3d31dc6c73d/django_browser_reload-1.21.0.tar.gz", hash = "sha256:3335ad3d107eb657f623d1a8e680dfbcab8a83ae1f94df1895e069dddf5604ba", size = 15800, upload-time = "2025-09-22T17:00:35.199Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/61/1b4a8c589652859995bcab87682286443eb9fdf2d7fd584975b9ffc1db33/django_browser_reload-1.21.0-py3-none-any.whl", hash = "sha256:0b2a86ab460774fa9bb142a121c70e75a72f18109f51a4f6de409cd633d3a70d", size = 12852, upload-time = "2025-09-22T17:00:33.479Z" },
 ]
 
 [[package]]
@@ -1394,15 +1382,15 @@ wheels = [
 
 [[package]]
 name = "hyperdjango"
-version = "0.6.0"
+version = "0.27.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "django-render-block" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/85/68/e135d0a047a7f22a09cdab40e6d24b2f4787094270ecd5933f5306d213ed/hyperdjango-0.6.0.tar.gz", hash = "sha256:d46f2e64a92885108bb3bcc63c903b72ef27539bd66ddc702521c039d7fc4afb", size = 35800, upload-time = "2026-04-07T13:11:40.126Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8f/4f/f4fa5a5a9e0d830797158fa4c1322f89e32a0f923698920a18167203fa70/hyperdjango-0.27.0.tar.gz", hash = "sha256:0a182d2dfc1370aa62f40ec1637d16b4a36307712194f0cd7b1136a2f2bc339a", size = 41269, upload-time = "2026-04-27T19:52:51.397Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f0/5f/bfb7e1b4304f103aef6a655e62bfe2ad9f56d34ed153f2c0930f48445110/hyperdjango-0.6.0-py3-none-any.whl", hash = "sha256:72ed05a13722be5e64bd330003b1737fe9192a758b52fccfd3289808769dcb0e", size = 36756, upload-time = "2026-04-07T13:11:44.918Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/6e/6a0bad4c30eae6bb5e30f51e602ec845047fecf9fea108bb25cfbac53b54/hyperdjango-0.27.0-py3-none-any.whl", hash = "sha256:653cfa09c108bda25cbb130ace237011b74e49e245aba0224e70bfb42ac8c0f4", size = 43660, upload-time = "2026-04-27T19:52:47.856Z" },
 ]
 
 [[package]]
@@ -1782,7 +1770,7 @@ wheels = [
 
 [[package]]
 name = "jupyterlab"
-version = "4.5.6"
+version = "4.5.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "async-lru" },
@@ -1799,9 +1787,9 @@ dependencies = [
     { name = "tornado" },
     { name = "traitlets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/d5/730628e03fff2e8a8e8ccdaedde1489ab1309f9a4fa2536248884e30b7c7/jupyterlab-4.5.6.tar.gz", hash = "sha256:642fe2cfe7f0f5922a8a558ba7a0d246c7bc133b708dfe43f7b3a826d163cf42", size = 23970670, upload-time = "2026-03-11T14:17:04.531Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/22/8440ec827762146e7cdecf04335bd348795899d29dc6ae82238707353a2c/jupyterlab-4.5.7.tar.gz", hash = "sha256:55a9822c4754da305f41e113452c68383e214dcf96de760146af89ce5d5117b0", size = 23992763, upload-time = "2026-04-29T16:43:51.328Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/1b/dad6fdcc658ed7af26fdf3841e7394072c9549a8b896c381ab49dd11e2d9/jupyterlab-4.5.6-py3-none-any.whl", hash = "sha256:d6b3dac883aa4d9993348e0f8e95b24624f75099aed64eab6a4351a9cdd1e580", size = 12447124, upload-time = "2026-03-11T14:17:00.229Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/aa/537b8f7d80e799af19af35fb3ddfc970b951088a13c57dd9387dcfbb7f61/jupyterlab-4.5.7-py3-none-any.whl", hash = "sha256:fba4cb0e2c44a52859669d8c98b45de029d5e515f8407bf8534d2a8fc5f0964d", size = 12450123, upload-time = "2026-04-29T16:43:46.639Z" },
 ]
 
 [[package]]
@@ -2560,7 +2548,6 @@ dependencies = [
     { name = "django", extra = ["argon2"] },
     { name = "django-admin-interface" },
     { name = "django-allauth" },
-    { name = "django-browser-reload" },
     { name = "django-constance" },
     { name = "django-cotton" },
     { name = "django-extensions" },
@@ -2693,7 +2680,6 @@ requires-dist = [
     { name = "django", extras = ["argon2"], specifier = ">=6.0,<7" },
     { name = "django-admin-interface", specifier = ">=0.31.1,<1" },
     { name = "django-allauth", specifier = ">=65.13.1,<66" },
-    { name = "django-browser-reload", specifier = ">=1.21.0,<2" },
     { name = "django-constance", specifier = ">=4.3.4,<5" },
     { name = "django-cotton", specifier = "==2.6.1" },
     { name = "django-extensions", specifier = ">=4.1,<5" },
@@ -2719,7 +2705,7 @@ requires-dist = [
     { name = "gevent", specifier = ">=25.9,<26" },
     { name = "gunicorn", specifier = ">=23,<24" },
     { name = "hiredis", specifier = ">=3.3.0,<4" },
-    { name = "hyperdjango", specifier = ">=0.6" },
+    { name = "hyperdjango", specifier = ">=0.18.0" },
     { name = "jinja2", specifier = ">=3.1.6,<4" },
     { name = "mjml-python", specifier = ">=1.3.7" },
     { name = "numerize", specifier = ">=0.12,<0.13" },
@@ -2773,7 +2759,7 @@ dev = [
     { name = "flower", specifier = ">=2.0.1,<3" },
     { name = "ipdb", specifier = ">=0.13.9,<0.14" },
     { name = "ipywidgets", specifier = ">=8.1.1,<9" },
-    { name = "jupyterlab", specifier = ">=4,<5" },
+    { name = "jupyterlab", specifier = ">=4.5.7,<5" },
     { name = "jupyterlab-vim", specifier = ">=4.1.4" },
     { name = "mixer", specifier = ">=7.2.2,<8" },
     { name = "mkdocs", specifier = ">=1.6,<2" },
