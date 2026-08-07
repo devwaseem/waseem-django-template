@@ -4,7 +4,10 @@ theme:
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
+  - Product context: product.md
   - Architecture: architecture.md
+  - Background work: background-work.md
+  - Email: email.md
   - Security: security.md
   - Quality: quality.md
   - Configuration: configuration.md

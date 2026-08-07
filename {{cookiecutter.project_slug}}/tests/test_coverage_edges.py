@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from importlib import import_module
+from importlib.util import find_spec
 from unittest.mock import Mock
 
 import pytest
+from django.conf import settings
 from django.test import Client
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -24,16 +27,17 @@ def test_environment_handles_boolean_and_iterable_values(
 
 def test_domain_extension_points_are_explicit_noops() -> None:
     assert extra_urlpatterns() == ()
-    {% if cookiecutter.rendering_mode in ["api", "hybrid"] -%}
-    from {{ cookiecutter.project_slug }}.domains.registry import register_api
+    project_package = settings.ROOT_URLCONF.partition(".")[0]
+    domain_registry = import_module(f"{project_package}.domains.registry")
+    register_api = getattr(domain_registry, "register_api", None)
+    if register_api is not None:
+        assert register_api(object()) is None
 
-    assert register_api(object()) is None
-    {% endif -%}
-    {% if cookiecutter.enable_celery == "yes" -%}
-    from {{ cookiecutter.project_slug }}.platform.celery import app
+    celery_module_name = f"{project_package}.platform.celery"
+    if find_spec(celery_module_name) is not None:
+        celery = import_module(celery_module_name)
+        assert celery.app.main == project_package
 
-    assert app.main == "{{ cookiecutter.project_slug }}"
-{% endif %}
 
 @pytest.mark.django_db
 def test_remaining_platform_and_api_error_paths(
@@ -50,7 +54,9 @@ def test_remaining_platform_and_api_error_paths(
     monkeypatch.setattr(health.cache, "get", lambda *_args, **_kwargs: "missing")
     assert client.get("/readyz/").status_code == 503
 
-    {% if cookiecutter.rendering_mode in ["api", "hybrid"] -%}
+    if settings.RENDERING_MODE == "ssr":
+        return
+
     user = User.objects.create_user(
         "validation@example.test", "Correct-horse-battery-1"
     )
@@ -76,4 +82,3 @@ def test_remaining_platform_and_api_error_paths(
         ).status_code
         == 422
     )
-{% endif -%}

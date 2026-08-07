@@ -26,7 +26,8 @@ class Command(BaseCommand):
                 "Use a lowercase Python identifier, for example 'billing'."
             )
 
-        directory = Path(settings.BASE_DIR) / "{{ cookiecutter.project_slug }}" / "domains" / name
+        project_package = settings.ROOT_URLCONF.partition(".")[0]
+        directory = Path(settings.BASE_DIR) / project_package / "domains" / name
         if directory.exists():
             raise CommandError(f"Domain '{name}' already exists.")
         directory.mkdir(parents=True)
@@ -39,7 +40,7 @@ class Command(BaseCommand):
                     "",
                     "",
                     "class DomainConfig(AppConfig):",
-                    f'    name = "{{ cookiecutter.project_slug }}.domains.{name}"',
+                    f'    name = "{project_package}.domains.{name}"',
                     f'    label = "{name}"',
                     "",
                 ]

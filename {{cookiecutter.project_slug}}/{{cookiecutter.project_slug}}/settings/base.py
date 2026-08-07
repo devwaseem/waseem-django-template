@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "storages",
     "django_structlog",
     "django_ratelimit",
+    "hijack",
+    "hijack.contrib.admin",
     "allauth",
     "allauth.account",
     "{{ cookiecutter.project_slug }}.platform.apps.PlatformConfig",
@@ -77,6 +79,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "hijack.middleware.HijackUserMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django_ratelimit.middleware.RatelimitMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -88,6 +91,7 @@ TEMPLATES: list[dict[str, Any]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
+            BASE_DIR / "templates",
             BASE_DIR / "{{ cookiecutter.project_slug }}" / "platform" / "templates",
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] -%}
             BASE_DIR / "hyper",
@@ -121,6 +125,11 @@ ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USER_MODEL_USERNAME_FIELD: str | None = None
+ENABLE_ADMIN_HIJACK = env.boolean("ENABLE_ADMIN_HIJACK", False)
+HIJACK_PERMISSION_CHECK = "{{ cookiecutter.project_slug }}.platform.hijack.can_hijack"
+HIJACK_INSERT_BEFORE = "</body>"
+HIJACK_LOGIN_REDIRECT_URL = "/"
+HIJACK_LOGOUT_REDIRECT_URL = "/"
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",

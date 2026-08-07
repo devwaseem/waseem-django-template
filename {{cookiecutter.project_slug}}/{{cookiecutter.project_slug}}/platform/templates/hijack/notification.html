@@ -1,0 +1,11 @@
+{% load i18n static %}
+<link rel="stylesheet" href="{% static 'hijack/hijack.min.css' %}">
+<aside class="djhj" id="djhj" role="alert" aria-live="assertive">
+  <p>
+    {% trans "You are impersonating another user. Actions are audited." %}
+  </p>
+  <form action="{% url 'hijack:release' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">{% trans "Stop impersonating" %}</button>
+  </form>
+</aside>

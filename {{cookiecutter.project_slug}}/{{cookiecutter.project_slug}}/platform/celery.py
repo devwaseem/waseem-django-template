@@ -16,11 +16,12 @@ from {{ cookiecutter.project_slug }}.platform.request_id import (
 from {{ cookiecutter.project_slug }}.platform.telemetry import initialize_telemetry
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{{ cookiecutter.project_slug }}.settings.dev")
+project_package = __name__.partition(".")[0]
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"{project_package}.settings.dev")
 initialize_telemetry()
 
-app = Celery("{{ cookiecutter.project_slug }}")
-app.config_from_object("{{ cookiecutter.project_slug }}.platform.celeryconfig")
+app = Celery(project_package)
+app.config_from_object(f"{__package__}.celeryconfig")
 app.autodiscover_tasks()
 
 _task_context_tokens: dict[str, dict[str, Any]] = {}

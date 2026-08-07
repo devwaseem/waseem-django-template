@@ -55,16 +55,45 @@ def test_every_supported_shape_renders_with_its_expected_layers(
     assert (project / slug / "platform" / "celery.py").exists() is (
         enable_celery == "yes"
     )
+    assert (
+        project / slug / "platform" / "management" / "commands" / "new_route.py"
+    ).exists() is (rendering_mode != "api")
     assert (project / slug / "api").exists() is (rendering_mode != "ssr")
     assert (project / "hyper").exists() is (rendering_mode != "api")
     assert (project / "package-lock.json").exists() is (rendering_mode != "api")
     assert (project / ".github" / "workflows" / "publish-image.yml").is_file()
     assert (project / ".github" / "workflows" / "release-provenance.yml").is_file()
     assert (project / "docs" / "configuration.md").is_file()
+    assert (project / "docs" / "product.md").is_file()
+    assert (project / "templates" / ".gitkeep").is_file()
+    assert not (project / slug / "platform" / "templates" / "email").exists()
+    settings = (project / slug / "settings" / "base.py").read_text(encoding="utf-8")
+    assert 'BASE_DIR / "templates",' in settings
     justfile = (project / "justfile").read_text(encoding="utf-8")
     assert "verify:" in justfile
     assert "Frontend checks: skipped (API mode has no frontend layer)" in justfile
-    assert "Pre-commit: skipped (initialize Git to enable repository checks)" in justfile
+    assert (
+        "Pre-commit: skipped (initialize Git to enable repository checks)" in justfile
+    )
+
+
+@pytest.mark.template
+@pytest.mark.parametrize("rendering_mode", ["api", "ssr", "hybrid"])
+@pytest.mark.parametrize("enable_celery", ["no", "yes"])
+def test_each_selected_lockfile_matches_its_rendered_project(
+    tmp_path: Path, rendering_mode: str, enable_celery: str
+) -> None:
+    project = render_project(
+        tmp_path, rendering_mode=rendering_mode, enable_celery=enable_celery
+    )
+    result = subprocess.run(
+        ["uv", "lock", "--check"],
+        cwd=project,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
 
 
 def generated_environment(slug: str) -> dict[str, str]:

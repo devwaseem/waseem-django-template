@@ -29,6 +29,7 @@ for path in (
     "env_template.txt",
     "gunicorn_config.py",
     "observability",
+    f"{PROJECT_SLUG}/platform/templates/email",
     ".vscode",
     "docs/deployment.md",
     "docs/observability.md",
@@ -47,6 +48,7 @@ if RENDERING_MODE == "api":
         "vite.config.ts",
         "playwright.config.ts",
         "tests/e2e",
+        f"{PROJECT_SLUG}/platform/management/commands/new_route.py",
     ):
         remove(path)
 

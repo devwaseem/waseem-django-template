@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from importlib import import_module
+from importlib.util import find_spec
 from unittest.mock import Mock
 
 import pytest
+from django.conf import settings
 
 from {{ cookiecutter.project_slug }}.platform.logging import configure_logging
 
@@ -43,7 +46,6 @@ def test_logging_and_opt_in_telemetry_configuration(
     assert instrument.call_count == 2
 
 
-{% if cookiecutter.enable_celery == "yes" -%}
 def test_celery_propagates_and_clears_request_correlation() -> None:
     from types import SimpleNamespace
 
@@ -53,7 +55,11 @@ def test_celery_propagates_and_clears_request_correlation() -> None:
         get_contextvars,
     )
 
-    from {{ cookiecutter.project_slug }}.platform import celery
+    project_package = settings.ROOT_URLCONF.partition(".")[0]
+    celery_module_name = f"{project_package}.platform.celery"
+    if find_spec(celery_module_name) is None:
+        return
+    celery = import_module(celery_module_name)
 
     clear_contextvars()
     headers: dict[str, str] = {}
@@ -80,4 +86,3 @@ def test_celery_propagates_and_clears_request_correlation() -> None:
     assert get_contextvars() == {"task_id": "task-invalid"}
     celery.clear_task_context("task-invalid")
     celery.clear_task_context("missing-task")
-{% endif -%}

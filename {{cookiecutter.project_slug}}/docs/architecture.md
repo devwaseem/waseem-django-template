@@ -17,5 +17,12 @@ HyperDjango provides SSR page bundles. A route has `+page.py`, `index.html`,
 {% if cookiecutter.enable_celery == "yes" %}
 Celery uses one default queue and Beat. Tasks are thin idempotent adapters that
 call domain operations; task arguments should be stable identifiers, not model
-instances or request objects.
+instances or request objects. Delivery is at-least-once: a worker crash can
+redeliver a late-acknowledged task. Make business outcomes effectively once with
+database uniqueness, idempotency keys, transactional outbox/inbox boundaries,
+and provider idempotency keys. See `background-work.md`.
 {% endif -%}
+
+Application email is rendered with MRML from product-owned MJML templates.
+When a product adopts email, it creates `templates/email/base.mjml` and sends
+through `platform.emails`, which supplies both HTML and a plain-text fallback.

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from importlib import import_module
+from importlib.util import find_spec
 from io import StringIO
 from pathlib import Path
 from unittest.mock import Mock
@@ -13,20 +15,34 @@ from django.core.management.base import CommandError
 from django.test import Client, RequestFactory, override_settings
 from django_ratelimit.exceptions import Ratelimited
 
-from {{ cookiecutter.project_slug }}.config.env import Environment
-from {{ cookiecutter.project_slug }}.platform.admin import UserAdmin
-from {{ cookiecutter.project_slug }}.platform.apps import PlatformConfig
-from {{ cookiecutter.project_slug }}.platform.context_processors import account_settings
-from {{ cookiecutter.project_slug }}.platform.logging import REDACTED, redact_sensitive_data
-from {{ cookiecutter.project_slug }}.platform.models import User
-from {{ cookiecutter.project_slug }}.platform.storage import (
-    PrivateMediaStorage,
-    PublicStaticStorage,
+PROJECT_PACKAGE = settings.ROOT_URLCONF.partition(".")[0]
+Environment = import_module(f"{PROJECT_PACKAGE}.config.env").Environment
+UserAdmin = import_module(f"{PROJECT_PACKAGE}.platform.admin").UserAdmin
+PlatformConfig = import_module(f"{PROJECT_PACKAGE}.platform.apps").PlatformConfig
+account_settings = import_module(
+    f"{PROJECT_PACKAGE}.platform.context_processors"
+).account_settings
+logging_module = import_module(f"{PROJECT_PACKAGE}.platform.logging")
+REDACTED = logging_module.REDACTED
+redact_sensitive_data = logging_module.redact_sensitive_data
+models_module = import_module(f"{PROJECT_PACKAGE}.platform.models")
+AdminImpersonationAuditEvent = models_module.AdminImpersonationAuditEvent
+User = models_module.User
+storage_module = import_module(f"{PROJECT_PACKAGE}.platform.storage")
+PrivateMediaStorage = storage_module.PrivateMediaStorage
+PublicStaticStorage = storage_module.PublicStaticStorage
+tasks_module_name = f"{PROJECT_PACKAGE}.platform.tasks"
+DomainTask = (
+    import_module(tasks_module_name).DomainTask
+    if find_spec(tasks_module_name) is not None
+    else None
 )
-{% if cookiecutter.enable_celery == "yes" %}
-from {{ cookiecutter.project_slug }}.platform.tasks import DomainTask
-{% endif %}
-from {{ cookiecutter.project_slug }}.platform.views import handler403, handler404, handler500
+views_module = import_module(f"{PROJECT_PACKAGE}.platform.views")
+handler403 = views_module.handler403
+handler404 = views_module.handler404
+handler500 = views_module.handler500
+request_id_module = import_module(f"{PROJECT_PACKAGE}.platform.request_id")
+request_id_from_header = request_id_module.request_id_from_header
 
 
 def test_environment_parses_explicit_values(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -73,23 +89,28 @@ def test_email_user_model_normalizes_identity_and_superuser_requirements() -> No
 
 
 def test_platform_defaults_are_registered_and_safe(rf: RequestFactory) -> None:
-    assert PlatformConfig.name == "{{ cookiecutter.project_slug }}.platform"
+    assert PlatformConfig.name.endswith(".platform")
     assert site._registry[User].__class__ is UserAdmin
+    assert site._registry[AdminImpersonationAuditEvent].__class__.__name__ == (
+        "AdminImpersonationAuditEventAdmin"
+    )
     assert PrivateMediaStorage.location == "media"
     assert PrivateMediaStorage.default_acl == "private"
     assert PrivateMediaStorage.querystring_auth is True
     assert PublicStaticStorage.location == "static"
     assert PublicStaticStorage.default_acl is None
     assert PublicStaticStorage.querystring_auth is False
-{% if cookiecutter.enable_celery == "yes" %}
-    assert DomainTask.autoretry_for == (ConnectionError, TimeoutError)
-    assert DomainTask.retry_backoff is True
-    assert DomainTask.retry_jitter is True
-    assert DomainTask.max_retries == 3
-{% endif %}
+    if DomainTask is not None:
+        assert DomainTask.autoretry_for == (ConnectionError, TimeoutError)
+        assert DomainTask.retry_backoff is True
+        assert DomainTask.retry_backoff_max == 300
+        assert DomainTask.retry_jitter is True
+        assert DomainTask.max_retries == 3
     assert account_settings(rf.get("/")) == {
         "ACCOUNT_ALLOW_REGISTRATION": settings.ACCOUNT_ALLOW_REGISTRATION
     }
+    assert settings.ENABLE_ADMIN_HIJACK is False
+    assert settings.HIJACK_PERMISSION_CHECK.endswith(".platform.hijack.can_hijack")
 
 
 def test_redaction_is_recursive_and_does_not_mutate_safe_values() -> None:
@@ -116,7 +137,7 @@ def test_health_and_error_endpoints_cover_success_and_failure(
     assert client.get("/livez/").json() == {"status": "ok"}
     assert client.get("/readyz/").json() == {"status": "ok"}
 
-    from {{ cookiecutter.project_slug }}.platform import health
+    health = import_module(f"{PROJECT_PACKAGE}.platform.health")
 
     monkeypatch.setattr(health.cache, "set", Mock(side_effect=RuntimeError("offline")))
     assert client.get("/readyz/").status_code == 503
@@ -134,7 +155,8 @@ def test_scaffold_commands_create_expected_files_and_reject_invalid_names(
     output = StringIO()
     with override_settings(BASE_DIR=tmp_path):
         call_command("new_domain", "billing", stdout=output)
-        domain = tmp_path / "{{ cookiecutter.project_slug }}" / "domains" / "billing"
+        project_package = settings.ROOT_URLCONF.partition(".")[0]
+        domain = tmp_path / project_package / "domains" / "billing"
         assert (domain / "operations.py").exists()
         assert (domain / "tests" / "test_operations.py").exists()
         {% if cookiecutter.rendering_mode in ["api", "hybrid"] -%}
@@ -151,9 +173,7 @@ def test_scaffold_commands_create_expected_files_and_reject_invalid_names(
             call_command("new_domain", "Billing")
         with override_settings(RENDERING_MODE="ssr"):
             call_command("new_domain", "server_only", stdout=output)
-            assert not (
-                tmp_path / "{{ cookiecutter.project_slug }}" / "domains" / "server_only" / "api.py"
-            ).exists()
+            assert not (domain.parent / "server_only" / "api.py").exists()
         with override_settings(RENDERING_MODE="api"):
             call_command("new_domain", "api_only", stdout=output)
             assert not (tmp_path / "hyper" / "routes" / "api_only").exists()
@@ -170,8 +190,6 @@ def test_scaffold_commands_create_expected_files_and_reject_invalid_names(
 
 
 def test_request_identity_and_version_endpoint(client: Client) -> None:
-    from {{ cookiecutter.project_slug }}.platform.request_id import request_id_from_header
-
     supplied = "release-2026.08.05"
     response = client.get("/livez/", headers={"X-Request-ID": supplied})
     generated = client.get("/livez/", headers={"X-Request-ID": "invalid"})
@@ -192,9 +210,10 @@ def test_request_identity_and_version_endpoint(client: Client) -> None:
 def test_doctor_reports_dependencies_and_surfaces_failures(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from {{ cookiecutter.project_slug }}.platform.management.commands.doctor import (
-        Command as DoctorCommand,
+    doctor_module = import_module(
+        f"{PROJECT_PACKAGE}.platform.management.commands.doctor"
     )
+    DoctorCommand = doctor_module.Command
 
     output = StringIO()
     call_command("doctor", stdout=output)

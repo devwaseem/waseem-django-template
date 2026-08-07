@@ -9,6 +9,6 @@ from django.core.asgi import get_asgi_application
 from {{ cookiecutter.project_slug }}.platform.telemetry import initialize_telemetry
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{{ cookiecutter.project_slug }}.settings.dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"{__package__}.settings.dev")
 initialize_telemetry()
 application = get_asgi_application()

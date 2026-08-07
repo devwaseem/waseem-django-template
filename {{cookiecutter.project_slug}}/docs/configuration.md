@@ -17,6 +17,7 @@ read the environment directly from application code.
 | `APP_BUILD_SHA` | `/version/` build identifier. | `development`. |
 | `SITE_ID` | django-allauth site selection. | `1`. |
 | `ACCOUNT_ALLOW_REGISTRATION` | Enables public account creation. | `true`; application-specific after generation. |
+| `ENABLE_ADMIN_HIJACK` | Enables auditable Django-admin impersonation. | `false`; enable only under an approved support-access policy. |
 
 ## Database, cache, and email
 
@@ -56,6 +57,13 @@ nonce), and forbids frames, plugins, and unrestricted form targets.
 are controlled by `USE_SSL` and the production settings; wildcard CORS is
 rejected. `LOGGING` always applies credential redaction before events reach an
 output sink.
+
+When `ENABLE_ADMIN_HIJACK` is true, `HIJACK_PERMISSION_CHECK` still allows only
+active superusers to impersonate active non-staff, non-superuser accounts.
+`HIJACK_INSERT_BEFORE` keeps a visible stop-impersonating warning in every
+response, and the generated `platform.AdminImpersonationAuditEvent` stores the
+start/end actor, target, timestamp, direct remote address, and request ID.
+These settings are code-owned safety controls, not environment switches.
 
 ## Storage
 

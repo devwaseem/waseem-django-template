@@ -26,3 +26,15 @@ uv run pytest -m template
 The local pre-push hook renders all six supported rendering/Celery combinations.
 Generated projects run their own test, coverage, quality, and (where applicable)
 browser checks in GitHub Actions.
+
+## Refresh template lockfiles
+
+Generated projects receive one committed `uv.lock` for their selected shape.
+The template retains six parameterized internal variants so the generated
+project's own package name is recorded correctly without resolving dependencies
+during project creation. After an intentional dependency update, regenerate the
+template lock and all generated-project variants with:
+
+```bash
+just refresh-template-locks
+```

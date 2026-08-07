@@ -19,8 +19,7 @@ def extra_urlpatterns() -> Sequence[URLPattern | URLResolver]:
 {% if cookiecutter.rendering_mode in ["api", "hybrid"] -%}
 def register_api(_api: object) -> None:
     """Register project-owned API routers on the template-managed API."""
-
-
+    return None
 {% endif -%}
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] -%}
 def dashboard_navigation() -> Sequence[dict[str, str]]:
