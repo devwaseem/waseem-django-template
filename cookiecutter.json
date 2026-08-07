@@ -1,14 +1,14 @@
 {
-  "project_name": "test_project",
-  "project_verbose_name": "Test Project",
-  "django_settings_module_default": "app.settings.dev",
-  "enable_healthcheck": true,
-  "enable_sentry": false,
+  "project_name": "Acme Portal",
+  "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}",
+  "presentation_timezone": "America/Toronto",
+  "license": ["Proprietary", "MIT", "Apache-2.0"],
+  "rendering_mode": ["hybrid", "ssr", "api"],
+  "enable_celery": ["yes", "no"],
   "_copy_without_render": [
-    "*justfile",
-    "hyper/*",
-    "app/**/*.html",
-    "node_modules/**",
-    "**/node_modules/**"
+    "hyper/**/*.html",
+    "hyper/**/*.css",
+    "hyper/**/*.ts",
+    "{{cookiecutter.project_slug}}/platform/templates/**"
   ]
 }

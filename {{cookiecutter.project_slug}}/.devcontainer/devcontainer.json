@@ -1,0 +1,13 @@
+{
+  "name": "{{ cookiecutter.project_name }}",
+  "dockerComposeFile": ["../compose.yaml", "compose.devcontainer.yaml"],
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/{{ cookiecutter.project_slug }}",
+  "remoteUser": "developer",
+  "postCreateCommand": "just setup",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "charliermarsh.ruff", "esbenp.prettier-vscode"]
+    }
+  }
+}

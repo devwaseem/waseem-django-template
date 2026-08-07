@@ -1,0 +1,10 @@
+{% extends "layouts/account_stack/index.html" %}
+{% block account_title %}Password updated{% endblock account_title %}
+{% block account_description %}
+<p class="auth-lead">Your password has been changed successfully.</p>
+{% endblock account_description %}
+{% block account_footer %}
+<p class="auth-footer">
+  <a href="{% url 'account_login' %}" class="btn btn-link">Continue to sign in</a>
+</p>
+{% endblock account_footer %}

@@ -1,0 +1,17 @@
+<div class="form-control{% if field.field.disabled %} opacity-70{% endif %}">
+  {% if field.field.widget.input_type != "hidden" %}
+    <label class="label" for="{{ field.id_for_label }}">
+      {{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}
+    </label>
+  {% endif %}
+  {{ field }}
+  {% if field.errors %}
+    <div class="mt-1" id="{{ field.id_for_label }}-error">
+      {% for error in field.errors %}
+        <p class="text-danger text-xs font-medium">{{ error }}</p>
+      {% endfor %}
+    </div>
+  {% elif field.help_text %}
+    <p class="helptext">{{ field.help_text }}</p>
+  {% endif %}
+</div>

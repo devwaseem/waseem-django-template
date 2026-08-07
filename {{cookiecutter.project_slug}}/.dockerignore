@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+node_modules
+.env
+.pytest_cache
+.ruff_cache
+coverage.xml
+htmlcov
+playwright-report
+test-results
+media
+site

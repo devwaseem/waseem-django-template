@@ -1,0 +1,10 @@
+{% extends "layouts/account_stack/index.html" %}
+{% block account_title %}Check your email{% endblock account_title %}
+{% block account_description %}
+<p class="auth-lead">If an account exists for that email, a password reset link has been sent.</p>
+{% endblock account_description %}
+{% block account_footer %}
+<p class="auth-footer">
+  <a href="{% url 'account_login' %}" class="btn btn-link">Back to sign in</a>
+</p>
+{% endblock account_footer %}

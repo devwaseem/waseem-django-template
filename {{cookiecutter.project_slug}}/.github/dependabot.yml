@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule: { interval: weekly }
+    groups:
+      python:
+        patterns: ["*"]
+    open-pull-requests-limit: 10
+{% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
+  - package-ecosystem: npm
+    directory: "/"
+    schedule: { interval: weekly }
+    groups:
+      frontend:
+        patterns: ["*"]
+    open-pull-requests-limit: 10
+{% endif %}
+  - package-ecosystem: docker
+    directory: "/"
+    schedule: { interval: weekly }
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule: { interval: weekly }

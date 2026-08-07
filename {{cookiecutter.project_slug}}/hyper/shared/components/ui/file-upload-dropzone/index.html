@@ -1,0 +1,79 @@
+<div class="flex flex-col gap-3">
+  {% if label %}<label class="text-base-content text-sm font-medium">{{ label }}</label>{% endif %}
+  <div
+    class="border-base-300 bg-base-200/40 border p-4 transition-colors"
+    :class="{{ drag_class_binding }}"
+    @dragover="{{ dragover_handler }}"
+    @dragleave="{{ dragleave_handler }}"
+    @drop="{{ drop_handler }}"
+  >
+    <input
+      x-ref="{{ input_ref }}"
+      type="file"
+      name="{{ input_name }}"
+      accept="{{ accept }}"
+      {% if
+      multiple
+      %}multiple{% endif
+      %}
+      class="sr-only"
+      :disabled="{{ input_disabled_binding }}"
+      @change="{{ change_handler }}"
+    />
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex flex-col gap-1">
+        <p class="text-base-content text-sm font-medium">
+          {{ dropzone_title|default:'Drop file here or choose one from your device' }}
+        </p>
+        <p class="text-muted-content text-sm">
+          {{ help_text|default:'Accepted formats: .xlsx and .xls' }}
+        </p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-outline btn-sm self-start sm:self-auto"
+        @click="$refs.{{ input_ref }}.click()"
+        :disabled="{{ button_disabled_binding }}"
+      >
+        <span class="icon-[lucide--folder-open] h-4 w-4" aria-hidden="true"></span>
+        <span>{{ button_label|default:'Select file' }}</span>
+      </button>
+    </div>
+    <div
+      x-show="{{ summary_visible_binding }}"
+      x-cloak
+      class="border-base-300 bg-base-100 mt-4 border"
+    >
+      <div class="flex items-center justify-between gap-3 px-4 py-3">
+        <div class="flex min-w-0 items-center gap-3">
+          <div
+            class="border-base-300 bg-base-200 text-primary flex h-10 w-10 items-center justify-center border"
+          >
+            <span class="icon-[lucide--file-spreadsheet] h-5 w-5" aria-hidden="true"></span>
+          </div>
+          <div class="min-w-0">
+            <p
+              class="text-base-content truncate text-sm font-medium"
+              x-text="{{ file_name_binding }}"
+            ></p>
+            <p class="text-muted-content text-xs" x-text="{{ file_state_binding }}"></p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span
+            class="text-primary text-sm font-medium"
+            x-show="{{ progress_visible_binding }}"
+            x-cloak
+            x-text="{{ progress_text_binding }}"
+          ></span>
+        </div>
+      </div>
+      <div class="bg-base-300 h-1.5 overflow-hidden">
+        <div
+          class="bg-primary h-full transition-all duration-150"
+          :style="{{ progress_style_binding }}"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

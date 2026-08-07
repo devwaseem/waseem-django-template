@@ -1,0 +1,93 @@
+set dotenv-load := true
+
+setup:
+  if [ ! -f .env ]; then cp .env.example .env; fi
+  uv sync --all-groups
+  if [ -f package.json ]; then npm ci; fi
+
+services-up:
+  docker compose up -d --wait
+
+services-down:
+  docker compose down
+
+doctor:
+  test -f .env || { echo "Missing .env; run just setup first."; exit 1; }
+  command -v uv >/dev/null
+  command -v docker >/dev/null
+  docker compose config --quiet
+  uv lock --check
+  if [ -f package.json ]; then command -v node >/dev/null && command -v npm >/dev/null; fi
+  uv run --env-file .env python manage.py doctor
+
+production-check:
+  if [ -f package.json ]; then npm run build; fi
+  env DJANGO_SETTINGS_MODULE={{ cookiecutter.project_slug }}.settings.prod DEBUG=false SECRET_KEY=production-check-secret-key-that-is-long-and-not-used-anywhere ALLOWED_HOSTS=production-check.example.test USE_SSL=true POSTGRES_DB=production_check POSTGRES_USER=production_check POSTGRES_PASSWORD=production_check POSTGRES_HOST=127.0.0.1 POSTGRES_PORT=5432 REDIS_URL=redis://127.0.0.1:6379/0 STATIC_USE_S3=false MEDIA_USE_S3=false uv run python manage.py check --deploy
+  env DJANGO_SETTINGS_MODULE={{ cookiecutter.project_slug }}.settings.prod DEBUG=false SECRET_KEY=production-check-secret-key-that-is-long-and-not-used-anywhere ALLOWED_HOSTS=production-check.example.test USE_SSL=true POSTGRES_DB=production_check POSTGRES_USER=production_check POSTGRES_PASSWORD=production_check POSTGRES_HOST=127.0.0.1 POSTGRES_PORT=5432 REDIS_URL=redis://127.0.0.1:6379/0 STATIC_USE_S3=false MEDIA_USE_S3=false uv run pytest --no-cov tests/test_production_settings.py
+
+verify:
+  @echo "==> Python lock, format, lint, type, and security checks"
+  just quality
+  @echo "==> Migration contract"
+  just migrations-check
+  @echo "==> Production configuration contract"
+  just production-check
+  if [ -f package.json ]; then echo "==> Frontend formatting and production build"; npm run format:check; npm run build; else echo "==> Frontend checks: skipped (API mode has no frontend layer)"; fi
+  if [ -f {{ cookiecutter.project_slug }}/platform/celery.py ]; then echo "==> Celery configuration checks: included in the application tests"; else echo "==> Celery checks: skipped (Celery is disabled)"; fi
+  @echo "==> Application tests and coverage contract"
+  just test
+  if [ -f playwright.config.ts ]; then echo "==> Browser E2E: not part of verify; run just e2e for browser or auth-flow changes."; else echo "==> Browser E2E: skipped (API mode has no browser layer)"; fi
+
+dev:
+  uv run --env-file .env python manage.py runserver 0.0.0.0:8000
+
+test *ARGS:
+  if [ -f package.json ]; then npm run build; fi
+  uv run --env-file .env pytest -n auto {{ '{{' }} ARGS {{ '}}' }}
+
+test-one TEST_PATH:
+  if [ -f package.json ]; then npm run build; fi
+  uv run --env-file .env pytest {{ '{{' }} TEST_PATH {{ '}}' }}
+
+quality:
+  uv lock --check
+  uv run ruff format --check .
+  uv run ruff check .
+  uv run djlint . --lint
+  uv run basedpyright
+  uv run bandit -q -r {{ cookiecutter.project_slug }}
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then uv run pre-commit run --all-files; else echo "==> Pre-commit: skipped (initialize Git to enable repository checks)"; fi
+
+migrations-check:
+  uv run --env-file .env python manage.py makemigrations --check --dry-run
+
+migrate:
+  uv run --env-file .env python manage.py migrate
+
+makemigrations *ARGS:
+  uv run --env-file .env python manage.py makemigrations {{ '{{' }} ARGS {{ '}}' }}
+
+new-domain NAME:
+  uv run --env-file .env python manage.py new_domain {{ '{{' }} NAME {{ '}}' }}
+
+vite:
+  test -f package.json || { echo "This project has no frontend layer."; exit 1; }
+  npm run dev
+
+build-assets:
+  test -f package.json || { echo "This project has no frontend layer."; exit 1; }
+  npm run build
+
+e2e:
+  test -f package.json || { echo "This project has no frontend layer."; exit 1; }
+  npm run e2e
+
+new-route ROUTE:
+  test -f {{ cookiecutter.project_slug }}/platform/management/commands/new_route.py || { echo "This project has no SSR route layer."; exit 1; }
+  uv run --env-file .env python manage.py new_route {{ '{{' }} ROUTE {{ '}}' }}
+
+cruft-check:
+  cruft check
+
+cruft-update:
+  cruft update

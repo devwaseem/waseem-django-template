@@ -3,6 +3,7 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      - id: check-added-large-files
       - id: check-merge-conflict
       - id: check-toml
       - id: check-yaml
@@ -14,11 +15,22 @@ repos:
       - id: ruff-check
         args: [--fix]
       - id: ruff-format
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
   - repo: local
     hooks:
-      - id: template-matrix
-        name: template configuration matrix
-        entry: just template-matrix
+{% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
+      - id: prettier
+        name: prettier
+        entry: npm run format:check
+        language: system
+        pass_filenames: false
+{% endif %}
+      - id: complete-quality
+        name: complete quality gate
+        entry: just verify
         language: system
         pass_filenames: false
         stages: [pre-push]

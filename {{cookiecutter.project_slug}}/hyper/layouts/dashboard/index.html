@@ -1,0 +1,49 @@
+{% extends "layouts/base/index.html" %}
+{% block body %}
+<div
+  class="bg-canvas grid min-h-screen grid-rows-[auto_1fr] lg:grid-cols-[15rem_1fr] lg:grid-rows-1"
+>
+  <aside class="border-line bg-surface border-b p-4 lg:border-r lg:border-b-0 lg:p-5">
+    <div class="flex items-center justify-between gap-4 lg:block">
+      <a class="text-ink no-underline" href="/">
+        <p class="eyebrow">Workspace</p>
+        <p class="mt-1 font-semibold tracking-tight">{{ dashboard_site_name }}</p>
+      </a>
+      <button
+        class="btn btn-outline btn-sm"
+        type="button"
+        data-theme-toggle
+        aria-label="Toggle color theme"
+      >
+        Theme
+      </button>
+    </div>
+    <nav class="mt-5 flex gap-1 overflow-x-auto lg:flex-col" aria-label="Primary navigation">
+      {% for item in sidebar_items %}
+      <a
+        class="rounded-panel {% if item.active %}bg-surface-muted text-ink{% else %}text-ink-muted hover:bg-surface-muted hover:text-ink{% endif %} px-3 py-2 text-sm font-medium no-underline"
+        href="{{ item.href }}"
+        >{{ item.label }}</a
+      >
+      {% endfor %}
+    </nav>
+  </aside>
+  <div class="min-w-0">
+    <header
+      class="border-line bg-surface flex items-center justify-between border-b px-5 py-4 sm:px-8"
+    >
+      <div>
+        <p class="eyebrow">{{ dashboard_site_name }}</p>
+        <h1 class="mt-1 text-lg font-semibold tracking-tight">{{ page.title }}</h1>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-medium">{{ request.user.email }}</p>
+        <a class="text-xs" href="{% url 'account_logout' %}">Sign out</a>
+      </div>
+    </header>
+    <main class="mx-auto w-full max-w-6xl p-5 sm:p-8">
+      {% block dashboard_content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

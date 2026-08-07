@@ -1,0 +1,18 @@
+{% extends "layouts/dashboard/index.html" %}
+{% block dashboard_content %}
+<section class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+  <div class="card card-content">
+    <p class="eyebrow">Ready</p>
+    <h2 class="mt-2 text-2xl font-semibold tracking-tight">Your workspace is prepared.</h2>
+    <p class="text-ink-muted mt-3 max-w-prose text-sm leading-6">
+      Start with a product domain, then add the use cases and routes your application needs.
+    </p>
+  </div>
+  <div class="empty-state">
+    <p class="eyebrow">Next step</p>
+    <p class="text-ink-muted mt-2 text-sm">
+      Run <code>just new-domain &lt;name&gt;</code> to create the first product boundary.
+    </p>
+  </div>
+</section>
+{% endblock %}

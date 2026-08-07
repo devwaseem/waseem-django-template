@@ -1,0 +1,19 @@
+{% load static hyper_tags %}
+<!doctype html>
+<html lang="en" class="min-h-full" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{{ page.title }}</title>
+    {% hyper_preloads %}
+{% hyper_stylesheets %}
+{% hyper_head_scripts %}
+    <script src="{% static 'hyperdjango/hyper.js' %}"></script>
+    {% block head_extras %}{% endblock %}
+  </head>
+  <body class="bg-canvas text-ink min-h-screen antialiased">
+    {% block body %}{% endblock %}
+{% hyper_body_scripts %}
+  </body>
+</html>

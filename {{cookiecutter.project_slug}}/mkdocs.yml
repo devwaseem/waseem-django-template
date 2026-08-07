@@ -1,0 +1,13 @@
+site_name: "{{ cookiecutter.project_name }}"
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Architecture: architecture.md
+  - Security: security.md
+  - Quality: quality.md
+  - Configuration: configuration.md
+  - Cruft: cruft.md
+  - Image provenance: release-provenance.md
+  - ADRs: adr/index.md

@@ -1,0 +1,17 @@
+{% extends "layouts/account_stack/index.html" %}
+{% block account_title %}Reset password{% endblock account_title %}
+{% block account_description %}
+<p class="auth-lead">Enter your email and we will send a reset link.</p>
+{% endblock account_description %}
+{% block account_body %}
+<form method="post" action="{% url 'account_reset_password' %}" class="auth-form">
+  {% csrf_token %}
+{% include "components/form/fields.html" with form=form input_class="input" %}
+  <button type="submit" class="btn btn-primary w-full justify-center">Send reset link</button>
+</form>
+{% endblock account_body %}
+{% block account_footer %}
+<p class="auth-footer">
+  <a href="{% url 'account_login' %}" class="btn btn-link">Back to sign in</a>
+</p>
+{% endblock account_footer %}

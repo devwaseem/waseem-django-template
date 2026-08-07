@@ -1,2 +1,0 @@
-# Disable HTML formatting; it can break Django template tags.
-**/*.html

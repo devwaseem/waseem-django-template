@@ -1,0 +1,32 @@
+name: Attach release SBOM
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        description: Existing immutable GitHub Release tag that receives the SBOM.
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  source-sbom:
+    name: Generate and attach source SBOM
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ '{{' }} inputs.release_tag {{ '}}' }}
+      - id: sbom
+        name: Generate SPDX SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: spdx-json
+          output-file: sbom.spdx.json
+      - name: Attach SBOM to the GitHub Release
+        env:
+          GH_TOKEN: ${{ '{{' }} github.token {{ '}}' }}
+        run: gh release upload "${{ '{{' }} inputs.release_tag {{ '}}' }}" "${{ '{{' }} steps.sbom.outputs.spdx-json {{ '}}' }}" --clobber
