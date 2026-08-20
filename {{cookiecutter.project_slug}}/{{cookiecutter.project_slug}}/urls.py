@@ -10,6 +10,7 @@ from django.views.generic import TemplateView
 
 from {{ cookiecutter.project_slug }}.domains.registry import extra_urlpatterns
 from {{ cookiecutter.project_slug }}.platform.health import livez, readyz, version
+from {{ cookiecutter.project_slug }}.platform.metrics import metrics
 
 
 urlpatterns = [
@@ -18,11 +19,22 @@ urlpatterns = [
     path("livez/", livez, name="livez"),
     path("readyz/", readyz, name="readyz"),
     path("version/", version, name="version"),
+    path("metrics/", metrics, name="metrics"),
     path(
         "robots.txt",
         TemplateView.as_view(template_name="txt/robots.txt", content_type="text/plain"),
     ),
 ]
+
+{% if cookiecutter.rendering_mode in ["ssr", "hybrid"] -%}
+if settings.DEBUG and getattr(settings, "HYPER_DEBUG_TOOLBAR", False):
+    urlpatterns.append(
+        path(
+            "__hyperdebug__/",
+            include("hyperdjango.integrations.devtools.urls"),
+        )
+    )
+{% endif -%}
 
 urlpatterns.extend(extra_urlpatterns())
 

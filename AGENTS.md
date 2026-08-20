@@ -10,9 +10,14 @@ changes to the template itself.
 - Keep the template generic. It may preserve reusable engineering patterns from
   SmoothPay, but must never contain SmoothPay terminology, product behavior,
   data, workflows, branding, or integrations.
-- The root template owns generator behavior, platform code, shared UI,
-  extension points, and documentation. Generated projects own `domains/`,
-  product routes, view models, and product ADRs.
+- The root template owns generator behavior, framework/runtime platform code,
+  shared UI primitives, extension points, and documentation. Generated
+  projects own `identity/`, `domains/`, product routes, view
+  models, settings composition, and product ADRs.
+- The platform is provider-neutral: it must not own a user model, Allauth,
+  JWT endpoints, authentication routes, or product authorization policy. The
+  default local identity implementation belongs in the generated project's
+  top-level `identity/` package.
 - Change reusable platform behavior in this template repository, then release it
   through Cruft. Do not treat a generated project's inherited `platform/` as
   the normal place to make template improvements.
@@ -29,7 +34,16 @@ changes to the template itself.
 - Use Cookiecutter-compatible Jinja only. A generated project must not retain
   template internals such as `.template_locks`.
 - Preserve the Cruft extension boundary: updates may change template-owned
-  files without overwriting product-owned domain extensions.
+  files without overwriting product-owned domain extensions, identity code,
+  project settings composition, or product routes. Configure those paths in
+  the generated project's Cruft skip list.
+- Generate local identity by default. It is a complete, project-owned starting
+  point rather than a permanent product decision: a project may remove or
+  replace it before its first migration, or later through a deliberate data
+  migration and ADR.
+- Keep production security enforcement after project settings composition.
+  Projects may choose their applications and settings, but must not weaken
+  essential production safeguards through an ordinary settings override.
 
 ## Dependencies and lockfiles
 
@@ -49,6 +63,9 @@ changes to the template itself.
   behavior in the rendered project, not by duplicating its tests here.
 - Do not weaken generated-project security defaults, configuration contracts,
   or the 100% coverage requirement merely to make a template change pass.
+- Exercise the product-owned settings and identity seams in rendered-project
+  tests. In particular, confirm that a project can remove local identity before
+  its first migration without editing template-owned platform files.
 
 ## Updates
 

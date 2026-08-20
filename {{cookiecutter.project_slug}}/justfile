@@ -38,16 +38,21 @@ verify:
   just test
   if [ -f playwright.config.ts ]; then echo "==> Browser E2E: not part of verify; run just e2e for browser or auth-flow changes."; else echo "==> Browser E2E: skipped (API mode has no browser layer)"; fi
 
+{% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
+dev:
+  uv run --env-file .env python manage.py hyper_runserver 0.0.0.0:8000
+{% else %}
 dev:
   uv run --env-file .env python manage.py runserver 0.0.0.0:8000
+{% endif %}
 
 test *ARGS:
   if [ -f package.json ]; then npm run build; fi
-  uv run --env-file .env pytest -n auto {{ '{{' }} ARGS {{ '}}' }}
+  env DJANGO_SETTINGS_MODULE={{ cookiecutter.project_slug }}.settings.test uv run --env-file .env pytest -n auto {{ '{{' }} ARGS {{ '}}' }}
 
 test-one TEST_PATH:
   if [ -f package.json ]; then npm run build; fi
-  uv run --env-file .env pytest {{ '{{' }} TEST_PATH {{ '}}' }}
+  env DJANGO_SETTINGS_MODULE={{ cookiecutter.project_slug }}.settings.test uv run --env-file .env pytest {{ '{{' }} TEST_PATH {{ '}}' }}
 
 quality:
   uv lock --check

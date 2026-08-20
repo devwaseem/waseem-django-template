@@ -26,14 +26,18 @@ tickets, implementation diaries, or secrets in this file.
 ## Technical shape
 
 - Python 3.14, Django 6, PostgreSQL, Redis, `uv`, Docker Compose, and Uvicorn.
-- Django settings are split into `settings/base.py`, `settings/dev.py`,
-  `settings/test.py`, and `settings/prod.py`.
-- `{{ cookiecutter.project_slug }}/platform/` contains the template-owned
-  platform: user/auth foundation, settings support, health/version endpoints,
-  admin, storage, observability, logging, tasks, and management commands.
+- Django settings have a template-owned foundation and a project-owned
+  composition layer. The project composition layer selects applications,
+  identity, routes, and product settings; production settings enforce the
+  non-negotiable security baseline after that composition.
+- `{{ cookiecutter.project_slug }}/platform/` contains template-owned,
+  provider-neutral runtime infrastructure: settings support, health/version
+  endpoints, admin integration, storage, observability, logging, tasks, and
+  management commands. It owns neither a user model nor an auth provider.
 - `{{ cookiecutter.project_slug }}/domains/` is product-owned code. Its
   registry is the extension point for installed apps, navigation, routes, and
-  API routers.
+  API routers. The top-level `identity/` app owns the default local identity
+  implementation.
 {% if cookiecutter.rendering_mode in ["api", "hybrid"] %}
 - Django Ninja provides the `/api/v1/` layer. It is present because this is a
   `{{ cookiecutter.rendering_mode }}` project.
@@ -59,8 +63,10 @@ or dependency-injection container unless an ADR establishes a real need.
 
 | Location | Owns | Do not put here |
 | --- | --- | --- |
-| `{{ cookiecutter.project_slug }}/platform/` | reusable platform infrastructure and framework integration | product workflows or domain policy |
+| `{{ cookiecutter.project_slug }}/platform/` | reusable, provider-neutral runtime infrastructure and framework integration | user models, auth-provider configuration, product workflows, or domain policy |
+| `{{ cookiecutter.project_slug }}/settings/project.py` | application selection and project-specific settings composition | template-wide runtime defaults or production safeguards |
 | `{{ cookiecutter.project_slug }}/domains/<domain>/` | domain models, operations, policies, queries, API adapters, and domain tests | page-specific formatting or broad utilities |
+| `{{ cookiecutter.project_slug }}/identity/` | local user model, Allauth/JWT integration, auth UI behavior, authorization seams, and identity tests | generic platform runtime behavior |
 | `{{ cookiecutter.project_slug }}/api/` | API root/router and shared API concerns | business rules or model serialization |
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
 | `hyper/routes/` | HTTP transport, route-local templates, and page bundles | domain decisions or reusable business logic |
@@ -78,21 +84,27 @@ response. They do not implement business decisions themselves.
 repository, service, factory, or abstraction layers. Create an abstraction only
 when it removes a demonstrated repeated boundary, not speculative complexity.
 
-## Template-owned platform boundary
+## Platform, product, and Cruft boundary
 
-- **Must not** edit `{{ cookiecutter.project_slug }}/platform/` for a product
-  feature, convenience configuration, or a local workaround. It is inherited
-  template infrastructure; use `domains/`, the domain registry, product routes,
-  view models, and documented configuration extension points instead.
-- This is an update-maintainability rule, not a technical restriction. Cruft
-  does not prevent platform edits; it must merge or surface them as conflicts
-  during a later update. Ruff also checks the entire generated project, not
-  platform code specially.
-- **Exception**: before changing platform code, obtain explicit user approval,
-  write an ADR explaining why no extension boundary fits, record the Cruft
-  update risk and test plan, and decide whether the change belongs upstream in
-  the template. Forward reusable fixes to the template rather than leaving
-  product-only platform forks.
+- **Must** make product decisions in `identity/`, `domains/`, product routes,
+  view models, and `settings/project.py`. This includes selecting or removing
+  applications, the user model, authentication provider, authorization model,
+  and product settings.
+- **Prefer** the documented extension seams instead of changing
+  `{{ cookiecutter.project_slug }}/platform/`. This keeps future template
+  updates reviewable, but is not a technical restriction: Cruft permits edits
+  and will merge or surface them as conflicts during a later update. Ruff also
+  checks the entire generated project, not platform code specially.
+- **Must** treat a platform change as a deliberate fork. Before a lasting
+  change, write an ADR explaining why no extension boundary fits, list the
+  forked files, expected Cruft-update conflict, rollback path, and regression
+  tests. Decide whether a reusable part should be proposed upstream. Do not
+  hide a product-specific platform fork in an unrelated feature change.
+- **Must** preserve the generated Cruft skip list for project-owned paths,
+  including `identity/`, `domains/`, `settings/project.py`, product routes,
+  view models, product `AGENTS.md`, and product ADRs. Skipped paths are
+  intentionally owned by the project; template releases document relevant
+  manual migrations rather than overwriting them.
 
 ## Product development conventions
 
@@ -165,16 +177,53 @@ the API contract, error, auth, and CORS rules above.
 - **Prefer** small, declarative TypeScript modules. Keep DOM querying scoped to
   a route root and make frontend behavior progressively enhance a useful SSR
   page.
+- **Must** use `just dev` for ordinary SSR or hybrid development. It runs
+  HyperDjango's `hyper_runserver`, which supervises Django and Vite, assigns a
+  free Vite port, and shares it with Django. Use `just vite` only when
+  deliberately pairing it with Django's ordinary `runserver`.
+- HyperDjango's Request Inspector is enabled only in development, before file
+  routes, with page-request recording disabled so its bounded history focuses
+  on actions and SSE streams. Its unpinned traces clear on full refresh; pins
+  and traces are process-local and disappear on restart. Do not enable it
+  outside a reviewed debugging or access-controlled environment. Use stable
+  DOM targets and inspect action traces before adding client-side diagnostic
+  logging.
+- **Must** treat HyperDjango's retry policy as a delivery guarantee: GET
+  actions retry by default and must be read-only; POST actions do not retry by
+  default. Enable a retryable POST only with a durable idempotency ledger,
+  database uniqueness/conditional transition, and downstream idempotency keys.
+- **Must** use named `Checkpoint` items only in retryable GET action streams,
+  after a completed permission-checked stage. Read them through
+  `get_resume_checkpoint(request, allowed=...)` with a stable ordered allow
+  list. `Last-Event-ID` and `X-Hyper-Request-ID` are untrusted progress
+  metadata, never authorization, tenant, or resource identity.
+- **Must** keep `HYPER_SSE_HEARTBEAT_INTERVAL` below the smallest complete-path
+  proxy, CDN, server, or ingress idle timeout when adding streamed actions;
+  confirm heartbeats are not buffered and test reconnects through the same
+  production topology. Do not disable heartbeats unless that keep-alive review
+  explicitly permits it.
+- **Must** preserve Vite 8 compatibility: use Node.js `^20.19.0` or
+  `>=22.12.0`, keep colocated `entry.ts` and `entry.head.ts` files valid, and
+  resolve HyperDjango system-check errors rather than silencing them.
 {% else %}
 This is API-only. Do not add a frontend build or SSR routes without an ADR.
 {% endif %}
 
 ## Authentication and authorization
 
-- Django Allauth supplies authentication behavior; the project owns the UI and
-  routes. Do not mount broad provider URLs merely for convenience.
-- Preserve the custom login, logout, registration, and password-reset flows.
-  Registration remains controlled by `ACCOUNT_ALLOW_REGISTRATION`.
+- The generated project defaults to a complete top-level `identity/`
+  implementation. It owns the user model, Django Allauth configuration, JWT
+  endpoints where an API exists, authentication SSR behavior where SSR exists,
+  and authorization extension seams. The platform must remain free of these
+  product decisions.
+- A project may remove or replace local identity. Do so before the first
+  migration whenever possible. Replacing a migrated `AUTH_USER_MODEL` is a
+  data-migration and deployment change: write an ADR, migration/rollback plan,
+  threat model, configuration documentation, and tests first.
+- Select identity and related settings in `settings/project.py`; do not mount
+  broad provider URLs merely for convenience. Preserve the custom login,
+  logout, registration, and password-reset flows while local identity remains
+  selected. Registration remains controlled by `ACCOUNT_ALLOW_REGISTRATION`.
 - **Must** keep authentication, authorization, and domain permissions explicit
   at transport boundaries and inside operations that can be invoked by more
   than one transport.
@@ -187,6 +236,37 @@ This is API-only. Do not add a frontend build or SSR routes without an ADR.
   superuser-to-active-regular-user policy, visible warning/exit control, and
   immutable start/end audit events. Never impersonate staff or superuser users,
   and never disable the warning banner.
+
+## Rate limiting
+
+- **Must** assess every new externally reachable route or API operation for a
+  rate-limit policy before implementation. Public authentication, password
+  reset, registration, invitations, verification/OTP, uploads, exports,
+  outbound-email triggers, search, expensive reads, and every state-changing
+  operation require an explicit limit.
+- **Must** use `platform.ratelimits.enforce_rate_limit` or
+  `enforce_public_auth_rate_limits`; do not add view-local, in-memory, or
+  database-counter implementations. Reuse the broad API IP policy and add a
+  narrower operation policy where risk warrants it.
+- **Must** attach `APIIPRateThrottle()` when registering every Django Ninja
+  router. Ninja does not inherit an API-level throttle into routers added later;
+  use `api.add_router(..., throttle=APIIPRateThrottle())`, then add an
+  operation-specific policy for sensitive routes.
+- **Must** use independent trusted-IP and normalized-account/user/API-key
+  counters for publicly reachable credential or account actions. A single IP
+  limit is insufficient against distributed attacks; a single account limit is
+  insufficient against a single host spraying accounts.
+- **Must** return RFC 9457 `429` API responses and a `Retry-After` header.
+  Keep responses non-enumerating: never reveal whether an email, account,
+  invite, reset token, or credential exists.
+- **Must** keep rates configurable through the documented environment settings,
+  enabled by default, and use Redis-backed atomic counters. Do not fail open
+  when the rate-limit cache is unavailable.
+- **Must** treat application limits as a second layer. Configure ingress/WAF
+  rate and request-size limits too, and set `UVICORN_FORWARDED_ALLOW_IPS` only
+  to proxy networks that remove client-supplied forwarding headers. Never use
+  `*` for a publicly reachable application without an explicit, reviewed trust
+  boundary.
 
 ## Email
 
@@ -215,6 +295,11 @@ This is API-only. Do not add a frontend build or SSR routes without an ADR.
 - **Must** preserve production fail-closed behavior: real `SECRET_KEY`, allowed
   hosts, TLS, secure cookies, origin-specific CORS, CSP without `unsafe-inline`
   or `unsafe-eval`, logging redaction, and RFC 9457 API errors where present.
+- **Must** put project-specific configuration and application selection in
+  `settings/project.py`. Production enforcement is applied after that layer;
+  do not weaken it through a routine settings override. A genuine exception is
+  a platform fork and requires the ADR, rollback, and regression-test record
+  described above.
 - **Must** keep static assets public and media private/signed by default when
   using S3. Do not turn a media bucket public to simplify a feature.
 - **Prefer** explicit retention, deletion, audit, and data-classification
@@ -222,6 +307,34 @@ This is API-only. Do not add a frontend build or SSR routes without an ADR.
   ADR or linked product documentation.
 - Sentry and OpenTelemetry integrations are opt-in through configuration;
   preserve redaction and correlation before enabling new telemetry.
+
+## Observability
+
+- **Must** treat telemetry as a product contract. Before adding a log event,
+  span, or metric, define the operator question it answers; for product metrics,
+  also define the owner, dashboard, alert threshold, and runbook in the same
+  change.
+- **Must** use static dotted event names and structured fields for logs. Keep
+  `request_id`, and active `trace_id`/`span_id`, intact. Never log request or
+  response bodies, headers, query strings, credentials, cookies, tokens,
+  email contents, unredacted provider payloads, or regulated data. Platform
+  redaction is defence in depth, not permission to emit unsafe values.
+- **Must** use OpenTelemetry as the sole performance-tracing owner. Preserve
+  parent-based sampling, trace the template-provided HTTP and Celery boundaries
+  only, and keep Sentry focused on redacted errors. Do not enable Sentry
+  performance tracing, database tracing, Redis tracing, or arbitrary span
+  attributes without an ADR covering privacy, retention, cost, and cardinality.
+- **Must** use metric names and labels with finite, reviewed values. Route
+  patterns are allowed; raw paths, URLs, query values, IDs, emails, task IDs,
+  exception messages, and external identifiers are forbidden as labels. Add
+  product metrics beside the owning domain operation, not in `platform/`.
+- **Must** keep `/metrics/` disabled unless a private monitoring path and
+  `METRICS_TOKEN` secret are configured. Scrapers send the token in an
+  `Authorization: Bearer` header; never put it in a URL, log it, or expose the
+  endpoint through public ingress. Run one Uvicorn worker per container when
+  scraping the in-process registry unless a reviewed multiprocess aggregation
+  strategy exists.
+- Read `docs/observability.md` before adding or changing telemetry.
 
 ## Background work
 

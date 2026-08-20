@@ -8,13 +8,14 @@ from django.core import mail
 from django.test import Client, override_settings
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from ninja.errors import HttpError
+from ninja.errors import HttpError, Throttled
 
 from {{ cookiecutter.project_slug }}.api import auth
 from {{ cookiecutter.project_slug }}.api.router import (
     authentication_error,
     http_error,
     not_found,
+    throttled_error,
     unhandled_error,
     validation_error,
 )
@@ -137,6 +138,9 @@ def test_auth_helpers_and_uniform_error_handlers(
     from django.http import Http404
 
     assert authentication_error(request, AuthenticationError()).status_code == 401
+    throttled = throttled_error(request, Throttled(wait=None))
+    assert throttled.status_code == 429
+    assert "Retry-After" not in throttled
     assert validation_error(request, ValidationError([])).status_code == 422
     assert http_error(request, HttpError(400, "no")).status_code == 400
     assert not_found(request, Http404()).status_code == 404

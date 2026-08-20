@@ -10,7 +10,7 @@ PACKAGE_ROOT = PROJECT_ROOT / "{{ cookiecutter.project_slug }}"
 CONFIGURATION_DOCUMENT = PROJECT_ROOT / "docs" / "configuration.md"
 EXAMPLE_ENVIRONMENT = PROJECT_ROOT / ".env.example"
 ENVIRONMENT_READ = re.compile(
-    r'env\.(?:string|integer|boolean|list)\(\s*"([A-Z][A-Z0-9_]*)"'
+    r'env\.(?:string|integer|number|boolean|list)\(\s*"([A-Z][A-Z0-9_]*)"'
 )
 DIRECT_ENVIRONMENT_READ = re.compile(
     r'os\.environ\.(?:get|setdefault)\(\s*"([A-Z][A-Z0-9_]*)"'
@@ -27,6 +27,11 @@ SECURITY_SETTINGS = {
     "CORS_ALLOWED_ORIGINS",
     "STORAGES",
     "LOGGING",
+    "RATELIMIT_ENABLE",
+    "RATELIMIT_USE_CACHE",
+    "RATELIMIT_FAIL_OPEN",
+    "METRICS_ENABLED",
+    "METRICS_TOKEN",
 }
 
 

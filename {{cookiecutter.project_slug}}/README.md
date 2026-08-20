@@ -13,7 +13,10 @@ just dev
 ```
 
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
-In a second terminal, run `just vite` for frontend development.
+For SSR and hybrid projects, `just dev` starts Django and Vite together through
+HyperDjango. It selects an available Vite port, exposes it to Django, and
+stops both processes together. Use `just vite` only when deliberately running
+Django's plain `runserver` in a separate terminal.
 {% endif %}
 
 The app is available at `http://localhost:8000`; the Django admin is at

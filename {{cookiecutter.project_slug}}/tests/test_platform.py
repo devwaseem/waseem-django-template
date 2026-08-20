@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from importlib import import_module
+from importlib import import_module, reload
 from importlib.util import find_spec
 from io import StringIO
 from pathlib import Path
@@ -14,6 +14,8 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.test import Client, RequestFactory, override_settings
 from django_ratelimit.exceptions import Ratelimited
+
+from {{ cookiecutter.project_slug }}.platform.ratelimits import RateLimitExceeded
 
 PROJECT_PACKAGE = settings.ROOT_URLCONF.partition(".")[0]
 Environment = import_module(f"{PROJECT_PACKAGE}.config.env").Environment
@@ -55,6 +57,7 @@ def test_environment_parses_explicit_values(monkeypatch: pytest.MonkeyPatch) -> 
 
     assert environment.string("TEMPLATE_TEXT") == " value "
     assert environment.integer("TEMPLATE_NUMBER") == 42
+    assert environment.number("TEMPLATE_NUMBER") == 42.0
     assert environment.boolean("TEMPLATE_TRUE") is True
     assert environment.boolean("TEMPLATE_FALSE") is False
     assert environment.list("TEMPLATE_LIST") == ["one", "two"]
@@ -63,6 +66,11 @@ def test_environment_parses_explicit_values(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setenv("TEMPLATE_NUMBER", "not-a-number")
     with pytest.raises(ImproperlyConfigured):
         environment.integer("TEMPLATE_NUMBER")
+    with pytest.raises(ImproperlyConfigured):
+        environment.number("TEMPLATE_NUMBER")
+    monkeypatch.setenv("TEMPLATE_NUMBER", "nan")
+    with pytest.raises(ImproperlyConfigured):
+        environment.number("TEMPLATE_NUMBER")
     monkeypatch.setenv("TEMPLATE_TRUE", "perhaps")
     with pytest.raises(ImproperlyConfigured):
         environment.boolean("TEMPLATE_TRUE")
@@ -111,6 +119,9 @@ def test_platform_defaults_are_registered_and_safe(rf: RequestFactory) -> None:
     }
     assert settings.ENABLE_ADMIN_HIJACK is False
     assert settings.HIJACK_PERMISSION_CHECK.endswith(".platform.hijack.can_hijack")
+    assert settings.RATELIMIT_ENABLE is False
+    assert settings.RATELIMIT_USE_CACHE == "default"
+    assert settings.RATELIMIT_FAIL_OPEN is False
 
 
 def test_redaction_is_recursive_and_does_not_mutate_safe_values() -> None:
@@ -119,6 +130,8 @@ def test_redaction_is_recursive_and_does_not_mutate_safe_values() -> None:
         "Authorization": "Bearer secret",
         "nested": {"password": "secret", "items": [{"token": "value"}]},
         "tuple": ({"cookie": "session"},),
+        "METRICS_TOKEN": "metrics-secret",
+        42: "safe",
     }
 
     redacted = redact_sensitive_data(None, "info", payload)
@@ -128,6 +141,8 @@ def test_redaction_is_recursive_and_does_not_mutate_safe_values() -> None:
     assert redacted["nested"]["password"] == REDACTED
     assert redacted["nested"]["items"][0]["token"] == REDACTED
     assert redacted["tuple"][0]["cookie"] == REDACTED
+    assert redacted["METRICS_TOKEN"] == REDACTED
+    assert redacted[42] == "safe"
 
 
 @pytest.mark.django_db
@@ -144,6 +159,9 @@ def test_health_and_error_endpoints_cover_success_and_failure(
     request = rf.get("/")
     assert handler403(request).status_code == 403
     assert handler403(request, Ratelimited()).status_code == 429
+    blocked = handler403(request, RateLimitExceeded(retry_after=60))
+    assert blocked.status_code == 429
+    assert blocked["Retry-After"] == "60"
     assert handler404(request, Exception()).status_code == 404
     assert handler500(request).status_code == 500
 
@@ -206,6 +224,29 @@ def test_request_identity_and_version_endpoint(client: Client) -> None:
     }
 
 
+{% if cookiecutter.rendering_mode in ["ssr", "hybrid"] -%}
+def test_hyperdjango_development_toolbar_is_mounted_when_enabled() -> None:
+    urls = import_module(settings.ROOT_URLCONF)
+    development_settings = import_module(f"{PROJECT_PACKAGE}.settings.dev")
+
+    assert settings.HYPER_SSE_HEARTBEAT_INTERVAL == 15.0
+    assert development_settings.LOGGING["handlers"]["console"]["filters"] == [
+        "skip_hyperdjango_request_inspector"
+    ]
+
+    try:
+        with override_settings(DEBUG=True, HYPER_DEBUG_TOOLBAR=True):
+            urls = reload(urls)
+
+            assert any(
+                str(pattern.pattern) == "__hyperdebug__/"
+                for pattern in urls.urlpatterns
+            )
+    finally:
+        reload(urls)
+
+
+{% endif -%}
 @pytest.mark.django_db
 def test_doctor_reports_dependencies_and_surfaces_failures(
     monkeypatch: pytest.MonkeyPatch,

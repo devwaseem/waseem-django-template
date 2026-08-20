@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from math import isfinite
 from collections.abc import Iterable
 from typing import Final, cast, overload
 
@@ -46,6 +47,22 @@ class Environment:
             return int(str(value).strip())
         except ValueError as exc:
             raise ImproperlyConfigured(f"{name} must be an integer.") from exc
+
+    @overload
+    def number(self, name: str) -> float: ...
+
+    @overload
+    def number(self, name: str, default: float) -> float: ...
+
+    def number(self, name: str, default: float | None = None) -> float:
+        value = self._raw(name, default)
+        try:
+            number = float(str(value).strip())
+        except ValueError as exc:
+            raise ImproperlyConfigured(f"{name} must be a number.") from exc
+        if not isfinite(number):
+            raise ImproperlyConfigured(f"{name} must be a finite number.")
+        return number
 
     @overload
     def boolean(self, name: str) -> bool: ...

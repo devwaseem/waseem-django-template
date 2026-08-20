@@ -28,6 +28,9 @@ from {{ cookiecutter.project_slug }}.api.schemas import (
     TokenPairResponse,
     UserResponse,
 )
+from {{ cookiecutter.project_slug }}.platform.ratelimits import (
+    enforce_public_auth_rate_limits,
+)
 
 
 def problem(
@@ -78,11 +81,15 @@ router = Router(tags=["Authentication"])
 bearer_auth = JwtBearer()
 
 
-@router.post("/register", response={201: UserResponse, 403: Problem, 409: Problem})
+@router.post(
+    "/register", response={201: UserResponse, 403: Problem, 409: Problem, 429: Problem}
+)
 def register(
     request: HttpRequest, payload: RegisterRequest
 ) -> UserResponse | JsonResponse:
     """Register a generic account when registration is enabled by environment."""
+    email = get_user_model().objects.normalize_email(payload.email).lower()
+    enforce_public_auth_rate_limits(request, action="registration", email=email)
     if not settings.ACCOUNT_ALLOW_REGISTRATION:
         return problem(
             request,
@@ -91,7 +98,6 @@ def register(
             title="Registration is disabled",
             detail="This service is not accepting new accounts.",
         )
-    email = get_user_model().objects.normalize_email(payload.email).lower()
     if get_user_model().objects.filter(email__iexact=email).exists():
         return problem(
             request,
@@ -108,13 +114,15 @@ def register(
     return 201, serialize_user(user)
 
 
-@router.post("/token", response={200: TokenPairResponse, 401: Problem})
+@router.post("/token", response={200: TokenPairResponse, 401: Problem, 429: Problem})
 def obtain_token(
     request: HttpRequest,
     payload: CredentialsRequest,
 ) -> TokenPairResponse | JsonResponse:
     """Exchange valid email/password credentials for a fresh token pair."""
-    user = authenticate(request, email=payload.email, password=payload.password)
+    email = get_user_model().objects.normalize_email(payload.email).lower()
+    enforce_public_auth_rate_limits(request, action="login", email=email)
+    user = authenticate(request, email=email, password=payload.password)
     if user is None:
         return problem(
             request,
@@ -126,7 +134,9 @@ def obtain_token(
     return token_pair_for(user)
 
 
-@router.post("/token/refresh", response={200: TokenPairResponse, 401: Problem})
+@router.post(
+    "/token/refresh", response={200: TokenPairResponse, 401: Problem, 429: Problem}
+)
 def refresh_token(
     request: HttpRequest,
     payload: RefreshRequest,
@@ -149,7 +159,7 @@ def refresh_token(
     return token_pair_for(user)
 
 
-@router.post("/token/revoke", response={204: None, 401: Problem})
+@router.post("/token/revoke", response={204: None, 401: Problem, 429: Problem})
 def revoke_token(
     request: HttpRequest, payload: RefreshRequest
 ) -> HttpResponse | JsonResponse:
@@ -167,23 +177,21 @@ def revoke_token(
     return HttpResponse(status=204)
 
 
-@router.get("/me", auth=bearer_auth, response={200: UserResponse})
+@router.get("/me", auth=bearer_auth, response={200: UserResponse, 429: Problem})
 def current_user(request: HttpRequest) -> UserResponse:
     """Return the authenticated user's minimal public representation."""
     return serialize_user(request.auth)
 
 
-@router.post("/password/reset", response={202: None})
+@router.post("/password/reset", response={202: None, 429: Problem})
 def request_password_reset(
     request: HttpRequest,
     payload: PasswordResetRequest,
 ) -> HttpResponse:
     """Send a reset email when an active user exists, without enumeration."""
-    user = (
-        get_user_model()
-        .objects.filter(email__iexact=payload.email, is_active=True)
-        .first()
-    )
+    email = get_user_model().objects.normalize_email(payload.email).lower()
+    enforce_public_auth_rate_limits(request, action="password_reset", email=email)
+    user = get_user_model().objects.filter(email__iexact=email, is_active=True).first()
     if user is not None:
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)

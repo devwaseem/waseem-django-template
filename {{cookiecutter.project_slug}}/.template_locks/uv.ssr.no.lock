@@ -642,15 +642,15 @@ wheels = [
 
 [[package]]
 name = "hyperdjango"
-version = "0.37.0"
+version = "0.42.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "django-render-block" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6e/f1/1027aaab9f77a4702d249a55b75b12500c9ff1e356740d9901f36d59c77a/hyperdjango-0.37.0.tar.gz", hash = "sha256:9837d701b14c4e40a7daf9e38e9193e5a804a4cc19771e38c997e5ae50f76630", size = 43750, upload-time = "2026-06-30T06:25:33.69Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/44/df/ea6079d2b67f2ad84c1f4d57cff8e64f3d35914a47b40e57b257a42f04a2/hyperdjango-0.42.1.tar.gz", hash = "sha256:70c8ca88c64206fab3b479e9ea4a65aff4da6cf5674a8e93701eb07f5ecfa0b6", size = 163109, upload-time = "2026-08-17T08:39:06.939Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/dd/789fd5932b87c39f0a63957f15b9fa47eca330808d102cdfed9e3ddbc398/hyperdjango-0.37.0-py3-none-any.whl", hash = "sha256:59c85c902e4b4e0f896a2e5b68aef774ea4fbb3fa377636ae2f586f78bbff0e0", size = 45127, upload-time = "2026-06-30T06:25:35.782Z" },
+    { url = "https://files.pythonhosted.org/packages/85/83/ce12e32dd4f9bd7c5fecd79b41fab0a71a4f1f74d0464cf18df8dbe3bc81/hyperdjango-0.42.1-py3-none-any.whl", hash = "sha256:8c0ada808249ffe799242e52409bac807a9bda4eb3e2ee325bc1208d8cb29c64", size = 151708, upload-time = "2026-08-17T08:39:05.452Z" },
 ]
 
 [[package]]
@@ -768,9 +768,8 @@ dependencies = [
     { name = "opentelemetry-exporter-otlp-proto-http" },
     { name = "opentelemetry-instrumentation-django" },
     { name = "opentelemetry-instrumentation-logging" },
-    { name = "opentelemetry-instrumentation-psycopg" },
-    { name = "opentelemetry-instrumentation-redis" },
     { name = "opentelemetry-sdk" },
+    { name = "prometheus-client" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic" },
     { name = "redis" },
@@ -807,15 +806,14 @@ requires-dist = [
     { name = "django-structlog", specifier = ">=9.0,<10" },
     { name = "django-stubs-ext", specifier = ">=5.2,<6" },
     { name = "django-unfold", specifier = ">=0.74,<1" },
-    { name = "hyperdjango", specifier = ">=0.18,<1" },
+    { name = "hyperdjango", specifier = ">=0.42.1,<0.43" },
     { name = "mrml", specifier = ">=0.2,<0.3" },
     { name = "opentelemetry-api", specifier = ">=1.38,<2" },
     { name = "opentelemetry-exporter-otlp-proto-http", specifier = ">=1.38,<2" },
     { name = "opentelemetry-instrumentation-django", specifier = ">=0.60b1,<1" },
     { name = "opentelemetry-instrumentation-logging", specifier = ">=0.60b1,<1" },
-    { name = "opentelemetry-instrumentation-psycopg", specifier = ">=0.60b1,<1" },
-    { name = "opentelemetry-instrumentation-redis", specifier = ">=0.60b1,<1" },
     { name = "opentelemetry-sdk", specifier = ">=1.38,<2" },
+    { name = "prometheus-client", specifier = ">=0.22,<1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
     { name = "pydantic", specifier = ">=2.12,<3" },
     { name = "redis", specifier = ">=7,<8" },
@@ -1080,21 +1078,6 @@ wheels = [
 ]
 
 [[package]]
-name = "opentelemetry-instrumentation-dbapi"
-version = "0.65b0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-semantic-conventions" },
-    { name = "wrapt" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/0e/97/b2e0ae6951cbf93c0c211910077cb50f9478fb4b7e89a402800b9a98151c/opentelemetry_instrumentation_dbapi-0.65b0.tar.gz", hash = "sha256:da048bb683347ddad2f47344bacfe1e111bf7bfb2e5a39796b1083679ad4f0f3", size = 20247, upload-time = "2026-07-16T15:26:02.726Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/20/e3/106953cea1d7f9318a4b56827ad10839fda3d033ecea2db717c051bf6a60/opentelemetry_instrumentation_dbapi-0.65b0-py3-none-any.whl", hash = "sha256:50b662578a6903b028e09b73f604de687752f5f904aa0ca032969157b29d60f2", size = 14815, upload-time = "2026-07-16T15:25:08.361Z" },
-]
-
-[[package]]
 name = "opentelemetry-instrumentation-django"
 version = "0.65b0"
 source = { registry = "https://pypi.org/simple" }
@@ -1122,35 +1105,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ed/0a/b70a9cddbc7b314a783e62739dbb1184f8538c1f85e8ded6d340142b9b54/opentelemetry_instrumentation_logging-0.65b0.tar.gz", hash = "sha256:c0a50cade5d54db6c6af12e2c69227ecd26f2b3b779e99ff850561d3d8dd77e3", size = 19783, upload-time = "2026-07-16T15:26:09.853Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e2/8e/7577914681d77b180f8d6dcbac435be8e4ca6add6315da2d01ac4289eaa3/opentelemetry_instrumentation_logging-0.65b0-py3-none-any.whl", hash = "sha256:68365b31755c844f1e85f07dcd217839ff92f2d278a214bdf02d4dc806f9d915", size = 15727, upload-time = "2026-07-16T15:25:18.774Z" },
-]
-
-[[package]]
-name = "opentelemetry-instrumentation-psycopg"
-version = "0.65b0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-instrumentation-dbapi" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/5f/e8/61953dd952ce3c7bfa5212d0f75e56c42c73ceee8795cd783750e3dfeaf2/opentelemetry_instrumentation_psycopg-0.65b0.tar.gz", hash = "sha256:62921ceaad2a0d0813a4185ce724aba40e583ead52db03bc3506de5ef53cab84", size = 12116, upload-time = "2026-07-16T15:26:13.173Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/05/f0/24595afbba7f7216c88ea167f71793fec735298f6fb4f597411f802c9b1b/opentelemetry_instrumentation_psycopg-0.65b0-py3-none-any.whl", hash = "sha256:a363c594a0dfcb1f6c8db5b1a1549a2e7dfde91f4d17e5fe0b48e777119705f9", size = 10820, upload-time = "2026-07-16T15:25:22.469Z" },
-]
-
-[[package]]
-name = "opentelemetry-instrumentation-redis"
-version = "0.65b0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-semantic-conventions" },
-    { name = "wrapt" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/21/e5/b369897a9ff902eb028f1f999c9f9a4602f0b30fe1e97298d2c15fe5b8b0/opentelemetry_instrumentation_redis-0.65b0.tar.gz", hash = "sha256:f16409f189092984ff922f26939e7be79509365f5c9d202308c13fddf1368147", size = 17218, upload-time = "2026-07-16T15:26:17.243Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/9d/2a/5b874bf8824e7cb995b22e1e61e1b5bc42810023d81612c44edbfd2c48a3/opentelemetry_instrumentation_redis-0.65b0-py3-none-any.whl", hash = "sha256:7d135f61db9d72416e1f382012fbc13de6f5e726491bebd0344a9c42a60e6769", size = 14658, upload-time = "2026-07-16T15:25:29.146Z" },
 ]
 
 [[package]]
@@ -1287,6 +1241,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/25/3a/ddb78f32a0814e66b18a099377a106a2dcdce92d86a034d69d65df9b256e/pre_commit-4.6.1.tar.gz", hash = "sha256:03e809865c7d178b9979d06c761fcbfe6808fdaded8581a745bb110e52050421", size = 198646, upload-time = "2026-07-21T20:56:58.225Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fb/49/bc925106abcdac498074f2cbe6137e94e09f418dd2b7775df5b577dc0313/pre_commit-4.6.1-py2.py3-none-any.whl", hash = "sha256:0e3b2942510d1fb34eec167a3ec57331bf8442122f1153a9fb8b58f5c49b2717", size = 226186, upload-time = "2026-07-21T20:56:57.064Z" },
+]
+
+[[package]]
+name = "prometheus-client"
+version = "0.26.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/52/73/f1334c29c2af4cd9dba6c7817e61b611bd0215e2eb5565c6064a4de18802/prometheus_client-0.26.0.tar.gz", hash = "sha256:04a91bcf94e2cf74a44a1a874d651a2e853ed354b6e822f3b7487751465d5c2b", size = 92910, upload-time = "2026-07-24T19:36:41.893Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/eb/a3/b69efbf4143b5b9859b977770bbbabcc2796b702fa69dc40271e45cd5a56/prometheus_client-0.26.0-py3-none-any.whl", hash = "sha256:fa93d06737aa02bacd05794768508bb97d2fbee28cb3bca04eaae92f0ca953d6", size = 64494, upload-time = "2026-07-24T19:36:40.854Z" },
 ]
 
 [[package]]

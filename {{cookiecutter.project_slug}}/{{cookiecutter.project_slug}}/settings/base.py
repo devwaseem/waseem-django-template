@@ -13,6 +13,7 @@ import django_stubs_ext
 import structlog
 from csp.constants import NONE, NONCE, SELF
 from django.contrib.messages import constants as messages
+from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
 
 from {{ cookiecutter.project_slug }}.config.env import env
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "{{ cookiecutter.project_slug }}.platform.request_id.RequestIDMiddleware",
+    "{{ cookiecutter.project_slug }}.platform.metrics.HttpMetricsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "csp.middleware.CSPMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -81,7 +83,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "hijack.middleware.HijackUserMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "django_ratelimit.middleware.RatelimitMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_structlog.middlewares.RequestMiddleware",
@@ -166,6 +167,23 @@ CACHES = {
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
+RATELIMIT_ENABLE = env.boolean("RATELIMIT_ENABLE", True)
+RATELIMIT_USE_CACHE = "default"
+RATELIMIT_FAIL_OPEN = False
+RATE_LIMIT_API_IP = env.string("RATE_LIMIT_API_IP", "120/m")
+RATE_LIMIT_LOGIN_IP = env.string("RATE_LIMIT_LOGIN_IP", "5/15m")
+RATE_LIMIT_LOGIN_ACCOUNT = env.string("RATE_LIMIT_LOGIN_ACCOUNT", "5/15m")
+RATE_LIMIT_REGISTRATION_IP = env.string("RATE_LIMIT_REGISTRATION_IP", "3/h")
+RATE_LIMIT_REGISTRATION_ACCOUNT = env.string(
+    "RATE_LIMIT_REGISTRATION_ACCOUNT", "5/d"
+)
+RATE_LIMIT_PASSWORD_RESET_IP = env.string("RATE_LIMIT_PASSWORD_RESET_IP", "3/h")
+RATE_LIMIT_PASSWORD_RESET_ACCOUNT = env.string(
+    "RATE_LIMIT_PASSWORD_RESET_ACCOUNT", "3/h"
+)
+METRICS_ENABLED = env.boolean("METRICS_ENABLED", False)
+METRICS_TOKEN = env.string("METRICS_TOKEN", "")
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
@@ -175,7 +193,12 @@ MEDIA_USE_S3 = env.boolean("MEDIA_USE_S3", False)
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] -%}
 HYPER_FRONTEND_DIR = BASE_DIR / "hyper"
 HYPER_VITE_OUTPUT_DIR = BASE_DIR / "dist"
-HYPER_VITE_DEV_SERVER_URL = "http://localhost:5173/"
+HYPER_VITE_DEV_SERVER_URL = env.string(
+    "HYPER_VITE_DEV_SERVER_URL", "http://localhost:5173/"
+)
+HYPER_SSE_HEARTBEAT_INTERVAL = env.number("HYPER_SSE_HEARTBEAT_INTERVAL", 15.0)
+if HYPER_SSE_HEARTBEAT_INTERVAL < 0:
+    raise ImproperlyConfigured("HYPER_SSE_HEARTBEAT_INTERVAL must not be negative.")
 HYPER_DEV = DEBUG
 STATICFILES_DIRS = [HYPER_VITE_OUTPUT_DIR] if HYPER_VITE_OUTPUT_DIR.exists() else []
 {% endif -%}
@@ -251,7 +274,12 @@ MESSAGE_TAGS = {
     messages.ERROR: "error",
 }
 
-configure_logging(debug=DEBUG)
+configure_logging(
+    app_build_sha=APP_BUILD_SHA,
+    app_version=APP_VERSION,
+    debug=DEBUG,
+    deployment_environment=env.string("DEPLOYMENT_ENVIRONMENT", "development"),
+)
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

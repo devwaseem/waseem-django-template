@@ -40,7 +40,7 @@ jobs:
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.14.0"
           cache: npm
 {% endif %}
       - name: Prepare environment
@@ -82,7 +82,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.14.0"
           cache: npm
       - run: cp .env.example .env
       - run: uv sync --all-groups --frozen && npm ci

@@ -18,13 +18,15 @@ dependencies = [
   "django-unfold>=0.74,<1",
   "opentelemetry-api>=1.38,<2",
   "opentelemetry-exporter-otlp-proto-http>=1.38,<2",
+{% if cookiecutter.enable_celery == "yes" %}
+  "opentelemetry-instrumentation-celery>=0.60b1,<1",
+{% endif %}
   "opentelemetry-instrumentation-django>=0.60b1,<1",
   "opentelemetry-instrumentation-logging>=0.60b1,<1",
-  "opentelemetry-instrumentation-psycopg>=0.60b1,<1",
-  "opentelemetry-instrumentation-redis>=0.60b1,<1",
   "opentelemetry-sdk>=1.38,<2",
   "psycopg[binary]>=3.2,<4",
   "pydantic>=2.12,<3",
+  "prometheus-client>=0.22,<1",
   "redis>=7,<8",
   "mrml>=0.2,<0.3",
   "sentry-sdk[django]>=2.47,<3",
@@ -32,7 +34,7 @@ dependencies = [
   "uvicorn[standard]>=0.38,<1",
 {% if cookiecutter.rendering_mode in ["ssr", "hybrid"] %}
   "django-cotton>=2.6,<3",
-  "hyperdjango>=0.18,<1",
+  "hyperdjango>=0.42.1,<0.43",
 {% endif %}
 {% if cookiecutter.rendering_mode in ["api", "hybrid"] %}
   "django-ninja>=1.6,<2",
@@ -42,7 +44,6 @@ dependencies = [
 {% if cookiecutter.enable_celery == "yes" %}
   "celery>=5.6,<6",
   "celery-types>=0.23,<1",
-  "opentelemetry-instrumentation-celery>=0.60b1,<1",
 {% endif %}
 ]
 

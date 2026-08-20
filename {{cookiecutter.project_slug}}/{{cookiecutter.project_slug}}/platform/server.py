@@ -16,6 +16,8 @@ def main() -> None:
         workers=env.integer("UVICORN_WORKERS", 1),
         timeout_keep_alive=env.integer("UVICORN_TIMEOUT_KEEP_ALIVE", 5),
         timeout_graceful_shutdown=env.integer("UVICORN_TIMEOUT_GRACEFUL_SHUTDOWN", 30),
+        proxy_headers=True,
+        forwarded_allow_ips=env.string("UVICORN_FORWARDED_ALLOW_IPS", "127.0.0.1"),
         log_config=None,
     )
 

@@ -49,6 +49,10 @@ print(json.dumps({
         PublicStaticStorage.default_acl is None
         and PublicStaticStorage.querystring_auth is False
     ),
+    "ratelimit_enable": settings.RATELIMIT_ENABLE,
+    "ratelimit_cache": settings.RATELIMIT_USE_CACHE,
+    "ratelimit_fail_open": settings.RATELIMIT_FAIL_OPEN,
+    "metrics_enabled": settings.METRICS_ENABLED,
     "redacted": redacted,
 }))
 """
@@ -125,6 +129,10 @@ def test_production_security_contract_holds_for_cookies_csp_cors_and_logging() -
     assert runtime["cors_origins"] == []
     assert "unsafe-inline" not in all_sources
     assert "unsafe-eval" not in all_sources
+    assert runtime["ratelimit_enable"] is True
+    assert runtime["ratelimit_cache"] == "default"
+    assert runtime["ratelimit_fail_open"] is False
+    assert runtime["metrics_enabled"] is False
     assert runtime["redacted"] == {
         "Authorization": "[REDACTED]",
         "nested": {"password": "[REDACTED]"},
@@ -158,3 +166,13 @@ def test_production_settings_reject_wildcard_cors_origins() -> None:
 
     assert result.returncode != 0
     assert "CORS_ALLOWED_ORIGINS must not contain a wildcard" in result.stderr
+
+
+def test_production_settings_reject_an_unprotected_metrics_endpoint() -> None:
+    environment = production_environment()
+    environment["METRICS_ENABLED"] = "true"
+
+    result = check_production_settings(environment)
+
+    assert result.returncode != 0
+    assert "METRICS_TOKEN must be set" in result.stderr

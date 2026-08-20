@@ -20,3 +20,7 @@ if "*" in CORS_ALLOWED_ORIGINS:  # noqa: F405
     raise ImproperlyConfigured(
         "CORS_ALLOWED_ORIGINS must not contain a wildcard in production."
     )
+if METRICS_ENABLED and not METRICS_TOKEN:  # noqa: F405
+    raise ImproperlyConfigured(
+        "METRICS_TOKEN must be set when METRICS_ENABLED is true in production."
+    )

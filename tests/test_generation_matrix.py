@@ -75,6 +75,24 @@ def test_every_supported_shape_renders_with_its_expected_layers(
     assert (
         "Pre-commit: skipped (initialize Git to enable repository checks)" in justfile
     )
+    if rendering_mode == "api":
+        assert "hyper_runserver" not in justfile
+        assert not (project / "package.json").exists()
+    else:
+        project_file = (project / "pyproject.toml").read_text(encoding="utf-8")
+        package = (project / "package.json").read_text(encoding="utf-8")
+        dev_settings = (project / slug / "settings" / "dev.py").read_text(
+            encoding="utf-8"
+        )
+        urls = (project / slug / "urls.py").read_text(encoding="utf-8")
+
+        assert '"hyperdjango>=0.42.1,<0.43"' in project_file
+        assert '"vite": "^8.0.0"' in package
+        assert '"node": "^20.19.0 || >=22.12.0"' in package
+        assert "hyper_runserver 0.0.0.0:8000" in justfile
+        assert "hyperdjango.integrations.devtools" in dev_settings
+        assert '"RECORD_PAGE_REQUESTS": False' in dev_settings
+        assert 'path(\n            "__hyperdebug__/"' in urls
 
 
 @pytest.mark.template
